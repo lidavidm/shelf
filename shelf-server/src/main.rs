@@ -63,6 +63,9 @@ fn main() {
     let shelf_ref = Arc::new(RwLock::new(shelf::Shelf::new()));
     server::new(
         move || App::with_state(AppState { shelf: shelf_ref.clone() })
+            .handler(
+                "/static",
+                actix_web::fs::StaticFiles::new("./static"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
             .resource("/item", |r| {
                 r.method(http::Method::PUT).with(begin);
