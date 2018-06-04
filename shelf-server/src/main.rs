@@ -6,7 +6,7 @@ use std::ops::{Deref, DerefMut};
 use std::sync::{Arc, RwLock};
 
 use actix_web::Result as ActixResult;
-use actix_web::{App, HttpRequest, Json, error, http, server};
+use actix_web::{App, HttpRequest, Json, Path, error, http, server};
 
 struct AppState {
     shelf: Arc<RwLock<shelf::Shelf>>,
@@ -46,6 +46,21 @@ fn items(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::item::Item>>
     Ok(Json(items))
 }
 
+fn item(params: (Path<(String,)>, HttpRequest<AppState>)) -> ActixResult<Json<shelf::item::Item>> {
+    let (path, req) = params;
+    let key = &path.0;
+    let shelf = req.state().read_shelf()?;
+    let item = shelf.query_items()
+        .filter(|x| &x.1.key == key)
+        .map(|x| x.1.clone()).next();
+    if let Some(rec) = item {
+        Ok(Json(rec))
+    }
+    else {
+        Err(error::ErrorNotFound(format!("Key {} not found", key)))
+    }
+}
+
 fn people(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::common::Person>>> {
     let shelf = req.state().read_shelf()?;
     let items = shelf.query_people().map(|p| p.clone()).collect();
@@ -67,6 +82,7 @@ fn main() {
                 "/static",
                 actix_web::fs::StaticFiles::new("./static"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
+            .resource("/item/{key}", |r| r.method(http::Method::GET).with(item))
             .resource("/item", |r| {
                 r.method(http::Method::PUT).with(begin);
                 r.method(http::Method::GET).with(items);
