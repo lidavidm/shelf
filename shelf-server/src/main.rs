@@ -29,10 +29,15 @@ fn shutdown(_req: HttpRequest<AppState>) -> String {
 }
 
 fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResult<String> {
+    use shelf::shelf::ShelfError;
     let (item, req) = params;
     let mut shelf = req.state().write_shelf()?;
-    shelf.insert_item(item.clone()).unwrap();
-    Ok("created".to_owned())
+    shelf.insert_item(item.clone())
+        .map_err(|e| match e {
+            ShelfError::InvalidReference(r) =>
+                error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
+        })
+        .map(|_| "created".to_owned())
 }
 
 fn items(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::item::Item>>> {

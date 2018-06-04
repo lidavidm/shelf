@@ -4,7 +4,7 @@ use series::Series;
 
 #[derive(Debug)]
 pub enum ShelfError {
-    InvalidReference,
+    InvalidReference(String),
 }
 
 pub type Result<T> = ::std::result::Result<T, ShelfError>;
@@ -56,7 +56,7 @@ impl Shelf {
                 }
             }
             if !found {
-                return Err(ShelfError::InvalidReference);
+                return Err(ShelfError::InvalidReference(person.to_owned()));
             }
         }
 
