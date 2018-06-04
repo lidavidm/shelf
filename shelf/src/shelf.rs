@@ -46,7 +46,14 @@ impl Shelf {
 
     pub fn insert_item(&mut self, item: Item) -> Result<()> {
         for (_, person) in item.people.iter() {
-            if *person >= self.people.len() {
+            let mut found = false;
+            for person2 in self.people.iter() {
+                if person == &person2.key {
+                    found = true;
+                    break;
+                }
+            }
+            if !found {
                 return Err(ShelfError::InvalidReference);
             }
         }

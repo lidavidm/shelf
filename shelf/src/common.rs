@@ -11,9 +11,10 @@ pub enum Role {
     Author,
 }
 
+pub type PersonIdx = String;
+
 #[derive(Clone,Serialize,Deserialize,Debug)]
 pub struct Person {
+    pub key: PersonIdx,
     pub name: Alternatives<String>,
 }
-
-pub type PersonIdx = usize;
