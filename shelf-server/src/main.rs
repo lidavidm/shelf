@@ -41,6 +41,19 @@ fn items(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::item::Item>>
     Ok(Json(items))
 }
 
+fn people(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::common::Person>>> {
+    let shelf = req.state().read_shelf()?;
+    let items = shelf.query_people().map(|p| p.clone()).collect();
+    Ok(Json(items))
+}
+
+fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> ActixResult<String> {
+    let (person, req) = params;
+    let mut shelf = req.state().write_shelf()?;
+    shelf.insert_person(person.clone());
+    Ok("created".to_owned())
+}
+
 fn main() {
     let shelf_ref = Arc::new(RwLock::new(shelf::Shelf::new()));
     server::new(
@@ -49,6 +62,10 @@ fn main() {
             .resource("/item", |r| {
                 r.method(http::Method::PUT).with(begin);
                 r.method(http::Method::GET).with(items);
+            })
+            .resource("/person", |r| {
+                r.method(http::Method::PUT).with(put_person);
+                r.method(http::Method::GET).with(people);
             })
     ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
 }
