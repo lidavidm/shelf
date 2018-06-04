@@ -18,3 +18,12 @@ pub struct Person {
     pub key: PersonIdx,
     pub name: Alternatives<String>,
 }
+
+#[derive(Clone,Copy,Debug,PartialEq,Eq,Deserialize,Serialize)]
+pub enum Status {
+    Completed,
+    InProgress,
+    Planned,
+    OnHold,
+    Dropped,
+}

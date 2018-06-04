@@ -1,6 +1,10 @@
+use chrono;
+use chrono::DateTime;
+
 use common::Alternatives;
 use common::PersonIdx;
 use common::Role;
+use common::Status;
 
 #[derive(Clone,Serialize,Deserialize,Debug)]
 pub struct Item {
@@ -9,7 +13,9 @@ pub struct Item {
     pub people: Vec<(Role, PersonIdx)>,
     pub season: Option<String>,
     pub entries: Vec<Entry>,
-    // rating
+    pub status: Status,
+    pub rating: Option<u32>,
+    pub added: DateTime<chrono::FixedOffset>,
 }
 
 #[derive(Clone,Serialize,Deserialize,Debug)]
