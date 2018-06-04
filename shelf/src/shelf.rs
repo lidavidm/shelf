@@ -32,13 +32,15 @@ impl Shelf {
         })
     }
 
-    pub fn query_people(&self) {
+    pub fn query_people(&self) -> impl Iterator<Item=&Person> {
+        self.people.iter()
     }
 
     pub fn query_series(&self) {
     }
 
-    pub fn insert_person(&mut self) {
+    pub fn insert_person(&mut self, person: Person) {
+        self.people.push(person);
     }
 
     pub fn insert_series(&mut self) {
