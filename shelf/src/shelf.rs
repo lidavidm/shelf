@@ -2,6 +2,7 @@ use common::Person;
 use item::Item;
 use series::Series;
 
+#[derive(Debug)]
 pub enum ShelfError {
     InvalidReference,
 }
@@ -14,7 +15,7 @@ pub struct Shelf {
     series: Vec<Series>,
 }
 
-pub struct ItemRef<'a>(&'a Shelf, &'a Item);
+pub struct ItemRef<'a>(pub &'a Shelf, pub &'a Item);
 
 impl Shelf {
     pub fn new() -> Shelf {

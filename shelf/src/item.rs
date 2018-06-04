@@ -2,6 +2,7 @@ use common::Alternatives;
 use common::PersonIdx;
 use common::Role;
 
+#[derive(Clone,Serialize,Deserialize,Debug)]
 pub struct Item {
     pub key: String,
     pub name: Alternatives<String>,
@@ -11,9 +12,10 @@ pub struct Item {
     // rating
 }
 
+#[derive(Clone,Serialize,Deserialize,Debug)]
 pub struct Entry {
-    name: Alternatives<String>,
-    number: Option<u32>,
-    volume: Option<u32>,
+    pub name: Alternatives<String>,
+    pub number: Option<u32>,
+    pub volume: Option<u32>,
     // started, completed
 }
