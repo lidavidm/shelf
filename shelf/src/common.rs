@@ -27,3 +27,12 @@ pub enum Status {
     OnHold,
     Dropped,
 }
+
+#[derive(Clone,Copy,Debug,PartialEq,Eq,Deserialize,Serialize)]
+pub enum Kind {
+    Unknown,
+    Manga,
+    TV,
+    Film,
+    Book,
+}
