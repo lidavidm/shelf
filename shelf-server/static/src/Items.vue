@@ -26,7 +26,7 @@
             </tbody>
         </table>
 
-        <EditItem v-if="editing" v-bind:item="editing" />
+        <EditItem v-if="editing" v-bind:item="editing" v-on:done="doneEditing" />
     </section>
 </template>
 
@@ -52,7 +52,10 @@
         methods: {
             edit(key) {
                 this.editing = key;
-                console.log(this.editing);
+            },
+
+            doneEditing() {
+                this.editing = null;
             },
         },
         components: {

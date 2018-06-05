@@ -1,33 +1,10 @@
 <template>
     <section id="item" v-if="data">
         <header>
-            <h2>Editing “{{ data.name.alternatives[data.name.default] }}” ({{ data.kind }})</h2>
+            <h2>{{ data.name.alternatives[data.name.default] }} <span>({{ data.kind }})</span></h2>
+
+            Added {{ data.added }}
         </header>
-        <section>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Language</th>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(name, key) in data.name.alternatives">
-                        <td><input type="text" v-model="key" /></td>
-                        <td><input type="text" v-model="data.name.alternatives[key]" /></td>
-                        <td><button>Delete</button></td>
-                    </tr>
-                    <tr>
-                        <td><button>Add Name</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <label for="name-default">Default</label>
-            <select id="name-default" v-model="data.name.default">
-                <option v-for="(value, key) in data.name.alternatives" :value="key">{{ key }}</option>
-            </select>
-        </section>
         <section>
             <label for="kind">Item Type</label>
             <select id="kind" v-model="data.kind">
@@ -67,8 +44,34 @@
             </select>
         </section>
 
-        <button>Save</button>
-        <button>Cancel</button>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Language</th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(name, key) in data.name.alternatives">
+                        <td><input type="text" v-model="key" /></td>
+                        <td><input type="text" v-model="data.name.alternatives[key]" /></td>
+                        <td><button>Delete</button></td>
+                    </tr>
+                    <tr>
+                        <td><button>Add Name</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <label for="name-default">Default</label>
+            <select id="name-default" v-model="data.name.default">
+                <option v-for="(value, key) in data.name.alternatives" :value="key">{{ key }}</option>
+            </select>
+        </section>
+
+        <button v-on:click="save">Save</button>
+        <button v-on:click="cancel">Cancel</button>
     </section>
     <section id="item" v-else>
         Loading…
@@ -94,8 +97,26 @@
                       this.data = item;
                   });
         },
+        methods: {
+            save() {
+                this.$emit("done");
+            },
+            cancel() {
+                this.$emit("done");
+            },
+        },
     };
 </script>
 
 <style lang="css">
+    #item {
+        position: fixed;
+        border: 1px solid #000;
+        top: 1em;
+        background: #FFF;
+        left: 2em;
+        right: 2em;
+        box-shadow: 0px 2px 1px rgba(0,0,0,0.5);
+        padding: 1em;
+    }
 </style>
