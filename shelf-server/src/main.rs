@@ -108,9 +108,9 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     Ok("created".to_owned())
 }
 
-fn main() {
+fn main() -> Result<(), Box<::std::error::Error>> {
     let mut shelf = shelf::Shelf::new();
-    let saver = shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/");
+    let saver = shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/")?;
     saver.load(&mut shelf);
     let shelf_ref = Arc::new(RwLock::new(shelf));
     let saver_ref = Arc::new(RwLock::new(saver));
@@ -133,4 +133,6 @@ fn main() {
                 r.method(http::Method::GET).with(people);
             })
     ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
+
+    Ok(())
 }

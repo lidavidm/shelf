@@ -78,7 +78,7 @@ impl Shelf {
             self.items[idx] = item;
         }
         else {
-            self.insert_item(item);
+            return self.insert_item(item);
         }
         Ok(())
     }
