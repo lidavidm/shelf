@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@vue/component-compiler-utils@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@vue/component-compiler-utils/-/component-compiler-utils-2.0.0.tgz#ea2e46d04c521afbce91a011ae2eb09460362a4b"
+"@vue/component-compiler-utils@1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@vue/component-compiler-utils/-/component-compiler-utils-1.3.1.tgz#686f0b913d59590ae327b2a1cb4b6d9b931bbe0e"
   dependencies:
     consolidate "^0.15.1"
     hash-sum "^1.0.2"
@@ -3387,6 +3387,10 @@ tar@^4:
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
+
+thenby@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/thenby/-/thenby-1.2.5.tgz#9f4a79deae033f77f8fd3cbd72e0af2f5ae2865e"
 
 through2@^2.0.0, through2@~2.0.3:
   version "2.0.3"

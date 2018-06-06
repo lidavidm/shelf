@@ -136,9 +136,9 @@
             </table>
         </section>
 
-        <section>
+        <section id="item-json">
             <code>
-{{ JSON.stringify(data) }}
+{{ JSON.stringify(data, null, 4) }}
             </code>
         </section>
     </section>
@@ -279,5 +279,14 @@
         right: 2em;
         box-shadow: 0px 2px 1px rgba(0,0,0,0.5);
         padding: 1em;
+    }
+
+    #item-json {
+        max-height: 20em;
+        overflow-y: scroll;
+    }
+
+    code {
+        white-space: pre-wrap;
     }
 </style>

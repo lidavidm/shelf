@@ -3,14 +3,17 @@
         <table>
             <thead>
                 <tr>
+                    <th>Type</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Entries</th>
                     <th>Rating</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr v-for="item in items">
+                    <td>{{ item["kind"] }}</td>
                     <td>
                         {{ item["name"]["alternatives"][item["name"]["default"]] }}
                         <button
@@ -21,6 +24,7 @@
                         </button>
                     </td>
                     <td>{{ item["status"] }}</td>
+                    <td>{{ item["entries"].filter(e => e.completed).length }} / {{ item["entries"].length }}</td>
                     <td>{{ item["rating"] === null ? "-" : item["rating"] }}</td>
                 </tr>
             </tbody>
@@ -31,6 +35,7 @@
 </template>
 
 <script>
+    import firstBy from "thenby";
     import EditItem from "./EditItem";
 
     export default {
@@ -45,7 +50,8 @@
             window.fetch("/item")
                   .then(r => r.json())
                   .then((items) => {
-                      console.log(items);
+                      items.sort(firstBy(v => v.kind)
+                          .thenBy(v => v.name.alternatives[v.name.default]));
                       this.items = items;
                   });
         },
