@@ -54,9 +54,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(name, key) in data.name.alternatives">
-                        <td><input type="text" v-model="key" /></td>
-                        <td><input type="text" v-model="data.name.alternatives[key]" /></td>
+                    <tr v-for="(field, idx) in sortedNameAlternatives()" v-bind:key="idx">
+                        <td>
+                            <input
+                                type="text"
+                                v-bind:value="field[0]"
+                                v-on:input="editAlternativeKey(data.name, field[0], $event)"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                v-bind:value="field[1]"
+                                v-on:input="editAlternativeValue(data.name, field[0], $event)"
+                            />
+                        </td>
                         <td><button>Delete</button></td>
                     </tr>
                     <tr>
@@ -165,9 +177,15 @@
             nextEntry() {
                 if (!this.data) return;
 
+                const number = this.data.entries.length + 1;
                 this.data.entries.push({
-                    name: null,
-                    number: this.data.entries.length + 1,
+                    name: {
+                        default: "English",
+                        alternatives: {
+                            "English": `${this.entryCategorization()} ${number}`,
+                        },
+                    },
+                    number,
                     volume: null,
                     completed: true,
                 });
@@ -189,6 +207,20 @@
                 }
             },
 
+            editAlternativeKey(alternatives, alt, ev) {
+                const val = alternatives.alternatives[alt];
+                const newAlt = ev.target.value;
+                this.$delete(alternatives.alternatives, alt);
+                this.$set(alternatives.alternatives, newAlt, val);
+                if (alternatives.default === alt) {
+                    alternatives.default = newAlt;
+                }
+            },
+
+            editAlternativeValue(alternatives, alt, ev) {
+                alternatives.alternatives[alt] = ev.target.value.trim();
+            },
+
             entryCategorization(plural=false) {
                 if (!this.data) {
                     return plural ? "Entries" : "Entry";
@@ -202,6 +234,22 @@
                     default:
                         return plural ? "Entries" : "Entry";
                 }
+            },
+
+            sortedNameAlternatives() {
+                const entries = Object.entries(this.data.name.alternatives);
+                entries.sort((alt1, alt2) => {
+                    const k1 = alt1[0];
+                    const k2 = alt2[0];
+                    if (k1 === k2) {
+                        return 0;
+                    }
+                    else if (k1 > k2) {
+                        return 1;
+                    }
+                    return -1;
+                });
+                return entries;
             },
         },
     };
