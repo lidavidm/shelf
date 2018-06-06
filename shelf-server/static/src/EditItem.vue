@@ -168,7 +168,21 @@
         },
         methods: {
             save() {
-                this.$emit("done");
+                window.fetch(`/item/${this.item}`, {
+                    method: "POST",
+                    body: JSON.stringify(this.data),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }).then((response) => {
+                    if (response.status === 200) {
+                        this.$emit("done");
+                    }
+                    else {
+                        // TODO: have an actual error message location
+                        alert(`Error ${response.status}: ${response.statusText}`);
+                    }
+                });
             },
             cancel() {
                 this.$emit("done");
@@ -187,7 +201,7 @@
                     },
                     number,
                     volume: null,
-                    completed: true,
+                    completed: new Date().toISOString(),
                 });
             },
 

@@ -61,6 +61,22 @@ fn item(params: (Path<(String,)>, HttpRequest<AppState>)) -> ActixResult<Json<sh
     }
 }
 
+fn edit_item(params: (Path<(String,)>,
+                      Json<shelf::item::Item>,
+                      HttpRequest<AppState>)) -> ActixResult<String> {
+    use shelf::shelf::ShelfError;
+    let (_, item, req) = params;
+    let mut shelf = req.state().write_shelf()?;
+    shelf.replace_item(item.clone())
+        // TODO: factor this out
+        .map_err(|e| match e {
+            ShelfError::InvalidReference(r) =>
+                error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
+        })
+        .map(|_| "updated".to_owned())
+}
+
+
 fn people(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::common::Person>>> {
     let shelf = req.state().read_shelf()?;
     let items = shelf.query_people().map(|p| p.clone()).collect();
@@ -82,7 +98,10 @@ fn main() {
                 "/static",
                 actix_web::fs::StaticFiles::new("./static"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
-            .resource("/item/{key}", |r| r.method(http::Method::GET).with(item))
+            .resource("/item/{key}", |r| {
+                r.method(http::Method::GET).with(item);
+                r.method(http::Method::POST).with(edit_item);
+            })
             .resource("/item", |r| {
                 r.method(http::Method::PUT).with(begin);
                 r.method(http::Method::GET).with(items);

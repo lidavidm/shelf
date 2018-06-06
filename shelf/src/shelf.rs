@@ -46,7 +46,7 @@ impl Shelf {
     pub fn insert_series(&mut self) {
     }
 
-    pub fn insert_item(&mut self, item: Item) -> Result<()> {
+    pub fn validate_item(&self, item: &Item) -> Result<()> {
         for (_, person) in item.people.iter() {
             let mut found = false;
             for person2 in self.people.iter() {
@@ -59,8 +59,27 @@ impl Shelf {
                 return Err(ShelfError::InvalidReference(person.to_owned()));
             }
         }
+        Ok(())
+    }
 
+    pub fn insert_item(&mut self, item: Item) -> Result<()> {
+        self.validate_item(&item)?;
         self.items.push(item);
+        Ok(())
+    }
+
+    pub fn replace_item(&mut self, item: Item) -> Result<()> {
+        self.validate_item(&item)?;
+        let idx = self.items.iter()
+            .enumerate()
+            .find(|(_, candidate)| item.key == candidate.key)
+            .map(|(idx, _)| idx);
+        if let Some(idx) = idx {
+            self.items[idx] = item;
+        }
+        else {
+            self.insert_item(item);
+        }
         Ok(())
     }
 }
