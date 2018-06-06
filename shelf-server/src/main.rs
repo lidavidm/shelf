@@ -10,6 +10,7 @@ use actix_web::{App, HttpRequest, Json, Path, error, http, server};
 
 struct AppState {
     shelf: Arc<RwLock<shelf::Shelf>>,
+    saver: Arc<RwLock<shelf::save::DirectoryShelf>>,
 }
 
 impl AppState {
@@ -19,6 +20,12 @@ impl AppState {
 
     fn write_shelf<'a>(&'a self) -> ActixResult<impl DerefMut<Target=shelf::Shelf> + 'a> {
         self.shelf.write().map_err(|_| error::ErrorInternalServerError("Could not acquire lock on shelf"))
+    }
+
+    fn save(&self) {
+        let shelf = self.read_shelf().unwrap();
+        let saver = self.saver.read().unwrap();
+        saver.save(&shelf);
     }
 }
 
@@ -31,13 +38,18 @@ fn shutdown(_req: HttpRequest<AppState>) -> String {
 fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResult<String> {
     use shelf::shelf::ShelfError;
     let (item, req) = params;
-    let mut shelf = req.state().write_shelf()?;
-    shelf.insert_item(item.clone())
-        .map_err(|e| match e {
-            ShelfError::InvalidReference(r) =>
-                error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
-        })
-        .map(|_| "created".to_owned())
+    let result = {
+        let mut shelf = req.state().write_shelf()?;
+        shelf.insert_item(item.clone())
+            .map_err(|e| match e {
+                ShelfError::InvalidReference(r) =>
+                    error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
+            })
+            .map(|_| "created".to_owned())
+    };
+    req.state().save();
+
+    result
 }
 
 fn items(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::item::Item>>> {
@@ -66,14 +78,20 @@ fn edit_item(params: (Path<(String,)>,
                       HttpRequest<AppState>)) -> ActixResult<String> {
     use shelf::shelf::ShelfError;
     let (_, item, req) = params;
-    let mut shelf = req.state().write_shelf()?;
-    shelf.replace_item(item.clone())
+    let result = {
+        let mut shelf = req.state().write_shelf()?;
+        shelf.replace_item(item.clone())
         // TODO: factor this out
-        .map_err(|e| match e {
-            ShelfError::InvalidReference(r) =>
-                error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
-        })
-        .map(|_| "updated".to_owned())
+            .map_err(|e| match e {
+                ShelfError::InvalidReference(r) =>
+                    error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
+            })
+            .map(|_| "updated".to_owned())
+    };
+
+    req.state().save();
+
+    result
 }
 
 
@@ -92,8 +110,9 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
 
 fn main() {
     let shelf_ref = Arc::new(RwLock::new(shelf::Shelf::new()));
+    let saver_ref = Arc::new(RwLock::new(shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/")));
     server::new(
-        move || App::with_state(AppState { shelf: shelf_ref.clone() })
+        move || App::with_state(AppState { shelf: shelf_ref.clone(), saver: saver_ref.clone() })
             .handler(
                 "/static",
                 actix_web::fs::StaticFiles::new("./static"))
