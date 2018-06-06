@@ -35,4 +35,28 @@ impl DirectoryShelf {
             serde_yaml::to_writer(file, item.1).unwrap();
         }
     }
+
+    pub fn load(&self, shelf: &mut Shelf) {
+        // TODO: error handling, denesting
+        let mut people: Vec<::common::Person> = vec![];
+        let mut items: Vec<::item::Item> = vec![];
+
+        for entry in self.directory.read_dir().unwrap() {
+            if let Ok(entry) = entry {
+                if let Some(name) = entry.file_name().to_str() {
+                    if name.starts_with("person--") {
+                        let file = File::open(entry.path()).unwrap();
+                        people.push(serde_yaml::from_reader(file).unwrap());
+                    }
+                    else if name.starts_with("item--") {
+                        let file = File::open(entry.path()).unwrap();
+                        items.push(serde_yaml::from_reader(file).unwrap());
+                    }
+                }
+            }
+        }
+
+        people.into_iter().for_each(|p| shelf.insert_person(p));
+        items.into_iter().for_each(|p| shelf.insert_item(p).unwrap());
+    }
 }
