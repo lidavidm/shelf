@@ -109,8 +109,11 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
 }
 
 fn main() {
-    let shelf_ref = Arc::new(RwLock::new(shelf::Shelf::new()));
-    let saver_ref = Arc::new(RwLock::new(shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/")));
+    let mut shelf = shelf::Shelf::new();
+    let saver = shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/");
+    saver.load(&mut shelf);
+    let shelf_ref = Arc::new(RwLock::new(shelf));
+    let saver_ref = Arc::new(RwLock::new(saver));
     server::new(
         move || App::with_state(AppState { shelf: shelf_ref.clone(), saver: saver_ref.clone() })
             .handler(
