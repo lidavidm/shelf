@@ -72,6 +72,45 @@
 
         <button v-on:click="save">Save</button>
         <button v-on:click="cancel">Cancel</button>
+
+        <section id="entries">
+            <header><h3>{{ entryCategorization(true) }}</h3></header>
+
+            <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Volume</th>
+                        <th>Number</th>
+                        <th>Completed</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr v-for="entry in data.entries">
+                        <td>
+                            <input
+                                type="text"
+                                v-bind:value="entry.name ? entry.name.alternatives[entry.name.default] : '-'"
+                            />
+                        </td>
+                        <td><input type="text" v-bind:value="entry.volume === null ? '-' : entry.volume" /></td>
+                        <td><input type="text" v-bind:value="entry.number === null ? '-' : entry.number" /></td>
+                        <td><input type="checkbox" v-model="entry.completed" /></td>
+                        <td>
+                            <button>Delete</button>
+                            <button>Move Up</button>
+                            <button>Move Down</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><button>Add Entry</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </section>
     <section id="item" v-else>
         Loading…
@@ -103,6 +142,32 @@
             },
             cancel() {
                 this.$emit("done");
+            },
+
+            nextEntry() {
+                if (!this.data) return;
+
+                this.data.entries.push({
+                    name: null,
+                    number: this.data.entries.length + 1,
+                    volume: null,
+                    completed: true,
+                });
+            },
+
+            entryCategorization(plural=false) {
+                if (!this.data) {
+                    return plural ? "Entries" : "Entry";
+                }
+                switch (this.data.kind) {
+                    case "TV":
+                        return plural ? "Episodes" : "Episode";
+                    case "Book":
+                    case "Manga":
+                        return plural ? "Chapters" : "Chapter";
+                    default:
+                        return plural ? "Entries" : "Entry";
+                }
             },
         },
     };
