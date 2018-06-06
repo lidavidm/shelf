@@ -89,15 +89,27 @@
                 </thead>
 
                 <tbody>
-                    <tr v-for="entry in data.entries">
+                    <tr v-for="(entry, index) in data.entries" v-bind:key="index">
                         <td>
                             <input
                                 type="text"
                                 v-bind:value="entry.name ? entry.name.alternatives[entry.name.default] : '-'"
                             />
                         </td>
-                        <td><input type="text" v-bind:value="entry.volume === null ? '-' : entry.volume" /></td>
-                        <td><input type="text" v-bind:value="entry.number === null ? '-' : entry.number" /></td>
+                        <td>
+                            <input
+                                type="text"
+                                v-bind:value="entry.volume === null ? '-' : entry.volume"
+                                v-on:input="editEntryField(index, 'volume', $event)"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                type="text"
+                                v-bind:value="entry.number === null ? '-' : entry.number"
+                                v-on:input="editEntryField(index, 'number', $event)"
+                            />
+                        </td>
                         <td><input type="checkbox" v-model="entry.completed" /></td>
                         <td>
                             <button>Delete</button>
@@ -110,6 +122,12 @@
                     </tr>
                 </tbody>
             </table>
+        </section>
+
+        <section>
+            <code>
+{{ JSON.stringify(data) }}
+            </code>
         </section>
     </section>
     <section id="item" v-else>
@@ -153,6 +171,22 @@
                     volume: null,
                     completed: true,
                 });
+            },
+
+            editEntryField(idx, field, ev) {
+                const value = ev.target.value.trim();
+                if (value === "-" || value === "") {
+                    this.data.entries[idx][field] = null;
+                }
+                else {
+                    const vol = parseInt(value, 10);
+                    if (Number.isInteger(vol) && vol >= 0) {
+                        this.data.entries[idx][field] = vol;
+                    }
+                    else {
+                        ev.target.value = "-";
+                    }
+                }
             },
 
             entryCategorization(plural=false) {
