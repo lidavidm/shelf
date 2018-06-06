@@ -7,6 +7,7 @@ extern crate serde_yaml;
 pub mod common;
 pub mod item;
 pub mod series;
+pub mod save;
 pub mod shelf;
 
 pub use shelf::Shelf;
