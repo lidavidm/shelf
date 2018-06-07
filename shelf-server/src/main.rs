@@ -119,14 +119,22 @@ fn main() -> Result<(), Box<::std::error::Error>> {
         move || App::with_state(AppState { shelf: shelf_ref.clone(), saver: saver_ref.clone() })
             .handler(
                 "/static",
-                actix_web::fs::StaticFiles::new("./static"))
+                actix_web::fs::StaticFiles::new("./static").index_file("index.html"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
             .resource("/item/{key}", |r| {
                 r.method(http::Method::GET).with(item);
-                r.method(http::Method::POST).with(edit_item);
+                r.method(http::Method::POST).with(edit_item)
+                    .1.error_handler(|err, req| {
+                        println!("{:?}", err);
+                        error::ErrorBadRequest(format!("{:?}", err))
+                    });
             })
             .resource("/item", |r| {
-                r.method(http::Method::PUT).with(begin);
+                r.method(http::Method::PUT).with(begin)
+                    .0.error_handler(|err, req| {
+                        println!("{:?}", err);
+                        error::ErrorBadRequest(format!("{:?}", err))
+                    });
                 r.method(http::Method::GET).with(items);
             })
             .resource("/person", |r| {
