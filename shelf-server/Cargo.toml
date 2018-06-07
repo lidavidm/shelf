@@ -6,6 +6,11 @@ authors = ["David Li <li.davidm96@gmail.com>"]
 [dependencies]
 actix = "~0.5"
 actix-web = "~0.6"
+app_dirs = "1.2"
+clap = "2.31"
+serde = "1.0"
+serde_derive = "1.0"
+serde_yaml = "0.7"
 
 [dependencies.shelf]
 path = "../shelf"

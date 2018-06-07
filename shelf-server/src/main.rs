@@ -1,5 +1,10 @@
 extern crate actix;
 extern crate actix_web;
+extern crate app_dirs;
+extern crate clap;
+extern crate serde;
+#[macro_use] extern crate serde_derive;
+extern crate serde_yaml;
 extern crate shelf;
 
 use std::ops::{Deref, DerefMut};
@@ -109,9 +114,19 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     Ok("created".to_owned())
 }
 
+const APP_INFO : app_dirs::AppInfo = app_dirs::AppInfo {
+    name: "shelf",
+    author: "lidavidm",
+};
+
 fn main() -> Result<(), Box<::std::error::Error>> {
+    let cfg_root = app_dirs::app_root(app_dirs::AppDataType::UserConfig, &APP_INFO)?;
+    let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")?;
+
+    println!("Opening shelf: {}", library_root.to_string_lossy());
+
     let mut shelf = shelf::Shelf::new();
-    let saver = shelf::save::DirectoryShelf::new("/home/lidavidm/Code/shelf/shelf-server/temp/")?;
+    let saver = shelf::save::DirectoryShelf::new(library_root)?;
     saver.load(&mut shelf)?;
 
     let shelf_ref = Arc::new(RwLock::new(shelf));
