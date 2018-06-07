@@ -51,6 +51,7 @@ pub enum DateBool {
     True,
     Timestamp(chrono::DateTime<chrono::FixedOffset>),
     Date(chrono::naive::NaiveDate),
+    YearMonth(u32, u32),
 }
 
 impl Default for DateBool {
@@ -67,6 +68,8 @@ impl Serialize for DateBool {
             DateBool::True => serializer.serialize_bool(true),
             DateBool::Timestamp(t) => t.serialize(serializer),
             DateBool::Date(t) => t.serialize(serializer),
+            DateBool::YearMonth(year, month) =>
+                serializer.serialize_str(&format!("{}-{:02}-00", year, month)),
         }
     }
 }
@@ -96,13 +99,31 @@ impl<'de> Deserialize<'de> for DateBool {
             }
 
             fn visit_str<E: de::Error>(self, v: &str) -> Result<Self::Value, E> {
-                if let Ok(ts) = chrono::DateTime::parse_from_rfc3339(v) {
+                if v == "0000-00-00" {
+                    // MyAnimeList export does this
+                    Ok(DateBool::False)
+                }
+                else if let Ok(ts) = chrono::DateTime::parse_from_rfc3339(v) {
                     Ok(DateBool::Timestamp(ts))
                 }
                 else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y/%m/%d") {
                     Ok(DateBool::Date(ts))
                 }
+                else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y-%m-%d") {
+                    Ok(DateBool::Date(ts))
+                }
                 else {
+                    let parts: Vec<&str> = v.split("-").collect();
+                    if parts.len() == 3 {
+                        let year = parts[0].parse::<u32>();
+                        let month = parts[1].parse::<u32>();
+                        let day = parts[2].parse::<u32>();
+                        if let (Ok(y), Ok(m), Ok(d)) = (year, month, day) {
+                            if y <= 9999 && m >= 1 && m <= 12 && d == 0 {
+                                return Ok(DateBool::YearMonth(y, m));
+                            }
+                        }
+                    }
                     Err(E::custom(format!("unrecognized date(time) format: {}", v)))
                 }
             }

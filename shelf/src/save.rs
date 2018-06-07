@@ -55,6 +55,8 @@ impl DirectoryShelf {
 
         let path = path.canonicalize()?;
 
+        fs::create_dir_all(&path);
+
         Ok(DirectoryShelf {
             directory: path,
         })
