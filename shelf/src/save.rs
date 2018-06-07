@@ -62,22 +62,39 @@ impl DirectoryShelf {
         })
     }
 
-    pub fn save(&self, shelf: &Shelf) {
+    pub fn save(&self, shelf: &mut Shelf) {
         fs::create_dir_all(&self.directory);
 
+        let mut wrote = 0;
+
         for person in shelf.query_people() {
+            if !shelf.is_dirty(&person.key) {
+                continue;
+            }
             let filename = format!("person--{}.yaml", person.key);
             let path = self.directory.join(filename);
             let mut file = File::create(path).unwrap();
             serde_yaml::to_writer(file, person).unwrap();
+
+            wrote += 1;
         }
 
         for item in shelf.query_items() {
+            if !shelf.is_dirty(&item.1.key) {
+                continue;
+            }
             let filename = format!("item--{}.yaml", item.1.key);
             let path = self.directory.join(filename);
             let mut file = File::create(path).unwrap();
             serde_yaml::to_writer(file, item.1).unwrap();
+
+            wrote += 1;
         }
+
+        shelf.clear_all_dirty();
+
+        // TODO: return this info
+        println!("Wrote {} entries", wrote);
     }
 
     pub fn load(&self, shelf: &mut Shelf) -> Result<(), SaveError> {
@@ -101,6 +118,8 @@ impl DirectoryShelf {
 
         people.into_iter().for_each(|p| shelf.insert_person(p));
         items.into_iter().for_each(|p| shelf.insert_item(p).unwrap());
+
+        shelf.clear_all_dirty();
 
         Ok(())
     }

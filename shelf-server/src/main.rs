@@ -23,9 +23,9 @@ impl AppState {
     }
 
     fn save(&self) {
-        let shelf = self.read_shelf().unwrap();
+        let mut shelf = self.write_shelf().unwrap();
         let saver = self.saver.read().unwrap();
-        saver.save(&shelf);
+        saver.save(&mut shelf);
     }
 }
 
@@ -143,9 +143,9 @@ fn main() -> Result<(), Box<::std::error::Error>> {
             })
     ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
 
-    let sh = shr.read().unwrap();
+    let mut sh = shr.write().unwrap();
     let sa = sar.read().unwrap();
-    sa.save(&sh);
+    sa.save(&mut sh);
 
     Ok(())
 }

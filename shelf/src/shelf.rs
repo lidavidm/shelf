@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use common::Person;
 use item::Item;
 use series::Series;
@@ -13,6 +15,7 @@ pub struct Shelf {
     people: Vec<Person>,
     items: Vec<Item>,
     series: Vec<Series>,
+    dirty: HashSet<String>,
 }
 
 pub struct ItemRef<'a>(pub &'a Shelf, pub &'a Item);
@@ -23,6 +26,7 @@ impl Shelf {
             people: Vec::new(),
             items: Vec::new(),
             series: Vec::new(),
+            dirty: HashSet::new(),
         }
     }
 
@@ -40,6 +44,7 @@ impl Shelf {
     }
 
     pub fn insert_person(&mut self, person: Person) {
+        self.dirty.insert(person.key.clone());
         self.people.push(person);
     }
 
@@ -64,6 +69,7 @@ impl Shelf {
 
     pub fn insert_item(&mut self, item: Item) -> Result<()> {
         self.validate_item(&item)?;
+        self.dirty.insert(item.key.clone());
         self.items.push(item);
         Ok(())
     }
@@ -75,11 +81,24 @@ impl Shelf {
             .find(|(_, candidate)| item.key == candidate.key)
             .map(|(idx, _)| idx);
         if let Some(idx) = idx {
+            self.dirty.insert(item.key.clone());
             self.items[idx] = item;
         }
         else {
             return self.insert_item(item);
         }
         Ok(())
+    }
+
+    pub fn is_dirty(&self, key: &str) -> bool {
+        self.dirty.contains(key)
+    }
+
+    pub fn clear_dirty(&mut self, key: &str) {
+        self.dirty.remove(key);
+    }
+
+    pub fn clear_all_dirty(&mut self) {
+        self.dirty.clear()
     }
 }
