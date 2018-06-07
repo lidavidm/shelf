@@ -48,6 +48,8 @@ fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResul
             .map(|_| "created".to_owned())
     };
 
+    req.state().save();
+
     result
 }
 
@@ -88,6 +90,8 @@ fn edit_item(params: (Path<(String,)>,
             .map(|_| "updated".to_owned())
     };
 
+    req.state().save();
+
     result
 }
 
@@ -101,6 +105,7 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     let (person, req) = params;
     let mut shelf = req.state().write_shelf()?;
     shelf.insert_person(person.clone());
+    req.state().save();
     Ok("created".to_owned())
 }
 
