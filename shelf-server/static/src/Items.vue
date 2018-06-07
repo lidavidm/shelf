@@ -4,6 +4,8 @@
         <label for="import">Import MAL:</label>
         <input id="import" type="file" v-on:change="onFile" />
 
+        Stats: {{ items.length }} items
+
         <table>
             <thead>
                 <tr>
@@ -85,37 +87,50 @@
 
                     const list = doc.documentElement;
                     for (const child of list.children) {
-                        if (child.nodeName === "anime") {
-                            const title = child.querySelector("series_title").textContent.trim();
+                        if (child.nodeName === "anime" || child.nodeName === "manga") {
+                            const titleField = child.nodeName === "manga" ?
+                                               "manga_title" : "series_title";
+                            const episodesField = child.nodeName === "manga" ?
+                                                  "manga_chapters" : "series_episodes";
+                            const watchedField = child.nodeName === "manga" ?
+                                                 "my_read_chapters" : "my_watched_episodes";
+
+                            const title = child.querySelector(titleField).textContent.trim();
                             const key = title
                                 .replace(/[\W:]+/g, "-")
                                 .replace(/^-+/, "")
                                 .replace(/-+$/, "")
                                 .toLowerCase();
                             let kind = "Unknown";
-                            switch (child.querySelector("series_type").textContent.trim()) {
-                                case "TV":
-                                case "Special":
-                                    kind = "TV";
-                                    break;
-                                case "Movie":
-                                    kind = "Film";
-                                    break;
-                                case "OVA":
-                                    kind = "OVA";
-                                    break;
-                                case "ONA":
-                                    kind = "ONA";
-                                    break;
-                                case "Music":
-                                    kind = "Music";
-                                    break;
+                            if (child.nodeName === "manga") {
+                                kind = "Manga";
+                            }
+                            else {
+                                switch (child.querySelector("series_type").textContent.trim()) {
+                                    case "TV":
+                                    case "Special":
+                                        kind = "TV";
+                                        break;
+                                    case "Movie":
+                                        kind = "Film";
+                                        break;
+                                    case "OVA":
+                                        kind = "OVA";
+                                        break;
+                                    case "ONA":
+                                        kind = "ONA";
+                                        break;
+                                    case "Music":
+                                        kind = "Music";
+                                        break;
+                                }
                             }
                             const score = parseInt(child.querySelector("my_score").textContent.trim(), 10);
 
                             let status = "Planned";
                             switch (child.querySelector("my_status").textContent.trim()) {
                                 case "Plan to Watch":
+                                case "Plan to Read":
                                     status = "Planned";
                                     break;
                                 case "Completed":
@@ -128,6 +143,7 @@
                                     status = "OnHold";
                                     break;
                                 case "Watching":
+                                case "Reading":
                                     status = "InProgress";
                                     break;
                             }
@@ -151,10 +167,10 @@
                                 completed: child.querySelector("my_finish_date").textContent.trim(),
                             };
 
-                            const episodes = parseInt(child.querySelector("series_episodes").textContent.trim(), 10);
-                            const watched = parseInt(child.querySelector("my_watched_episodes").textContent.trim(), 10);
+                            const episodes = parseInt(child.querySelector(episodesField).textContent.trim(), 10);
+                            const watched = parseInt(child.querySelector(watchedField).textContent.trim(), 10);
 
-                            for (let i = 0; i < episodes; i++) {
+                            for (let i = 0; i < Math.max(episodes, watched); i++) {
                                 result.entries.push({
                                     name: null,
                                     number: i + 1,
