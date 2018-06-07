@@ -9,16 +9,17 @@
         <table>
             <thead>
                 <tr>
+                    <th></th>
                     <th>Type</th>
                     <th>Name</th>
-                    <th>Status</th>
-                    <th>Entries</th>
+                    <th>Progress</th>
                     <th>Rating</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr v-for="item in items">
+                    <td class="item-status" v-bind:class="item['status']"></td>
                     <td>{{ item["kind"] }}</td>
                     <td>
                         {{ item["name"]["alternatives"][item["name"]["default"]] }}
@@ -29,7 +30,6 @@
                             Edit
                         </button>
                     </td>
-                    <td>{{ item["status"] }}</td>
                     <td>{{ item["entries"].filter(e => e.completed).length }} / {{ item["entries"].length }}</td>
                     <td>{{ item["rating"] === null ? "-" : item["rating"] }}</td>
                 </tr>
@@ -205,11 +205,41 @@
     table {
         border-collapse: collapse;
         min-width: 60em;
+        width: 100%;
     }
 
     th {
         border-bottom: 1px solid black;
         text-align: left;
+    }
+
+    td {
+        height: 2.5em;
+        line-height: 2.5em;
+    }
+
+    .item-status {
+        width: 0.25em;
+    }
+
+    .item-status.Completed {
+        background: var(--theme-completed);
+    }
+
+    .item-status.Dropped {
+        background: var(--theme-dropped);
+    }
+
+    .item-status.OnHold {
+        background: var(--theme-onhold);
+    }
+
+    .item-status.Planned {
+        background: var(--theme-planned);
+    }
+
+    .item-status.InProgress {
+        background: var(--theme-inprogress);
     }
 
     .edit {

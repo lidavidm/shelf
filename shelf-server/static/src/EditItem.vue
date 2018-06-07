@@ -16,7 +16,7 @@
             </select>
 
             <label for="season">Season</label>
-            <input id="season" v-model="data.season" />
+            <input id="season" type="text" v-model="data.season" />
 
             <label for="status">Status</label>
             <select id="status" v-model="data.status">
@@ -45,7 +45,7 @@
         </section>
 
         <section>
-            <table>
+            <table class="names">
                 <thead>
                     <tr>
                         <th>Language</th>
@@ -69,7 +69,7 @@
                                 v-on:input="editAlternativeValue(data.name, field[0], $event)"
                             />
                         </td>
-                        <td><button>Delete</button></td>
+                        <td><button class="danger">Delete</button></td>
                     </tr>
                     <tr>
                         <td><button>Add Name</button></td>
@@ -82,14 +82,14 @@
             </select>
         </section>
 
-        <button v-on:click="save">Save</button>
-        <button v-on:click="cancel">Cancel</button>
+        <button class="positive" v-on:click="save">Save</button>
+        <button class="danger" v-on:click="cancel">Cancel</button>
 
         <section id="entries">
             <header><h3>{{ entryCategorization(true) }}</h3></header>
 
             <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
-            <table>
+            <table class="entries">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -124,7 +124,7 @@
                         </td>
                         <td><input type="checkbox" v-model="entry.completed" /></td>
                         <td>
-                            <button>Delete</button>
+                            <button class="danger">Delete</button>
                             <button>Move Up</button>
                             <button>Move Down</button>
                         </td>
@@ -272,13 +272,22 @@
 <style lang="css">
     #item {
         position: fixed;
-        border: 1px solid #000;
+        border: 1px solid var(--theme-2);
         top: 1em;
-        background: #FFF;
+        background: var(--theme-base);
         left: 2em;
         right: 2em;
-        box-shadow: 0px 2px 1px rgba(0,0,0,0.5);
+        box-shadow: 0px 2px 1px var(--theme-2);
         padding: 1em;
+    }
+
+    #item h2 {
+        font-size: 2em;
+        margin: 0;
+    }
+
+    #item h2 span {
+        font-weight: normal;
     }
 
     #item-json {
@@ -286,7 +295,38 @@
         overflow-y: scroll;
     }
 
+    .entries, .names {
+        table-layout: fixed;
+    }
+
+    table input[type=text] {
+        width: 100%;
+    }
+
+    .entries th:nth-child(1) {
+    }
+
+    .entries th:nth-child(2) {
+    }
+
+    .entries th:nth-child(3 ) {
+    }
+
+    .entries th:nth-child(4) {
+        width: 5em;
+    }
+
+    .entries th:nth-child(5) {
+        width: 15em;
+    }
+
+    .entries td:nth-child(5) {
+        display: flex;
+    }
+
     code {
+        display: block;
         white-space: pre-wrap;
+        font-size: 0.6em;
     }
 </style>
