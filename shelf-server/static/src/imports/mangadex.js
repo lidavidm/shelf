@@ -30,13 +30,21 @@ export default function mangadex(url) {
                 ctr++;
             }
 
+            const entries = [];
+            // This will have to wait -.-
+            // const entryTable = page.querySelector(".table-striped > tbody:nth-child(2)");
+
+            // for (const el of entryTable.querySelectorAll("tr")) {
+
+            // }
+
             const imported = [{
                 key,
                 kind: "Manga",
                 name: names,
                 people: [],
                 season: null,
-                entries: [],
+                entries,
                 status: "Planned",
                 rating: null,
                 added: new Date().toISOString(),
