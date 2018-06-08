@@ -57,10 +57,10 @@
         background: var(--theme-4);
         border: 0;
 
-        padding: 0.5em 1em;
+        padding: 0.25em 1em;
 
         font-family: "Linux Biolinum O", sans-serif;
-        font-size: 1rem;
+        font-size: 1.25rem;
 
         cursor: pointer;
     }

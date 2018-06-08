@@ -2,84 +2,75 @@
     <section id="item" v-if="data">
         <header>
             <h2>{{ data.name.alternatives[data.name.default] }} <span>({{ data.kind }})</span></h2>
-
-            Added {{ data.added }}
         </header>
-        <section>
-            <label for="kind">Item Type</label>
-            <select id="kind" v-model="data.kind">
-                <option>Unknown</option>
-                <option>Manga</option>
-                <option>TV</option>
-                <option>Film</option>
-                <option>Book</option>
-            </select>
+        <section id="item-meta">
+            <div>
+                <label>Added to shelf</label>
+                <span>{{ data.added }}</span>
+            </div>
 
-            <label for="season">Season</label>
-            <input id="season" type="text" v-model="data.season" />
+            <div>
+                <label>Started on</label>
+                <span>{{ data.started }}</span>
+            </div>
 
-            <label for="status">Status</label>
-            <select id="status" v-model="data.status">
-                <option>Planned</option>
-                <option value="InProgress">In Progress</option>
-                <option>Completed</option>
-                <option value="OnHold">On Hold</option>
-                <option>Dropped</option>
-            </select>
+            <div>
+                <label>Finished on</label>
+                <span>{{ data.completed }}</span>
+            </div>
 
-            <label for="rating">Rating</label>
-            <select id="rating" v-model="data.rating">
-                <option :value="null">-</option>
-                <option :value="0">0</option>
-                <option :value="1">1</option>
-                <option :value="2">2</option>
-                <option :value="3">3</option>
-                <option :value="4">4</option>
-                <option :value="5">5</option>
-                <option :value="6">6</option>
-                <option :value="7">7</option>
-                <option :value="8">8</option>
-                <option :value="9">9</option>
-                <option :value="10">10</option>
-            </select>
+            <div>
+                <label for="kind">Item Type</label>
+                    <select id="kind" v-model="data.kind">
+                        <option>Unknown</option>
+                        <option>Manga</option>
+                        <option>TV</option>
+                        <option>Film</option>
+                        <option>Book</option>
+                    </select>
+            </div>
+
+            <div>
+                <label for="season">Season Name</label>
+                    <input id="season" type="text" v-model="data.season" />
+            </div>
+
+            <div>
+                <label for="status">Status</label>
+                    <select id="status" v-model="data.status">
+                        <option>Planned</option>
+                        <option value="InProgress">In Progress</option>
+                        <option>Completed</option>
+                        <option value="OnHold">On Hold</option>
+                        <option>Dropped</option>
+                    </select>
+            </div>
+
+            <div>
+                <label for="rating">Rating</label>
+                <select id="rating" v-model="data.rating">
+                    <option :value="null">-</option>
+                    <option :value="0">0</option>
+                    <option :value="1">1</option>
+                    <option :value="2">2</option>
+                    <option :value="3">3</option>
+                    <option :value="4">4</option>
+                    <option :value="5">5</option>
+                    <option :value="6">6</option>
+                    <option :value="7">7</option>
+                    <option :value="8">8</option>
+                    <option :value="9">9</option>
+                    <option :value="10">10</option>
+                </select>
+            </div>
         </section>
 
         <section>
-            <table class="names">
-                <thead>
-                    <tr>
-                        <th>Language</th>
-                        <th>Name</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(field, idx) in sortedNameAlternatives()" v-bind:key="idx">
-                        <td>
-                            <input
-                                type="text"
-                                v-bind:value="field[0]"
-                                v-on:input="editAlternativeKey(data.name, field[0], $event)"
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="text"
-                                v-bind:value="field[1]"
-                                v-on:input="editAlternativeValue(data.name, field[0], $event)"
-                            />
-                        </td>
-                        <td><button class="danger">Delete</button></td>
-                    </tr>
-                    <tr>
-                        <td><button>Add Name</button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <label for="name-default">Default</label>
-            <select id="name-default" v-model="data.name.default">
-                <option v-for="(value, key) in data.name.alternatives" :value="key">{{ key }}</option>
-            </select>
+            <edit-alternative
+                key-name="Language"
+                value-name="Name"
+                v-model="data.name"
+            />
         </section>
 
         <button class="positive" v-on:click="save">Save</button>
@@ -221,20 +212,6 @@
                 }
             },
 
-            editAlternativeKey(alternatives, alt, ev) {
-                const val = alternatives.alternatives[alt];
-                const newAlt = ev.target.value;
-                this.$delete(alternatives.alternatives, alt);
-                this.$set(alternatives.alternatives, newAlt, val);
-                if (alternatives.default === alt) {
-                    alternatives.default = newAlt;
-                }
-            },
-
-            editAlternativeValue(alternatives, alt, ev) {
-                alternatives.alternatives[alt] = ev.target.value.trim();
-            },
-
             entryCategorization(plural=false) {
                 if (!this.data) {
                     return plural ? "Entries" : "Entry";
@@ -287,13 +264,33 @@
         box-shadow: 0px 2px 1px var(--theme-2);
     }
 
+    #item header {
+        margin: 0.5em 0 1em;
+    }
+
     #item h2 {
         font-size: 2em;
+        font-weight: normal;
+        font-style: italic;
         margin: 0;
     }
 
     #item h2 span {
+        font-style: normal;
         font-weight: normal;
+        font-size: 0.7em;
+    }
+
+    #item-meta {
+
+    }
+
+    #item-meta > div {
+        margin: 0.5em 0;
+    }
+
+    #item-meta label {
+        font-weight: bold;
     }
 
     #item-json {
