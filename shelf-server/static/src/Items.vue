@@ -110,7 +110,20 @@
                 e.preventDefault();
                 const url = document.querySelector("#import-url").value;
 
-                const imported = imports.byURL(url);
+                imports.byURL(url).then((imported) => {
+                    for (const result of imported) {
+                        window.fetch("/item", {
+                            method: "PUT",
+                            body: JSON.stringify(result),
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+
+                        this.items.push(result);
+                    }
+                    this.sortItems();
+                });
             },
         },
         components: {
