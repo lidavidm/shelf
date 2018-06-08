@@ -15,7 +15,7 @@ use actix_web::{App, HttpRequest, Json, Path, error, http, server};
 
 struct AppState {
     shelf: Arc<RwLock<shelf::Shelf>>,
-    saver: Arc<RwLock<shelf::save::DirectoryShelf>>,
+    path: std::path::PathBuf,
 }
 
 impl AppState {
@@ -27,10 +27,12 @@ impl AppState {
         self.shelf.write().map_err(|_| error::ErrorInternalServerError("Could not acquire lock on shelf"))
     }
 
-    fn save(&self) {
-        let mut shelf = self.write_shelf().unwrap();
-        let saver = self.saver.read().unwrap();
-        saver.save(&mut shelf);
+    fn save<'a>(&'a self) {
+        // TODO: error handling
+        let mut shelf_ref = self.write_shelf().unwrap();
+        if let Ok(saver) = shelf::save::DirectoryShelf::new(&self.path) {
+            saver.save(&mut shelf_ref);
+        }
     }
 }
 
@@ -120,23 +122,25 @@ const APP_INFO : app_dirs::AppInfo = app_dirs::AppInfo {
 };
 
 fn main() -> Result<(), Box<::std::error::Error>> {
-    let cfg_root = app_dirs::app_root(app_dirs::AppDataType::UserConfig, &APP_INFO)?;
     let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")?;
-
-    println!("Opening shelf: {}", library_root.to_string_lossy());
+    let path = library_root.clone();
 
     let mut shelf = shelf::Shelf::new();
-    let saver = shelf::save::DirectoryShelf::new(library_root)?;
-    saver.load(&mut shelf)?;
+
+    // Load the shelf, but discard the saver, since it can't be moved
+    // across threads
+    {
+        println!("Opening shelf: {}", library_root.to_string_lossy());
+        let saver = shelf::save::DirectoryShelf::new(&library_root)?;
+        saver.load(&mut shelf)?;
+    }
 
     let shelf_ref = Arc::new(RwLock::new(shelf));
-    let saver_ref = Arc::new(RwLock::new(saver));
 
     let shr = shelf_ref.clone();
-    let sar = saver_ref.clone();
 
     server::new(
-        move || App::with_state(AppState { shelf: shelf_ref.clone(), saver: saver_ref.clone() })
+        move || App::with_state(AppState { shelf: shelf_ref.clone(), path: path.clone() })
             .handler(
                 "/static",
                 actix_web::fs::StaticFiles::new("./static").index_file("index.html"))
@@ -163,9 +167,10 @@ fn main() -> Result<(), Box<::std::error::Error>> {
             })
     ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
 
-    let mut sh = shr.write().unwrap();
-    let sa = sar.read().unwrap();
-    sa.save(&mut sh);
+    {
+        let saver = shelf::save::DirectoryShelf::new(&library_root)?;
+        saver.save(&mut shr.write().unwrap());
+    }
 
     Ok(())
 }
