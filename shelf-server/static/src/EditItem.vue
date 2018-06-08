@@ -272,13 +272,19 @@
 <style lang="css">
     #item {
         position: fixed;
-        border: 1px solid var(--theme-2);
+        box-sizing: border-box;
+
         top: 1em;
-        background: var(--theme-base);
         left: 2em;
         right: 2em;
-        box-shadow: 0px 2px 1px var(--theme-2);
+        height: calc(100vh - 2em);
+
         padding: 1em;
+        overflow-y: auto;
+
+        border: 1px solid var(--theme-2);
+        background: var(--theme-base);
+        box-shadow: 0px 2px 1px var(--theme-2);
     }
 
     #item h2 {
