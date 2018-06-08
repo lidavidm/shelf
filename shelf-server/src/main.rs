@@ -2,6 +2,7 @@ extern crate actix;
 extern crate actix_web;
 extern crate app_dirs;
 extern crate clap;
+extern crate futures;
 extern crate serde;
 #[macro_use] extern crate serde_derive;
 extern crate serde_yaml;
@@ -11,7 +12,8 @@ use std::ops::{Deref, DerefMut};
 use std::sync::{Arc, RwLock};
 
 use actix_web::Result as ActixResult;
-use actix_web::{App, HttpRequest, Json, Path, error, http, server};
+use actix_web::{App, AsyncResponder, HttpMessage, HttpRequest, HttpResponse, Json, Path, error, http, server};
+use futures::Future;
 
 struct AppState {
     shelf: Arc<RwLock<shelf::Shelf>>,
@@ -116,6 +118,28 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     Ok("created".to_owned())
 }
 
+#[derive(Deserialize)]
+struct ProxyParams {
+    url: String,
+}
+
+fn proxy(url: actix_web::Query<ProxyParams>) -> Box<Future<Item = HttpResponse, Error = error::Error>> {
+    actix_web::client::ClientRequest::get(url.into_inner().url)
+        .finish().unwrap()
+        .send()
+        .map_err(|e| {
+            println!("{:?}", e);
+            error::Error::from(e)
+        })
+        .and_then(
+            |resp| resp.body()
+                .from_err()
+                .and_then(|body| {
+                    Ok(HttpResponse::Ok().body(body))
+                }))
+        .responder()
+}
+
 const APP_INFO : app_dirs::AppInfo = app_dirs::AppInfo {
     name: "shelf",
     author: "lidavidm",
@@ -145,6 +169,7 @@ fn main() -> Result<(), Box<::std::error::Error>> {
                 "/static",
                 actix_web::fs::StaticFiles::new("./static").index_file("index.html"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
+            .resource("/proxy", |r| r.method(http::Method::GET).with(proxy))
             .resource("/item/{key}", |r| {
                 r.method(http::Method::GET).with(item);
                 r.method(http::Method::POST).with(edit_item)
