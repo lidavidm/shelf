@@ -1,4 +1,5 @@
 use chrono;
+use serde_yaml;
 
 use common::Alternatives;
 use common::DateBool;
@@ -22,6 +23,12 @@ pub struct Item {
     pub started: DateBool,
     #[serde(default)]
     pub completed: DateBool,
+    #[serde(default = "default_extras")]
+    pub extra: serde_yaml::Value,
+}
+
+fn default_extras() -> serde_yaml::Value {
+    serde_yaml::Value::Null
 }
 
 #[derive(Clone,Serialize,Deserialize,Debug)]
@@ -30,5 +37,6 @@ pub struct Entry {
     pub number: Option<u32>,
     pub volume: Option<u32>,
     pub completed: DateBool,
-    // started, completed
+    #[serde(default = "default_extras")]
+    pub extra: serde_yaml::Value,
 }
