@@ -96,11 +96,6 @@
                                                  "my_read_chapters" : "my_watched_episodes";
 
                             const title = child.querySelector(titleField).textContent.trim();
-                            const key = title
-                                .replace(/[\W:]+/g, "-")
-                                .replace(/^-+/, "")
-                                .replace(/-+$/, "")
-                                .toLowerCase();
                             let kind = "Unknown";
                             if (child.nodeName === "manga") {
                                 kind = "Manga";
@@ -147,6 +142,12 @@
                                     status = "InProgress";
                                     break;
                             }
+
+                            const key = kind.toLowerCase() + "-" + title
+                                .replace(/[\W:]+/g, "-")
+                                .replace(/^-+/, "")
+                                .replace(/-+$/, "")
+                                .toLowerCase();
 
                             const result = {
                                 key,
