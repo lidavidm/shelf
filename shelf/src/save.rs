@@ -3,17 +3,20 @@ use std::fs::File;
 use std::io;
 use std::path;
 
+use git2;
 use serde_yaml;
 
 use shelf::Shelf;
 
 pub struct DirectoryShelf {
     directory: path::PathBuf,
+    repository: git2::Repository,
 }
 
 #[derive(Debug)]
 pub enum SaveError {
     DirectoryError(String),
+    GitError(String),
     SerializationError(String),
 }
 
@@ -26,6 +29,12 @@ impl From<io::Error> for SaveError {
 impl From<serde_yaml::Error> for SaveError {
     fn from(err: serde_yaml::Error) -> Self {
         SaveError::SerializationError(format!("{}", err))
+    }
+}
+
+impl From<git2::Error> for SaveError {
+    fn from(err: git2::Error) -> Self {
+        SaveError::GitError(format!("{}", err))
     }
 }
 
@@ -55,15 +64,43 @@ impl DirectoryShelf {
 
         let path = path.canonicalize()?;
 
-        fs::create_dir_all(&path);
+        let _ = fs::create_dir_all(&path);
+
+        let repo = match git2::Repository::open(&path) {
+            Ok(repo) => repo,
+            Err(_) => {
+                let repo = git2::Repository::init(&path)?;
+
+                // https://github.com/alexcrichton/git2-rs/blob/master/examples/init.rs
+                let sig = repo.signature()?;
+
+                let tree_id = {
+                    let mut index = repo.index()?;
+                    index.write_tree()?
+                };
+
+                {
+                    let tree = repo.find_tree(tree_id)?;
+                    repo.commit(Some("HEAD"), &sig, &sig, "Initial commit", &tree, &[])?;
+                }
+
+                repo
+            },
+        };
 
         Ok(DirectoryShelf {
             directory: path,
+            repository: repo,
         })
     }
 
     pub fn save(&self, shelf: &mut Shelf) {
-        fs::create_dir_all(&self.directory);
+        // TODO: ERROR HANDLING!!
+        let sig = self.repository.signature().unwrap();
+        let mut index = self.repository.index().unwrap();
+
+        let prev_head_ref = self.repository.head().unwrap();
+        let prev_head = self.repository.find_commit(prev_head_ref.target().unwrap()).unwrap();
 
         let mut wrote = 0;
 
@@ -73,8 +110,10 @@ impl DirectoryShelf {
             }
             let filename = format!("person--{}.yaml", person.key);
             let path = self.directory.join(filename);
-            let mut file = File::create(path).unwrap();
+            let mut file = File::create(&path).unwrap();
             serde_yaml::to_writer(file, person).unwrap();
+
+            index.add_path(&path);
 
             wrote += 1;
         }
@@ -85,13 +124,27 @@ impl DirectoryShelf {
             }
             let filename = format!("item--{}.yaml", item.1.key);
             let path = self.directory.join(filename);
-            let mut file = File::create(path).unwrap();
+            let mut file = File::create(&path).unwrap();
             serde_yaml::to_writer(file, item.1).unwrap();
+
+            index.add_path(path.strip_prefix(&self.directory).unwrap());
 
             wrote += 1;
         }
 
         shelf.clear_all_dirty();
+
+        let tree_id = index.write_tree().unwrap();
+
+        let tree = self.repository.find_tree(tree_id).unwrap();
+        if wrote > 0 {
+            let message = format!("Update shelf ({} items)", wrote);
+            self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head]);
+        }
+
+        // Preserve the index so that future commits don't forget what
+        // happened here
+        index.write();
 
         // TODO: return this info
         println!("Wrote {} entries", wrote);
