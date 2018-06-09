@@ -20,24 +20,39 @@
                     <th>Name</th>
                     <th>Progress</th>
                     <th>Rating</th>
+                    <th>External</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr v-for="item in items">
+                <tr v-for="item in items" v-bind:id="item.key">
                     <td class="item-status" v-bind:class="item['status']"></td>
                     <td>{{ item["kind"] }}</td>
                     <td>
-                        {{ item["name"]["alternatives"][item["name"]["default"]] }}
-                        <button
-                            class="edit"
-                            v-on:click="edit(item['key'])"
+                        <a
+                            v-on:click="edit(item.key)"
+                            title="Click to edit"
                         >
-                            Edit
-                        </button>
+                            {{ item["name"]["alternatives"][item["name"]["default"]] }}
+                        </a>
                     </td>
                     <td>{{ item["entries"].filter(e => e.completed).length }} / {{ item["entries"].length }}</td>
                     <td>{{ item["rating"] === null ? "-" : item["rating"] }}</td>
+
+                    <td>
+                        <a
+                            v-if="item.extra.mangadex_url"
+                            v-bind:href="item.extra.mangadex_url"
+                        >
+                            Mangadex
+                        </a>
+                         <a
+                            v-if="item.extra.mal_id"
+                            v-bind:href="malUrl(item.kind, item.extra.mal_id)"
+                        >
+                            MyAnimeList
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -76,7 +91,8 @@
         },
         methods: {
             sortItems() {
-                return this.items.sort(firstBy(v => v.kind)
+                return this.items.sort(firstBy(v => v.status === "InProgress" ? 0 : 1)
+                    .thenBy(v => v.kind)
                     .thenBy(v => v.status)
                     .thenBy(v => v.name.alternatives[v.name.default].toLowerCase()));
             },
@@ -135,6 +151,13 @@
                     this.sortItems();
                 });
             },
+
+            malUrl(kind, id) {
+                if (kind === "Manga") {
+                    return `https://myanimelist.net/manga/${id}`;
+                }
+                return `https://myanimelist.net/anime/${id}`;
+            },
         },
         components: {
             EditItem,
@@ -157,6 +180,16 @@
     td {
         height: 2.5em;
         line-height: 2.5em;
+    }
+
+    td a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    td a:hover {
+        text-decoration: underline;
+        cursor: pointer;
     }
 
     .item-status {
