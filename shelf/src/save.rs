@@ -102,49 +102,57 @@ impl DirectoryShelf {
         let prev_head_ref = self.repository.head().unwrap();
         let prev_head = self.repository.find_commit(prev_head_ref.target().unwrap()).unwrap();
 
-        let mut wrote = 0;
+        let wrote = {
+            let mut updated = vec![];
 
-        for person in shelf.query_people() {
-            if !shelf.is_dirty(&person.key) {
-                continue;
+            for person in shelf.query_people() {
+                if !shelf.is_dirty(&person.key) {
+                    continue;
+                }
+                let filename = format!("person--{}.yaml", person.key);
+                let path = self.directory.join(filename);
+                let mut file = File::create(&path).unwrap();
+                serde_yaml::to_writer(file, person).unwrap();
+
+                index.add_path(&path);
+
+                updated.push(&person.key);
             }
-            let filename = format!("person--{}.yaml", person.key);
-            let path = self.directory.join(filename);
-            let mut file = File::create(&path).unwrap();
-            serde_yaml::to_writer(file, person).unwrap();
 
-            index.add_path(&path);
+            for item in shelf.query_items() {
+                if !shelf.is_dirty(&item.1.key) {
+                    continue;
+                }
+                let filename = format!("item--{}.yaml", item.1.key);
+                let path = self.directory.join(filename);
+                let mut file = File::create(&path).unwrap();
+                serde_yaml::to_writer(file, item.1).unwrap();
 
-            wrote += 1;
-        }
+                index.add_path(path.strip_prefix(&self.directory).unwrap());
 
-        for item in shelf.query_items() {
-            if !shelf.is_dirty(&item.1.key) {
-                continue;
+                updated.push(&item.1.key);
             }
-            let filename = format!("item--{}.yaml", item.1.key);
-            let path = self.directory.join(filename);
-            let mut file = File::create(&path).unwrap();
-            serde_yaml::to_writer(file, item.1).unwrap();
 
-            index.add_path(path.strip_prefix(&self.directory).unwrap());
+            let tree_id = index.write_tree().unwrap();
 
-            wrote += 1;
-        }
+            let tree = self.repository.find_tree(tree_id).unwrap();
+            if updated.len() > 0 {
+                let message = if updated.len() == 1 {
+                    format!("Updated \"{}\"", updated[0])
+                } else {
+                    format!("Update shelf ({} items)", updated.len())
+                };
+                self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head]);
+            }
+
+            // Preserve the index so that future commits don't forget what
+            // happened here
+            index.write();
+
+            updated.len()
+        };
 
         shelf.clear_all_dirty();
-
-        let tree_id = index.write_tree().unwrap();
-
-        let tree = self.repository.find_tree(tree_id).unwrap();
-        if wrote > 0 {
-            let message = format!("Update shelf ({} items)", wrote);
-            self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head]);
-        }
-
-        // Preserve the index so that future commits don't forget what
-        // happened here
-        index.write();
 
         // TODO: return this info
         println!("Wrote {} entries", wrote);
