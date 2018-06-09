@@ -29,11 +29,22 @@ impl AppState {
         self.shelf.write().map_err(|_| error::ErrorInternalServerError("Could not acquire lock on shelf"))
     }
 
-    fn save<'a>(&'a self) {
-        // TODO: error handling
+    fn save<'a>(&'a self) -> ActixResult<()> {
         let mut shelf_ref = self.write_shelf().unwrap();
-        if let Ok(saver) = shelf::save::DirectoryShelf::new(&self.path) {
-            saver.save(&mut shelf_ref);
+        match shelf::save::DirectoryShelf::new(&self.path) {
+            Ok(saver) => {
+                if let Err(err) = saver.save(&mut shelf_ref) {
+                    println!("Error while saving: {:?}", err);
+                    Err(error::ErrorInternalServerError(format!("Error while saving: {:?}", err)))
+                }
+                else {
+                    Ok(())
+                }
+            },
+            Err(err) => {
+                println!("Error while saving: {:?}", err);
+                Err(error::ErrorInternalServerError(format!("Error while saving: {:?}", err)))
+            },
         }
     }
 }
@@ -57,7 +68,7 @@ fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResul
             .map(|_| "created".to_owned())
     };
 
-    req.state().save();
+    req.state().save()?;
 
     result
 }
@@ -99,7 +110,7 @@ fn edit_item(params: (Path<(String,)>,
             .map(|_| "updated".to_owned())
     };
 
-    req.state().save();
+    req.state().save()?;
 
     result
 }
@@ -114,7 +125,7 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     let (person, req) = params;
     let mut shelf = req.state().write_shelf()?;
     shelf.insert_person(person.clone());
-    req.state().save();
+    req.state().save()?;
     Ok("created".to_owned())
 }
 
@@ -194,7 +205,7 @@ fn main() -> Result<(), Box<::std::error::Error>> {
 
     {
         let saver = shelf::save::DirectoryShelf::new(&library_root)?;
-        saver.save(&mut shr.write().unwrap());
+        saver.save(&mut shr.write().unwrap())?;
     }
 
     Ok(())

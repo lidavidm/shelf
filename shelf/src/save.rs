@@ -38,6 +38,12 @@ impl From<git2::Error> for SaveError {
     }
 }
 
+impl From<path::StripPrefixError> for SaveError {
+    fn from(err: path::StripPrefixError) -> Self {
+        SaveError::DirectoryError(format!("{}", err))
+    }
+}
+
 impl ::std::fmt::Display for SaveError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", self)
@@ -94,13 +100,16 @@ impl DirectoryShelf {
         })
     }
 
-    pub fn save(&self, shelf: &mut Shelf) {
+    #[must_use]
+    pub fn save(&self, shelf: &mut Shelf) -> Result<usize, SaveError> {
         // TODO: ERROR HANDLING!!
-        let sig = self.repository.signature().unwrap();
-        let mut index = self.repository.index().unwrap();
+        let sig = self.repository.signature()?;
+        let mut index = self.repository.index()?;
 
-        let prev_head_ref = self.repository.head().unwrap();
-        let prev_head = self.repository.find_commit(prev_head_ref.target().unwrap()).unwrap();
+        let prev_head_ref = self.repository.head()?;
+        let prev_head = self.repository.find_commit(
+            prev_head_ref.target().ok_or_else(|| SaveError::GitError("Can't find target of HEAD".to_owned()))?
+        )?;
 
         let wrote = {
             let mut updated = vec![];
@@ -111,10 +120,10 @@ impl DirectoryShelf {
                 }
                 let filename = format!("person--{}.yaml", person.key);
                 let path = self.directory.join(filename);
-                let mut file = File::create(&path).unwrap();
-                serde_yaml::to_writer(file, person).unwrap();
+                let mut file = File::create(&path)?;
+                serde_yaml::to_writer(file, person)?;
 
-                index.add_path(&path);
+                index.add_path(&path)?;
 
                 updated.push(&person.key);
             }
@@ -125,29 +134,29 @@ impl DirectoryShelf {
                 }
                 let filename = format!("item--{}.yaml", item.1.key);
                 let path = self.directory.join(filename);
-                let mut file = File::create(&path).unwrap();
-                serde_yaml::to_writer(file, item.1).unwrap();
+                let mut file = File::create(&path)?;
+                serde_yaml::to_writer(file, item.1)?;
 
-                index.add_path(path.strip_prefix(&self.directory).unwrap());
+                index.add_path(path.strip_prefix(&self.directory)?)?;
 
                 updated.push(&item.1.key);
             }
 
-            let tree_id = index.write_tree().unwrap();
+            let tree_id = index.write_tree()?;
 
-            let tree = self.repository.find_tree(tree_id).unwrap();
+            let tree = self.repository.find_tree(tree_id)?;
             if updated.len() > 0 {
                 let message = if updated.len() == 1 {
                     format!("Updated \"{}\"", updated[0])
                 } else {
                     format!("Update shelf ({} items)", updated.len())
                 };
-                self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head]);
+                self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head])?;
             }
 
             // Preserve the index so that future commits don't forget what
             // happened here
-            index.write();
+            index.write()?;
 
             updated.len()
         };
@@ -156,6 +165,7 @@ impl DirectoryShelf {
 
         // TODO: return this info
         println!("Wrote {} entries", wrote);
+        Ok(wrote)
     }
 
     pub fn load(&self, shelf: &mut Shelf) -> Result<(), SaveError> {
