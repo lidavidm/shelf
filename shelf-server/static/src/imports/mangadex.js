@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export default function mangadex(url) {
     return window.fetch(`/proxy?url=${url}`)
         .then(r => r.text())
@@ -47,7 +49,7 @@ export default function mangadex(url) {
                 entries,
                 status: "Planned",
                 rating: null,
-                added: new Date().toISOString(),
+                added: moment().format(),
                 started: null,
                 completed: null,
                 extra: {

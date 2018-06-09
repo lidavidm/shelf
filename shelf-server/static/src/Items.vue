@@ -42,7 +42,12 @@
             </tbody>
         </table>
 
-        <EditItem v-if="editing" v-bind:item="editing" v-on:done="doneEditing" />
+        <EditItem
+            v-if="editing || editingItem"
+            v-bind:item="editing"
+            v-bind:initdata="editingItem"
+            v-on:done="doneEditing"
+        />
     </section>
 </template>
 
@@ -58,6 +63,7 @@
             return {
                 items: [],
                 editing: null,
+                editingItem: null,
             };
         },
         mounted() {
@@ -81,6 +87,7 @@
 
             doneEditing() {
                 this.editing = null;
+                this.editingItem = null;
             },
 
             onFile(e) {
@@ -110,17 +117,20 @@
                 e.preventDefault();
                 const url = document.querySelector("#import-url").value;
 
+                // TODO: need some way to approve the entry
                 imports.byURL(url).then((imported) => {
                     for (const result of imported) {
-                        window.fetch("/item", {
-                            method: "PUT",
-                            body: JSON.stringify(result),
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        });
+                        console.log(result);
+                        this.editingItem = result;
+                        /* window.fetch("/item", {
+                         *     method: "PUT",
+                         *     body: JSON.stringify(result),
+                         *     headers: {
+                         *         "Content-Type": "application/json",
+                         *     },
+                         * });
 
-                        this.items.push(result);
+                         * this.items.push(result); */
                     }
                     this.sortItems();
                 });

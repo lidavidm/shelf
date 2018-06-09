@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export default function malbackup(s) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(s, "application/xml");
@@ -92,7 +94,7 @@ export default function malbackup(s) {
                 entries: [],
                 status,
                 rating: (score === 0 || !Number.isFinite(score)) ? null : score,
-                added: new Date().toISOString(),
+                added: moment().format(),
                 started: child.querySelector("my_start_date").textContent.trim(),
                 completed: child.querySelector("my_finish_date").textContent.trim(),
                 extra: {

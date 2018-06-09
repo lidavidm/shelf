@@ -11,12 +11,14 @@
 
             <div>
                 <label>Started on</label>
-                <span>{{ data.started }}</span>
+                <input id="started" type="text" v-model="data.started" />
+                <button v-on:click="data.started = now()">Now</button>
             </div>
 
             <div>
                 <label>Finished on</label>
-                <span>{{ data.completed }}</span>
+                <input id="finished" type="text" v-model="data.completed" />
+                <button v-on:click="data.completed = now()">Now</button>
             </div>
 
             <div>
@@ -139,10 +141,13 @@
 </template>
 
 <script>
+    import moment from "moment";
+
     export default {
         name: "item",
         props: {
             item: String,
+            initdata: Object,
         },
         data() {
             return {
@@ -150,12 +155,17 @@
             };
         },
         mounted() {
-            window.fetch(`/item/${this.item}`)
-                  .then(r => r.json())
-                  .then((item) => {
-                      console.log(item);
-                      this.data = item;
-                  });
+            if (this.initdata) {
+                this.data = this.initdata;
+            }
+            else {
+                window.fetch(`/item/${this.item}`)
+                      .then(r => r.json())
+                      .then((item) => {
+                          console.log(item);
+                          this.data = item;
+                      });
+            }
         },
         methods: {
             save() {
@@ -192,7 +202,7 @@
                     },
                     number,
                     volume: null,
-                    completed: new Date().toISOString(),
+                    completed: this.now(),
                 });
             },
 
@@ -241,6 +251,10 @@
                     return -1;
                 });
                 return entries;
+            },
+
+            now() {
+                return moment().format();
             },
         },
     };
@@ -294,8 +308,6 @@
     }
 
     #item-json {
-        max-height: 20em;
-        overflow-y: scroll;
     }
 
     .entries, .names {
