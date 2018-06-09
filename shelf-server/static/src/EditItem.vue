@@ -79,7 +79,13 @@
         <button class="danger" v-on:click="cancel">Cancel</button>
 
         <section id="entries">
-            <header><h3>{{ entryCategorization(true) }}</h3></header>
+            <header>
+                <h3>
+                    {{ entryCategorization(true) }}
+
+                    <span>({{ data.entries.filter(e=>e.completed).length }} complete/{{ data.entries.length }})</span>
+                </h3>
+            </header>
 
             <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
             <table class="entries">
@@ -308,6 +314,10 @@
     }
 
     #item-json {
+    }
+
+    #entries > header h3 span {
+        font-weight: normal;
     }
 
     .entries, .names {
