@@ -8,6 +8,12 @@ use common::PersonIdx;
 use common::Role;
 use common::Status;
 
+#[derive(Clone,Serialize,Deserialize,Debug,Eq,PartialEq)]
+pub enum PublicationStatus {
+    Publishing,
+    Complete,
+}
+
 #[derive(Clone,Serialize,Deserialize,Debug)]
 pub struct Item {
     pub key: String,
@@ -25,6 +31,7 @@ pub struct Item {
     pub completed: DateBool,
     #[serde(default = "default_extras")]
     pub extra: serde_yaml::Value,
+    pub publication_status: PublicationStatus,
 }
 
 fn default_extras() -> serde_yaml::Value {
