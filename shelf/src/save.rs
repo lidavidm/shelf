@@ -121,9 +121,10 @@ impl DirectoryShelf {
                 let filename = format!("person--{}.yaml", person.key);
                 let path = self.directory.join(filename);
                 let mut file = File::create(&path)?;
-                serde_yaml::to_writer(file, person)?;
+                serde_yaml::to_writer(&file, person)?;
+                file.sync_all()?;
 
-                index.add_path(&path)?;
+                index.add_path(path.strip_prefix(&self.directory)?)?;
 
                 updated.push(&person.key);
             }
@@ -135,7 +136,8 @@ impl DirectoryShelf {
                 let filename = format!("item--{}.yaml", item.1.key);
                 let path = self.directory.join(filename);
                 let mut file = File::create(&path)?;
-                serde_yaml::to_writer(file, item.1)?;
+                serde_yaml::to_writer(&file, item.1)?;
+                file.sync_all()?;
 
                 index.add_path(path.strip_prefix(&self.directory)?)?;
 
