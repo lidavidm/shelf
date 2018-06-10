@@ -9,7 +9,7 @@
         <tbody>
             <tr v-for="(person, idx) in people" v-bind:key="idx">
                 <td>
-                    <select v-model="person[1]">
+                    <select v-model="person[1]" v-on:change="update">
                         <option
                             v-for="choice in allPeople"
                             v-bind:value="choice.key"
@@ -19,7 +19,7 @@
                     </select>
                 </td>
                 <td>
-                    <select v-model="person[0]">
+                    <select v-model="person[0]" v-on:change="update">
                         <option>Author</option>
                         <option>Translator</option>
                     </select>
@@ -69,6 +69,7 @@
         methods: {
             addPerson() {
                 this.people.push(["Author", this.allPeople[0].key]);
+                this.update();
             },
             createPerson() {
                 this.creatingPerson = true;
@@ -93,6 +94,10 @@
                 });
                 this.creatingPerson = false;
                 this.newPersonName = "";
+            },
+
+            update() {
+                this.$emit("input", this.people);
             },
         },
     };
