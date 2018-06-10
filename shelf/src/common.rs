@@ -39,10 +39,12 @@ pub enum Kind {
     Manga,
     TV,
     Film,
-    Book,
+    Novel,
     OVA,
     ONA,
     Music,
+    Play,
+    Collection,
 }
 
 #[derive(Clone,Copy,Debug,PartialEq,Eq)]

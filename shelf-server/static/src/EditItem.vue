@@ -29,7 +29,12 @@
                         <option>Manga</option>
                         <option>TV</option>
                         <option>Film</option>
-                        <option>Book</option>
+                        <option>Novel</option>
+                        <option>OVA</option>
+                        <option>ONA</option>
+                        <option>Music</option>
+                        <option>Play</option>
+                        <option>Collection</option>
                     </select>
                 </div>
 
