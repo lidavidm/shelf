@@ -1,8 +1,8 @@
 <template>
-    <div id="app">
+    <main id="app">
         <h1>shelf</h1>
         <router-view />
-    </div>
+    </main>
 </template>
 
 <script>
@@ -17,12 +17,12 @@
 
 <style lang="css">
     :root {
-        --theme-base: #f4f3ed;
+        --theme-base: #FFF;
         --theme-1: #e07a5f;
         --theme-2: #3d405b;
         --theme-3: #81b29a;
         --theme-4: #f2cc8f;
-        --theme-text: #555;
+        --theme-text: #000;
 
         --theme-completed: var(--theme-3);
         --theme-dropped: var(--theme-1);
@@ -37,16 +37,23 @@
     body {
         background: var(--theme-base);
         color: var(--theme-text);
-        font-family: "Linux Biolinum O";
-        font-size: 18px;
+        font-family: "Linux Libertine O";
+        font-size: 20px;
+        padding: 0 4em;
+        text-rendering: optimizeLegibility;
     }
 
     #app {
 
     }
 
+    #app h1 {
+        font-size: 3em;
+        font-weight: normal;
+    }
+
     h1, h2, h3 {
-        font-family: "Linux Libertine Display O", serif;
+        font-family: "Linux Biolinum O", sans-serif;
     }
 
     code {

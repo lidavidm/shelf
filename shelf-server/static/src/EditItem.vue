@@ -3,26 +3,27 @@
         <header>
             <h2>{{ data.name.alternatives[data.name.default] }} <span>({{ data.kind }})</span></h2>
         </header>
-        <section id="item-meta">
-            <div>
-                <label>Added to shelf</label>
-                <span>{{ data.added }}</span>
-            </div>
+        <section id="item-body">
+            <section id="item-meta">
+                <div>
+                    <label>Added to shelf</label>
+                    <span>{{ data.added }}</span>
+                </div>
 
-            <div>
-                <label>Started on</label>
-                <input id="started" type="text" v-model="data.started" />
-                <button v-on:click="data.started = now()">Now</button>
-            </div>
+                <div>
+                    <label>Started on</label>
+                    <input id="started" type="text" v-model="data.started" />
+                    <button v-on:click="data.started = now()">Now</button>
+                </div>
 
-            <div>
-                <label>Finished on</label>
-                <input id="finished" type="text" v-model="data.completed" />
-                <button v-on:click="data.completed = now()">Now</button>
-            </div>
+                <div>
+                    <label>Finished on</label>
+                    <input id="finished" type="text" v-model="data.completed" />
+                    <button v-on:click="data.completed = now()">Now</button>
+                </div>
 
-            <div>
-                <label for="kind">Item Type</label>
+                <div>
+                    <label for="kind">Item Type</label>
                     <select id="kind" v-model="data.kind">
                         <option>Unknown</option>
                         <option>Manga</option>
@@ -30,15 +31,15 @@
                         <option>Film</option>
                         <option>Book</option>
                     </select>
-            </div>
+                </div>
 
-            <div>
-                <label for="season">Season Name</label>
+                <div>
+                    <label for="season">Season Name</label>
                     <input id="season" type="text" v-model="data.season" />
-            </div>
+                </div>
 
-            <div>
-                <label for="status">Status</label>
+                <div>
+                    <label for="status">Status</label>
                     <select id="status" v-model="data.status">
                         <option>Planned</option>
                         <option value="InProgress">In Progress</option>
@@ -46,100 +47,102 @@
                         <option value="OnHold">On Hold</option>
                         <option>Dropped</option>
                     </select>
-            </div>
+                </div>
 
-            <div>
-                <label for="rating">Rating</label>
-                <select id="rating" v-model="data.rating">
-                    <option :value="null">-</option>
-                    <option :value="0">0</option>
-                    <option :value="1">1</option>
-                    <option :value="2">2</option>
-                    <option :value="3">3</option>
-                    <option :value="4">4</option>
-                    <option :value="5">5</option>
-                    <option :value="6">6</option>
-                    <option :value="7">7</option>
-                    <option :value="8">8</option>
-                    <option :value="9">9</option>
-                    <option :value="10">10</option>
-                </select>
-            </div>
-        </section>
+                <div>
+                    <label for="rating">Rating</label>
+                    <select id="rating" v-model="data.rating">
+                        <option :value="null">-</option>
+                        <option :value="0">0</option>
+                        <option :value="1">1</option>
+                        <option :value="2">2</option>
+                        <option :value="3">3</option>
+                        <option :value="4">4</option>
+                        <option :value="5">5</option>
+                        <option :value="6">6</option>
+                        <option :value="7">7</option>
+                        <option :value="8">8</option>
+                        <option :value="9">9</option>
+                        <option :value="10">10</option>
+                    </select>
+                </div>
+            </section>
 
-        <section>
-            <edit-alternative
-                key-name="Language"
-                value-name="Name"
-                v-model="data.name"
-            />
-        </section>
+            <section>
+                <edit-alternative
+                    key-name="Language"
+                    value-name="Name"
+                    v-model="data.name"
+                />
+            </section>
 
-        <button class="positive" v-on:click="save">Save</button>
-        <button class="danger" v-on:click="cancel">Cancel</button>
+            <section id="entries">
+                <header>
+                    <h3>
+                        {{ entryCategorization(true) }}
 
-        <section id="entries">
-            <header>
-                <h3>
-                    {{ entryCategorization(true) }}
+                        <span>({{ data.entries.filter(e=>e.completed).length }} complete/{{ data.entries.length }})</span>
+                    </h3>
+                </header>
 
-                    <span>({{ data.entries.filter(e=>e.completed).length }} complete/{{ data.entries.length }})</span>
-                </h3>
-            </header>
+                <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
+                <table class="entries">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Volume</th>
+                            <th>Number</th>
+                            <th>Completed</th>
+                            <th></th>
+                        </tr>
+                    </thead>
 
-            <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
-            <table class="entries">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Volume</th>
-                        <th>Number</th>
-                        <th>Completed</th>
-                        <th></th>
-                    </tr>
-                </thead>
+                    <tbody>
+                        <tr v-for="(entry, index) in data.entries" v-bind:key="index">
+                            <td>
+                                <input
+                                    type="text"
+                                    v-bind:value="entry.name ? entry.name.alternatives[entry.name.default] : '-'"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    v-bind:value="entry.volume === null ? '-' : entry.volume"
+                                    v-on:input="editEntryField(index, 'volume', $event)"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="text"
+                                    v-bind:value="entry.number === null ? '-' : entry.number"
+                                    v-on:input="editEntryField(index, 'number', $event)"
+                                />
+                            </td>
+                            <td><input type="checkbox" v-model="entry.completed" /></td>
+                            <td>
+                                <button class="danger">Delete</button>
+                                <button>Move Up</button>
+                                <button>Move Down</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><button>Add Entry</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-                <tbody>
-                    <tr v-for="(entry, index) in data.entries" v-bind:key="index">
-                        <td>
-                            <input
-                                type="text"
-                                v-bind:value="entry.name ? entry.name.alternatives[entry.name.default] : '-'"
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="text"
-                                v-bind:value="entry.volume === null ? '-' : entry.volume"
-                                v-on:input="editEntryField(index, 'volume', $event)"
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="text"
-                                v-bind:value="entry.number === null ? '-' : entry.number"
-                                v-on:input="editEntryField(index, 'number', $event)"
-                            />
-                        </td>
-                        <td><input type="checkbox" v-model="entry.completed" /></td>
-                        <td>
-                            <button class="danger">Delete</button>
-                            <button>Move Up</button>
-                            <button>Move Down</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><button>Add Entry</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
-        <section id="item-json">
-            <code>
+            <section id="item-json">
+                <code>
 {{ JSON.stringify(data, null, 4) }}
-            </code>
+                </code>
+            </section>
         </section>
+        <nav id="item-nav">
+            <button class="danger" v-on:click="cancel">Cancel</button>
+            <button class="positive" v-on:click="save">Save</button>
+        </nav>
     </section>
     <section id="item" v-else>
         Loading…
@@ -272,27 +275,45 @@
         box-sizing: border-box;
 
         top: 1em;
-        left: 2em;
-        right: 2em;
+        left: 4em;
+        right: 4em;
         height: calc(100vh - 2em);
-
-        padding: 1em;
-        overflow-y: auto;
 
         border: 1px solid var(--theme-2);
         background: var(--theme-base);
         box-shadow: 0px 2px 1px var(--theme-2);
     }
 
-    #item header {
-        margin: 0.5em 0 1em;
+    #item > header {
+        height: 8%;
+        padding: 1em 1em 0 1em;
+        box-sizing: border-box;
+    }
+
+    #item-body {
+        height: 88%;
+        overflow-y: auto;
+        padding: 0em 1em;
+        box-sizing: border-box;
+    }
+
+    #item-nav {
+        display: flex;
+        height: 4%;
+    }
+
+    #item-nav button {
+        flex: 1 0;
+    }
+
+    #item-nav button:nth-child(1) {
+
     }
 
     #item h2 {
         font-size: 2em;
         font-weight: normal;
-        font-style: italic;
-        margin: 0;
+        margin: 0 0 0.5em;
     }
 
     #item h2 span {

@@ -43,12 +43,14 @@
                         <a
                             v-if="item.extra.mangadex_url"
                             v-bind:href="item.extra.mangadex_url"
+                            target="_blank"
                         >
                             Mangadex
                         </a>
                          <a
                             v-if="item.extra.mal_id"
                             v-bind:href="malUrl(item.kind, item.extra.mal_id)"
+                            target="_blank"
                         >
                             MyAnimeList
                         </a>
@@ -177,6 +179,23 @@
         text-align: left;
     }
 
+    th:nth-child(1) {
+        padding-right: 0.5em;
+        width: 0.3em;
+    }
+
+    th:nth-child(2) {
+        width: 6em;
+    }
+
+    th:nth-child(4) {
+        width: 7em;
+    }
+
+    th:nth-child(5) {
+        width: 5em;
+    }
+
     td {
         height: 2.5em;
         line-height: 2.5em;
@@ -193,7 +212,7 @@
     }
 
     .item-status {
-        width: 0.25em;
+        border-bottom: 1px solid var(--theme-base);
     }
 
     .item-status.Completed {
