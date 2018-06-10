@@ -89,6 +89,10 @@
                 />
             </section>
 
+            <section id="item-people">
+                <edit-people v-model="data.people" />
+            </section>
+
             <section id="entries">
                 <header>
                     <h3>
