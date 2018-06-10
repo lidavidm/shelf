@@ -32,6 +32,8 @@ pub struct Item {
     #[serde(default = "default_extras")]
     pub extra: serde_yaml::Value,
     pub publication_status: PublicationStatus,
+    // series key, series index/entry name
+    pub series: Option<(String, Option<String>)>,
 }
 
 fn default_extras() -> serde_yaml::Value {
