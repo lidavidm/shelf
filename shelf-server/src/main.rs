@@ -123,8 +123,10 @@ fn people(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::common::Per
 
 fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> ActixResult<String> {
     let (person, req) = params;
-    let mut shelf = req.state().write_shelf()?;
-    shelf.insert_person(person.clone());
+    {
+        let mut shelf = req.state().write_shelf()?;
+        shelf.insert_person(person.clone());
+    }
     req.state().save()?;
     Ok("created".to_owned())
 }
