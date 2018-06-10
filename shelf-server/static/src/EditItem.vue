@@ -50,6 +50,14 @@
                 </div>
 
                 <div>
+                    <label for="publication-status">Publication Status</label>
+                    <select id="publication-status" v-model="data.publication_status">
+                        <option>Publishing</option>
+                        <option>Complete</option>
+                    </select>
+                </div>
+
+                <div>
                     <label for="rating">Rating</label>
                     <select id="rating" v-model="data.rating">
                         <option :value="null">-</option>
