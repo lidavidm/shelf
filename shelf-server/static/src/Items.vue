@@ -12,7 +12,7 @@
 
         Stats: {{ items.length }} items
 
-        <table>
+        <table id="items-list">
             <thead>
                 <tr>
                     <th></th>
@@ -168,45 +168,45 @@
 </script>
 
 <style lang="css">
-    table {
+    #items-list {
         border-collapse: collapse;
         min-width: 60em;
         width: 100%;
     }
 
-    th {
+    #items-list th {
         border-bottom: 1px solid black;
         text-align: left;
     }
 
-    th:nth-child(1) {
+    #items-list th:nth-child(1) {
         padding-right: 0.5em;
         width: 0.3em;
     }
 
-    th:nth-child(2) {
+    #items-list th:nth-child(2) {
         width: 6em;
     }
 
-    th:nth-child(4) {
+    #items-list th:nth-child(4) {
         width: 7em;
     }
 
-    th:nth-child(5) {
+    #items-list th:nth-child(5) {
         width: 5em;
     }
 
-    td {
+    #items-list td {
         height: 2.5em;
         line-height: 2.5em;
     }
 
-    td a {
+    #items-list td a {
         color: inherit;
         text-decoration: none;
     }
 
-    td a:hover {
+    #items-list td a:hover {
         text-decoration: underline;
         cursor: pointer;
     }
