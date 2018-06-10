@@ -36,7 +36,10 @@
                             {{ item["name"]["alternatives"][item["name"]["default"]] }}
                         </a>
                     </td>
-                    <td>{{ item["entries"].filter(e => e.completed).length }} / {{ item["entries"].length }}</td>
+                    <td>
+                        {{ item["entries"].filter(e => e.completed).length }} /
+                        {{ item.publication_status === "Complete" ? item["entries"].length : "?" }}
+                    </td>
                     <td>{{ item["rating"] === null ? "-" : item["rating"] }}</td>
 
                     <td>
