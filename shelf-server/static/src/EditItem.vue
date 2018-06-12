@@ -120,6 +120,7 @@
                                 <input
                                     type="text"
                                     v-bind:value="entry.name ? entry.name.alternatives[entry.name.default] : '-'"
+                                    v-on:input="editEntryField(index, 'name', $event)"
                                 />
                             </td>
                             <td>
@@ -234,6 +235,27 @@
 
             editEntryField(idx, field, ev) {
                 const value = ev.target.value.trim();
+
+                if (field === "name") {
+                    if (value === "" || value === "-") {
+                        this.data.entries[idx].name = null;
+                        ev.target.value = "-";
+                    }
+                    else if (this.data.entries[idx].name === null) {
+                        this.data.entries[idx].name = {
+                            default: "English",
+                            alternatives: {
+                                "English": value,
+                            },
+                        };
+                    }
+                    else {
+                        const names = this.data.entries[idx].name;
+                        names.alternatives[names.default] = value;
+                    }
+                    return;
+                }
+
                 if (value === "-" || value === "") {
                     this.data.entries[idx][field] = null;
                 }
