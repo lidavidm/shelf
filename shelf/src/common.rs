@@ -13,6 +13,7 @@ pub struct Alternatives<T> {
 
 #[derive(Clone,Copy,PartialEq,Eq,Serialize,Deserialize,Debug)]
 pub enum Role {
+    Artist,
     Author,
     Translator,
 }

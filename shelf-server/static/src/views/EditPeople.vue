@@ -22,6 +22,7 @@
                     <select v-model="person[0]" v-on:change="update">
                         <option>Author</option>
                         <option>Translator</option>
+                        <option>Artist</option>
                     </select>
                 </td>
             </tr>
