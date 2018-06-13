@@ -16,19 +16,19 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Progress</th>
-                    <th>Rating</th>
-                    <th>External</th>
+                    <th class="type">Type</th>
+                    <th class="name">Name</th>
+                    <th class="progress">Progress</th>
+                    <th class="rating">Rating</th>
+                    <th class="external">External</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr v-for="item in items" v-bind:id="item.key">
                     <td class="item-status" v-bind:class="item['status']"></td>
-                    <td>{{ item["kind"] }}</td>
-                    <td>
+                    <td class="type">{{ item["kind"] }}</td>
+                    <td class="name">
                         <a
                             v-on:click="edit(item.key)"
                             title="Click to edit"
@@ -36,13 +36,13 @@
                             {{ item["name"]["alternatives"][item["name"]["default"]] }}
                         </a>
                     </td>
-                    <td>
+                    <td class="progress">
                         {{ item["entries"].filter(e => e.completed).length }} /
                         {{ item.publication_status === "Complete" ? item["entries"].length : "?" }}
                     </td>
-                    <td>{{ item["rating"] === null ? "-" : item["rating"] }}</td>
+                    <td class="rating">{{ item["rating"] === null ? "-" : item["rating"] }}</td>
 
-                    <td>
+                    <td class="external">
                         <a
                             v-if="item.extra.mangadex_url"
                             v-bind:href="item.extra.mangadex_url"
@@ -175,33 +175,45 @@
         border-collapse: collapse;
         min-width: 60em;
         width: 100%;
+        border-top: 4px solid #000;
+        margin: 1em 0;
     }
 
     #items-list th {
-        border-bottom: 1px solid black;
+        padding: 0.25em 0;
+        border-bottom: 2px solid black;
         text-align: left;
     }
 
-    #items-list th:nth-child(1) {
-        padding-right: 0.5em;
-        width: 0.3em;
+    #items-list th.status {
+        width: 0.25em;
     }
 
-    #items-list th:nth-child(2) {
+    #items-list th.type {
         width: 6em;
     }
 
-    #items-list th:nth-child(4) {
-        width: 7em;
+    #items-list th.progress {
+        width: 6em;
     }
 
-    #items-list th:nth-child(5) {
-        width: 5em;
+    #items-list th.rating {
+        width: 6em;
+    }
+
+    #items-list th.type, #items-list td.type,
+    #items-list th.progress, #items-list td.progress,
+    #items-list th.rating, #items-list td.rating {
+        text-align: left;
+    }
+
+    #items-list td.name a {
+        font-style: italic;
     }
 
     #items-list td {
-        height: 2.5em;
-        line-height: 2.5em;
+        height: 2em;
+        line-height: 2em;
     }
 
     #items-list td a {
@@ -216,26 +228,27 @@
 
     .item-status {
         border-bottom: 1px solid var(--theme-base);
+        border-left: 0.25em solid transparent;
     }
 
     .item-status.Completed {
-        background: var(--theme-completed);
+        border-left-color: var(--theme-completed);
     }
 
     .item-status.Dropped {
-        background: var(--theme-dropped);
+        border-left-color: var(--theme-dropped);
     }
 
     .item-status.OnHold {
-        background: var(--theme-onhold);
+        border-left-color: var(--theme-onhold);
     }
 
     .item-status.Planned {
-        background: var(--theme-planned);
+        border-left-color: var(--theme-planned);
     }
 
     .item-status.InProgress {
-        background: var(--theme-inprogress);
+        border-left-color: var(--theme-inprogress);
     }
 
     .edit {

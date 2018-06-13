@@ -39,12 +39,12 @@
         color: var(--theme-text);
         font-family: "Linux Libertine O";
         font-size: 20px;
-        padding: 0 4em;
         text-rendering: optimizeLegibility;
     }
 
     #app {
-
+        width: 60em;
+        margin: 0 auto;
     }
 
     #app h1 {
