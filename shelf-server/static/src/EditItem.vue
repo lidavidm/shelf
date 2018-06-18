@@ -5,6 +5,11 @@
         </header>
         <section id="item-body">
             <section id="item-meta">
+                <div v-if="canEditKey">
+                    <label>Key</label>
+                    <input id="key" type="text" v-model="data.key" />
+                </div>
+
                 <div>
                     <label>Added to shelf</label>
                     <span>{{ data.added }}</span>
@@ -181,11 +186,13 @@
         data() {
             return {
                 data: null,
+                canEditKey: false,
             };
         },
         mounted() {
             if (this.initdata) {
                 this.data = this.initdata;
+                this.canEditKey = this.data.key === null;
             }
             else {
                 window.fetch(`/item/${this.item}`)

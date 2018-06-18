@@ -10,6 +10,8 @@
             <button v-on:click="onImportURL">Import</button>
         </form>
 
+        <button v-on:click="addEntry">Add Entry</button>
+
         Stats: {{ items.length }} items
 
         <table id="items-list">
@@ -72,6 +74,7 @@
 </template>
 
 <script>
+    import moment from "moment";
     import firstBy from "thenby";
     import EditItem from "./EditItem";
 
@@ -162,6 +165,28 @@
                     return `https://myanimelist.net/manga/${id}`;
                 }
                 return `https://myanimelist.net/anime/${id}`;
+            },
+
+            addEntry() {
+                this.editingItem = {
+                    key: null,
+                    kind: "Manga",
+                    name: {
+                        default: "English",
+                        alternatives: {
+                            "English": "",
+                        },
+                    },
+                    people: [],
+                    season: null,
+                    entries: [],
+                    status: "Planned",
+                    rating: null,
+                    added: moment().format(),
+                    started: null,
+                    completed: null,
+                    extra: {},
+                };
             },
         },
         components: {
