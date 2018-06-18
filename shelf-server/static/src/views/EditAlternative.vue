@@ -75,7 +75,7 @@
             },
 
             deleteAlternative(idx) {
-                const [ removed ] = this.sortedAlternatives.splice(idx, idx + 1);
+                const [ removed ] = this.sortedAlternatives.splice(idx, 1);
                 if (removed[0] === this.defaultKey) {
                     // TODO: what if last one removed?
                     this.defaultKey = this.sortedAlternatives[0][0];
