@@ -103,7 +103,8 @@
                     </h3>
                 </header>
 
-                <button v-on:click="nextEntry">Add Next {{ entryCategorization() }}</button>
+                <button v-on:click="nextEntry(now())">Complete Next {{ entryCategorization() }}</button>
+                <button v-on:click="nextEntry(false)">Add Next {{ entryCategorization() }}</button>
                 <table class="entries">
                     <thead>
                         <tr>
@@ -217,10 +218,40 @@
                 this.$emit("done");
             },
 
-            nextEntry() {
+            nextEntry(completed) {
                 if (!this.data) return;
 
-                const number = this.data.entries.length + 1;
+                let number = 0;
+                let maxCompleted = null;
+                for (const entry of this.data.entries) {
+                    number = Math.max(number, entry.number);
+
+                    if (entry.completed) {
+                        if (maxCompleted === null) {
+                            maxCompleted = entry.number;
+                        }
+                        maxCompleted = Math.max(maxCompleted, entry.number);
+                    }
+                }
+                number += 1
+
+                if (completed && maxCompleted !== null && maxCompleted < number) {
+                    for (const entry of this.data.entries) {
+                        if (entry.number === maxCompleted + 1) {
+                            entry.completed = completed;
+                        }
+                    }
+                    return;
+                }
+                else if (completed && maxCompleted === null && this.data.entries.length > 0) {
+                    for (const entry of this.data.entries) {
+                        if (entry.number === 1) {
+                            entry.completed = completed;
+                            return;
+                        }
+                    }
+                }
+
                 this.data.entries.push({
                     name: {
                         default: "English",
@@ -230,7 +261,7 @@
                     },
                     number,
                     volume: null,
-                    completed: this.now(),
+                    completed,
                 });
             },
 
