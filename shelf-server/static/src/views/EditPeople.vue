@@ -62,6 +62,7 @@
             window.fetch("/person")
                   .then(r => r.json())
                   .then((people) => {
+                      people.sort(firstBy(x => x.name.alternatives[x.name.default]));
                       for (const person of people) {
                           this.allPeople.push(person);
                       }
