@@ -37,6 +37,12 @@
                         >
                             {{ item["name"]["alternatives"][item["name"]["default"]] }}
                         </a>
+                        <span
+                            class="item-series"
+                            v-if="item.series && series[item.series[0]]"
+                        >
+                            {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
+                        </span>
                     </td>
                     <td class="progress">
                         {{ item["entries"].filter(e => e.completed).length }} /
@@ -87,9 +93,18 @@
                 items: [],
                 editing: null,
                 editingItem: null,
+                series: {},
             };
         },
         mounted() {
+            window.fetch("/series")
+                  .then(r => r.json())
+                  .then((items) => {
+                      for (const series of items) {
+                          this.$set(this.series, series.key, series.name.alternatives[series.name.default]);
+                      }
+                  });
+
             window.fetch("/item")
                   .then(r => r.json())
                   .then((items) => {
@@ -274,6 +289,12 @@
 
     .item-status.InProgress {
         border-left-color: var(--theme-inprogress);
+    }
+
+    .item-series {
+        display: block;
+        font-size: 0.75em;
+        line-height: 0.75em;
     }
 
     .edit {

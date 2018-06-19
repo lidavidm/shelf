@@ -187,6 +187,7 @@
             return {
                 data: null,
                 canEditKey: false,
+                series: [],
             };
         },
         mounted() {
@@ -202,6 +203,14 @@
                           this.data = item;
                       });
             }
+            window.fetch("/series")
+                  .then(r => r.json())
+                  .then((series) => {
+                      series.sort(firstBy(x => x.name.alternatives[x.name.default]));
+                      for (const s of series) {
+                          this.series.push(s);
+                      }
+                  });
         },
         methods: {
             save() {
