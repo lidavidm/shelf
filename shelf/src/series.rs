@@ -2,8 +2,9 @@ use common::Alternatives;
 use common::PersonIdx;
 use common::Role;
 
+#[derive(Serialize,Deserialize,Clone,Debug)]
 pub struct Series {
-    key: String,
-    name: Alternatives<String>,
-    people: Vec<(Role, PersonIdx)>,
+    pub key: String,
+    pub name: Alternatives<String>,
+    pub people: Vec<(Role, PersonIdx)>,
 }

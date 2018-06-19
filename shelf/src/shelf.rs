@@ -40,7 +40,8 @@ impl Shelf {
         self.people.iter()
     }
 
-    pub fn query_series(&self) {
+    pub fn query_series(&self) -> impl Iterator<Item=&Series> {
+        self.series.iter()
     }
 
     pub fn insert_person(&mut self, person: Person) {
@@ -48,7 +49,9 @@ impl Shelf {
         self.people.push(person);
     }
 
-    pub fn insert_series(&mut self) {
+    pub fn insert_series(&mut self, series: Series) {
+        self.dirty.insert(series.key.clone());
+        self.series.push(series);
     }
 
     pub fn validate_item(&self, item: &Item) -> Result<()> {
@@ -64,6 +67,20 @@ impl Shelf {
                 return Err(ShelfError::InvalidReference(person.to_owned()));
             }
         }
+
+        if let Some((ref key, _)) = item.series {
+            let mut found = false;
+            for series in self.series.iter() {
+                if key == &series.key {
+                    found = true;
+                    break;
+                }
+            }
+            if !found {
+                return Err(ShelfError::InvalidReference(key.to_owned()));
+            }
+        }
+
         Ok(())
     }
 
