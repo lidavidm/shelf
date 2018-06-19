@@ -129,6 +129,21 @@ impl DirectoryShelf {
                 updated.push(&person.key);
             }
 
+            for series in shelf.query_series() {
+                if !shelf.is_dirty(&series.key) {
+                    continue;
+                }
+                let filename = format!("series--{}.yaml", series.key);
+                let path = self.directory.join(filename);
+                let mut file = File::create(&path)?;
+                serde_yaml::to_writer(&file, series)?;
+                file.sync_all()?;
+
+                index.add_path(path.strip_prefix(&self.directory)?)?;
+
+                updated.push(&series.key);
+            }
+
             for item in shelf.query_items() {
                 if !shelf.is_dirty(&item.1.key) {
                     continue;
@@ -173,6 +188,7 @@ impl DirectoryShelf {
     pub fn load(&self, shelf: &mut Shelf) -> Result<(), SaveError> {
         let mut people: Vec<::common::Person> = vec![];
         let mut items: Vec<::item::Item> = vec![];
+        let mut series: Vec<::series::Series> = vec![];
 
         for entry in self.directory.read_dir()? {
             if let Ok(entry) = entry {
@@ -185,11 +201,16 @@ impl DirectoryShelf {
                         let file = File::open(entry.path())?;
                         items.push(serde_yaml::from_reader(file)?);
                     }
+                    else if name.starts_with("series--") {
+                        let file = File::open(entry.path())?;
+                        series.push(serde_yaml::from_reader(file)?);
+                    }
                 }
             }
         }
 
         people.into_iter().for_each(|p| shelf.insert_person(p));
+        series.into_iter().for_each(|p| shelf.insert_series(p));
         items.into_iter().for_each(|p| shelf.insert_item(p).unwrap());
 
         shelf.clear_all_dirty();
