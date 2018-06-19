@@ -131,6 +131,22 @@ fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> A
     Ok("created".to_owned())
 }
 
+fn series(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::series::Series>>> {
+    let shelf = req.state().read_shelf()?;
+    let items = shelf.query_series().map(|p| p.clone()).collect();
+    Ok(Json(items))
+}
+
+fn put_series(params: (Json<shelf::series::Series>, HttpRequest<AppState>)) -> ActixResult<String> {
+    let (series, req) = params;
+    {
+        let mut shelf = req.state().write_shelf()?;
+        shelf.insert_series(series.clone());
+    }
+    req.state().save()?;
+    Ok("created".to_owned())
+}
+
 #[derive(Deserialize)]
 struct ProxyParams {
     url: String,
@@ -203,6 +219,11 @@ fn main() -> Result<(), Box<::std::error::Error>> {
                 r.method(http::Method::PUT).with(put_person);
                 r.method(http::Method::GET).with(people);
             })
+            .resource("/series", |r| {
+                r.method(http::Method::PUT).with(put_series);
+                r.method(http::Method::GET).with(series);
+            })
+
     ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
 
     {
