@@ -85,6 +85,8 @@
                         <option :value="10">10</option>
                     </select>
                 </div>
+
+                <edit-series v-model="data.series" />
             </section>
 
             <section>
@@ -176,6 +178,7 @@
 
 <script>
     import moment from "moment";
+    import firstBy from "thenby";
 
     export default {
         name: "item",
