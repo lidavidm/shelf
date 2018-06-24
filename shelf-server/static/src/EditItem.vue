@@ -112,6 +112,7 @@
 
                 <button v-on:click="nextEntry(now())">Complete Next {{ entryCategorization() }}</button>
                 <button v-on:click="nextEntry(false)">Add Next {{ entryCategorization() }}</button>
+                <button v-on:click="multipleEntry()">Add Multiple {{ entryCategorization() }}</button>
                 <table class="entries">
                     <thead>
                         <tr>
@@ -282,6 +283,29 @@
                     volume: null,
                     completed,
                 });
+            },
+
+            multipleEntry() {
+                const num = parseInt(window.prompt("Number of entries to add?"), 10);
+
+                let number = 0;
+                for (const entry of this.data.entries) {
+                    number = Math.max(number, entry.number);
+                }
+
+                for (let i = 0; i < num; i++) {
+                    this.data.entries.push({
+                        name: {
+                            default: "English",
+                            alternatives: {
+                                "English": `${this.entryCategorization()} ${number + i + 1}`,
+                            },
+                        },
+                        number: number + i + 1,
+                        volume: null,
+                        completed: false,
+                    });
+                }
             },
 
             editEntryField(idx, field, ev) {
