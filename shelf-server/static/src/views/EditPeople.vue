@@ -59,16 +59,20 @@
             };
         },
         mounted() {
-            window.fetch("/person")
-                  .then(r => r.json())
-                  .then((people) => {
-                      people.sort(firstBy(x => x.name.alternatives[x.name.default]));
-                      for (const person of people) {
-                          this.allPeople.push(person);
-                      }
-                  });
+            this.getPeople();
         },
         methods: {
+            getPeople() {
+                this.allPeople = [];
+                window.fetch("/person")
+                      .then(r => r.json())
+                      .then((people) => {
+                          people.sort(firstBy(x => x.name.alternatives[x.name.default]));
+                          for (const person of people) {
+                              this.allPeople.push(person);
+                          }
+                      });
+            },
             addPerson() {
                 this.people.push(["Author", this.allPeople[0].key]);
                 this.update();
@@ -93,7 +97,7 @@
                     headers: {
                         "Content-Type": "text/json",
                     },
-                });
+                }).then(req => req.text()).then(() => this.getPeople());
                 this.creatingPerson = false;
                 this.newPersonName = "";
             },
