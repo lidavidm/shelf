@@ -104,22 +104,26 @@
             };
         },
         mounted() {
-            window.fetch("/series")
-                  .then(r => r.json())
-                  .then((items) => {
-                      for (const series of items) {
-                          this.$set(this.series, series.key, series.name.alternatives[series.name.default]);
-                      }
-                  });
-
-            window.fetch("/item")
-                  .then(r => r.json())
-                  .then((items) => {
-                      this.items = items;
-                      this.sortItems();
-                  });
+            this.getItems();
         },
         methods: {
+            getItems() {
+                window.fetch("/series")
+                      .then(r => r.json())
+                      .then((items) => {
+                          for (const series of items) {
+                              this.$set(this.series, series.key, series.name.alternatives[series.name.default]);
+                          }
+                      });
+
+                window.fetch("/item")
+                      .then(r => r.json())
+                      .then((items) => {
+                          this.items = items;
+                          this.sortItems();
+                      });
+            },
+
             sortItems() {
                 return this.items.sort(firstBy(v => v.status === "InProgress" ? 0 : 1)
                     .thenBy(v => v.kind)
@@ -134,6 +138,7 @@
             doneEditing() {
                 this.editing = null;
                 this.editingItem = null;
+                this.getItems();
             },
 
             onFile(e) {
