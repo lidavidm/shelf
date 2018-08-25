@@ -18,6 +18,12 @@
             v-bind:value="series[1]"
             v-on:input="updateIndex"
         />
+        <template v-if="addingSeries">
+            <label for="seriesName">New Series Name:</label>
+            <input type="text" v-model:value="newSeriesName" id="seriesName" />
+            <button @click="createSeries">Save Series</button>
+        </template>
+        <button v-else @click="addingSeries = true">Add Series</button>
     </div>
 </template>
 
@@ -34,18 +40,24 @@
             return {
                 allSeries: [],
                 series: null,
+                addingSeries: false,
+                newSeriesName: null,
             };
         },
         mounted() {
             this.series = this.value;
-            window.fetch("/series")
-                  .then(r => r.json())
-                  .then((series) => {
-                      this.allSeries = series;
-                      this.sort();
-                  });
+            this.getSeries();
         },
         methods: {
+            getSeries() {
+                window.fetch("/series")
+                      .then(r => r.json())
+                      .then((series) => {
+                          this.allSeries = series;
+                          this.sort();
+                      });
+            },
+
             sort() {
                 this.allSeries.sort(firstBy(x => x.name.alternatives[x.name.default]));
             },
@@ -76,6 +88,29 @@
                     console.log(JSON.stringify(series));
                     this.$emit("input", series);
                 }
+            },
+
+            createSeries() {
+                const name = this.newSeriesName.trim();
+                const key = util.makeKey("series", name);
+                window.fetch(`/series`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        key,
+                        name: {
+                            default: "English",
+                            alternatives: {
+                                "English": name,
+                            },
+                        },
+                        people: [],
+                    }),
+                    headers: {
+                        "Content-Type": "text/json",
+                    },
+                }).then(req => req.text()).then(() => this.getSeries());
+                this.addingSeries = false;
+                this.newSeriesName = null;
             },
         },
     };
