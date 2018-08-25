@@ -155,12 +155,7 @@
                             <td><input type="checkbox" v-model="entry.completed" /></td>
                             <td>
                                 <button class="danger">Delete</button>
-                                <button>Move Up</button>
-                                <button>Move Down</button>
                             </td>
-                        </tr>
-                        <tr>
-                            <td><button>Add Entry</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -513,7 +508,7 @@
     }
 
     .entries th:nth-child(5) {
-        width: 15em;
+        width: 5em;
     }
 
     .entries td:nth-child(5) {
