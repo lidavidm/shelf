@@ -52,6 +52,13 @@
 
                     <td class="external">
                         <a
+                            v-if="item.extra.external_url"
+                            v-bind:href="item.extra.external_url"
+                            target="_blank"
+                        >
+                            {{(new URL(item.extra.external_url)).host}}
+                        </a>
+                        <a
                             v-if="item.extra.mangadex_url"
                             v-bind:href="item.extra.mangadex_url"
                             target="_blank"
@@ -230,7 +237,7 @@
     }
 
     #items-list th.type {
-        width: 6em;
+        width: 5em;
     }
 
     #items-list th.progress {
