@@ -266,6 +266,7 @@
     #items-list td {
         height: 2em;
         line-height: 2em;
+        vertical-align: top;
     }
 
     #items-list td a {
@@ -305,8 +306,8 @@
 
     .item-series {
         display: block;
-        font-size: 0.75em;
-        line-height: 0.75em;
+        font-size: 1em;
+        line-height: 1em;
     }
 
     .edit {
