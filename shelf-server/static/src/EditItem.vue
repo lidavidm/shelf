@@ -101,6 +101,11 @@
                 <edit-people v-model="data.people" />
             </section>
 
+            <section id="external">
+                <label for="External URL">External URL:</label>
+                <input type="text" :value="externalUrl" @input="updateExternalUrl" />
+            </section>
+
             <section id="entries">
                 <header>
                     <h3>
@@ -216,7 +221,38 @@
                       }
                   });
         },
+        computed: {
+            externalUrl() {
+                if (this.data && this.data.extra) {
+                    if (this.data.extra.mangadex_url) {
+                        return this.data.extra.mangadex_url;
+                    }
+                    else if (this.data.extra.external_url) {
+                        return this.data.extra.external_url;
+                    }
+                }
+                return null;
+            },
+        },
         methods: {
+            updateExternalUrl(e) {
+                const value = e.target.value;
+                try {
+                    const url = new URL(value);
+                    if (!this.data.extra) {
+                        this.data.extra = {};
+                    }
+                    if (url.host === "mangadex.org") {
+                        this.data.extra.mangadex_url = value;
+                    }
+                    else {
+                        this.data.extra.external_url = value;
+                    }
+                }
+                catch (e) {
+
+                }
+            },
             save() {
                 window.fetch(`/item/${this.item}`, {
                     method: "POST",
