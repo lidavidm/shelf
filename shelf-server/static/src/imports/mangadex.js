@@ -8,7 +8,7 @@ export default function mangadex(url) {
             const doc = parser.parseFromString(body, "text/html");
             const page = doc.documentElement;
 
-            const title = page.querySelector(".panel-title")
+            const title = page.querySelector("h6.card-header")
                   .textContent
                   .trim();
 
@@ -25,7 +25,7 @@ export default function mangadex(url) {
                     "English": title,
                 },
             };
-            const nameList = page.querySelector(".col-sm-9 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > ul:nth-child(1)");
+            const nameList = page.querySelector("div.m-0:nth-child(1) > div:nth-child(2) > ul:nth-child(1)");
             let ctr = 1;
             for (const el of nameList.querySelectorAll("li")) {
                 names.alternatives[`Alternate Name ${ctr}`] = el.textContent.trim();
