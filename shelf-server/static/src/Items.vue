@@ -39,9 +39,13 @@
                         </a>
                         <span
                             class="item-series"
-                            v-if="item.series && series[item.series[0]]"
                         >
-                            {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
+                            <span v-if="item.series && series[item.series[0]]">
+                                {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
+                            </span>
+                            <span v-if="item.people.some(x => x[0] === 'Author')">
+                                <em>by</em> {{getAuthor(item.people)}}
+                            </span>
                         </span>
                     </td>
                     <td class="progress">
@@ -101,6 +105,7 @@
                 editing: null,
                 editingItem: null,
                 series: {},
+                people: {},
             };
         },
         mounted() {
@@ -116,12 +121,26 @@
                           }
                       });
 
+                this.people = {};
+                window.fetch("/person")
+                      .then(r => r.json())
+                      .then((people) => {
+                          for (const person of people) {
+                              this.people[person.key] = person;
+                          }
+                      });
+
                 window.fetch("/item")
                       .then(r => r.json())
                       .then((items) => {
                           this.items = items;
                           this.sortItems();
                       });
+            },
+
+            getAuthor(people) {
+                const author = people.filter(x => x[0] === 'Author')[0][1];
+                return this.people[author].name.alternatives[this.people[author].name.default];
             },
 
             sortItems() {
