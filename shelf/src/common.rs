@@ -15,6 +15,7 @@ pub struct Alternatives<T> {
 pub enum Role {
     Artist,
     Author,
+    Director,
     Translator,
 }
 

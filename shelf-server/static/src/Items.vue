@@ -43,8 +43,10 @@
                             <span v-if="item.series && series[item.series[0]]">
                                 {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
                             </span>
-                            <span v-if="item.people.some(x => x[0] === 'Author')">
-                                <em>by</em> {{getAuthor(item.people)}}
+                            <span
+                                v-for="person in item.people"
+                                v-if="person[0] === 'Author' || person[0] === 'Director'">
+                                <em>by</em> {{getPersonName(person[1])}}
                             </span>
                         </span>
                     </td>
@@ -138,9 +140,8 @@
                       });
             },
 
-            getAuthor(people) {
-                const author = people.filter(x => x[0] === 'Author')[0][1];
-                return this.people[author].name.alternatives[this.people[author].name.default];
+            getPersonName(person) {
+                return this.people[person].name.alternatives[this.people[person].name.default];
             },
 
             sortItems() {
@@ -325,7 +326,7 @@
 
     .item-series {
         display: block;
-        font-size: 1em;
+        font-size: 0.9em;
         line-height: 1em;
     }
 
