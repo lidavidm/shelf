@@ -154,7 +154,7 @@
                             </td>
                             <td><input type="checkbox" v-model="entry.completed" /></td>
                             <td>
-                                <button class="danger">Delete</button>
+                                <button class="danger" @click="deleteEntry(index)">Delete</button>
                             </td>
                         </tr>
                     </tbody>
@@ -337,6 +337,10 @@
                         completed: false,
                     });
                 }
+            },
+
+            deleteEntry(index) {
+                this.data.entries.splice(index, 1);
             },
 
             editEntryField(idx, field, ev) {
