@@ -49,7 +49,7 @@ impl AppState {
     }
 }
 
-fn shutdown(_req: HttpRequest<AppState>) -> String {
+fn shutdown(_req: &HttpRequest<AppState>) -> String {
     actix::Arbiter::system().do_send(actix::msgs::SystemExit(0));
 
     "Goodbye!".to_owned()
@@ -154,7 +154,12 @@ struct ProxyParams {
 
 fn proxy(url: actix_web::Query<ProxyParams>) -> Box<Future<Item = HttpResponse, Error = error::Error>> {
     actix_web::client::ClientRequest::get(url.into_inner().url)
-        .finish().unwrap()
+        .finish()
+        .map_err(|e| {
+            println!("{:?}", e);
+            error::Error::from(e)
+        })
+        .unwrap()
         .send()
         .map_err(|e| {
             println!("{:?}", e);
@@ -196,23 +201,23 @@ fn main() -> Result<(), Box<::std::error::Error>> {
         move || App::with_state(AppState { shelf: shelf_ref.clone(), path: path.clone() })
             .handler(
                 "/static",
-                actix_web::fs::StaticFiles::new("./static").index_file("index.html"))
+                actix_web::fs::StaticFiles::new("./static").unwrap().index_file("index.html"))
             .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
             .resource("/proxy", |r| r.method(http::Method::GET).with(proxy))
             .resource("/item/{key}", |r| {
                 r.method(http::Method::GET).with(item);
-                r.method(http::Method::POST).with(edit_item)
-                    .1.error_handler(|err, req| {
-                        println!("{:?}", err);
-                        error::ErrorBadRequest(format!("{:?}", err))
-                    });
+                r.method(http::Method::POST).with(edit_item);
+                    // .1.error_handler(|err, req| {
+                    //     println!("{:?}", err);
+                    //     error::ErrorBadRequest(format!("{:?}", err))
+                    // });
             })
             .resource("/item", |r| {
-                r.method(http::Method::PUT).with(begin)
-                    .0.error_handler(|err, req| {
-                        println!("{:?}", err);
-                        error::ErrorBadRequest(format!("{:?}", err))
-                    });
+                r.method(http::Method::PUT).with(begin);
+                    // .0.error_handler(|err, req| {
+                    //     println!("{:?}", err);
+                    //     error::ErrorBadRequest(format!("{:?}", err))
+                    // });
                 r.method(http::Method::GET).with(items);
             })
             .resource("/person", |r| {

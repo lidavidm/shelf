@@ -62,7 +62,7 @@
                             v-bind:href="item.extra.external_url"
                             target="_blank"
                         >
-                            {{(new URL(item.extra.external_url)).host}}
+                            {{hostname(item.extra.external_url)}}
                         </a>
                         <a
                             v-if="item.extra.mangadex_url"
@@ -114,6 +114,9 @@
             this.getItems();
         },
         methods: {
+            hostname(url) {
+                return (new URL(url)).host;
+            },
             getItems() {
                 window.fetch("/series")
                       .then(r => r.json())
