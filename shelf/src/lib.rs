@@ -7,8 +7,8 @@ extern crate serde_yaml;
 
 pub mod common;
 pub mod item;
-pub mod series;
 pub mod save;
+pub mod series;
 pub mod shelf;
 
 pub use shelf::Shelf;
@@ -17,10 +17,10 @@ pub use shelf::Shelf;
 mod tests {
     #[test]
     fn it_works() {
-        use ::item;
-        use ::common;
-        use std::collections::HashMap;
+        use common;
+        use item;
         use serde_yaml;
+        use std::collections::HashMap;
 
         let mut alts = HashMap::new();
         alts.insert("Japanese (Romaji)".to_owned(), "Hourou Musuko".to_owned());

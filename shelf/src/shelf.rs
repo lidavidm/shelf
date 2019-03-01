@@ -30,17 +30,15 @@ impl Shelf {
         }
     }
 
-    pub fn query_items(&self) -> impl Iterator<Item=ItemRef> {
-        self.items.iter().map(move |item| {
-            ItemRef(self, item)
-        })
+    pub fn query_items(&self) -> impl Iterator<Item = ItemRef> {
+        self.items.iter().map(move |item| ItemRef(self, item))
     }
 
-    pub fn query_people(&self) -> impl Iterator<Item=&Person> {
+    pub fn query_people(&self) -> impl Iterator<Item = &Person> {
         self.people.iter()
     }
 
-    pub fn query_series(&self) -> impl Iterator<Item=&Series> {
+    pub fn query_series(&self) -> impl Iterator<Item = &Series> {
         self.series.iter()
     }
 
@@ -93,15 +91,16 @@ impl Shelf {
 
     pub fn replace_item(&mut self, item: Item) -> Result<()> {
         self.validate_item(&item)?;
-        let idx = self.items.iter()
+        let idx = self
+            .items
+            .iter()
             .enumerate()
             .find(|(_, candidate)| item.key == candidate.key)
             .map(|(idx, _)| idx);
         if let Some(idx) = idx {
             self.dirty.insert(item.key.clone());
             self.items[idx] = item;
-        }
-        else {
+        } else {
             return self.insert_item(item);
         }
         Ok(())

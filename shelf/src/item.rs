@@ -8,13 +8,13 @@ use common::PersonIdx;
 use common::Role;
 use common::Status;
 
-#[derive(Clone,Serialize,Deserialize,Debug,Eq,PartialEq)]
+#[derive(Clone, Serialize, Deserialize, Debug, Eq, PartialEq)]
 pub enum PublicationStatus {
     Publishing,
     Complete,
 }
 
-#[derive(Clone,Serialize,Deserialize,Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Item {
     pub key: String,
     pub kind: Kind,
@@ -40,7 +40,7 @@ fn default_extras() -> serde_yaml::Value {
     serde_yaml::Value::Null
 }
 
-#[derive(Clone,Serialize,Deserialize,Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Entry {
     pub name: Option<Alternatives<String>>,
     pub number: Option<u32>,

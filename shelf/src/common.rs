@@ -2,16 +2,16 @@ use std::collections::HashMap;
 use std::fmt;
 
 use chrono;
-use serde::{Deserialize,Deserializer,Serialize,Serializer};
 use serde::de;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Clone,Serialize,Deserialize,Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Alternatives<T> {
     pub default: String,
     pub alternatives: HashMap<String, T>,
 }
 
-#[derive(Clone,Copy,PartialEq,Eq,Serialize,Deserialize,Debug)]
+#[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Role {
     Artist,
     Author,
@@ -21,13 +21,13 @@ pub enum Role {
 
 pub type PersonIdx = String;
 
-#[derive(Clone,Serialize,Deserialize,Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Person {
     pub key: PersonIdx,
     pub name: Alternatives<String>,
 }
 
-#[derive(Clone,Copy,Debug,PartialEq,Eq,Deserialize,Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Status {
     Completed,
     InProgress,
@@ -36,7 +36,7 @@ pub enum Status {
     Dropped,
 }
 
-#[derive(Clone,Copy,Debug,PartialEq,Eq,Deserialize,Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Kind {
     Unknown,
     Manga,
@@ -51,7 +51,7 @@ pub enum Kind {
     ShortStory,
 }
 
-#[derive(Clone,Copy,Debug,PartialEq,Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DateBool {
     False,
     True,
@@ -68,21 +68,26 @@ impl Default for DateBool {
 
 impl Serialize for DateBool {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where S: Serializer {
+    where
+        S: Serializer,
+    {
         match self {
             DateBool::False => serializer.serialize_none(),
             DateBool::True => serializer.serialize_bool(true),
             DateBool::Timestamp(t) => t.serialize(serializer),
             DateBool::Date(t) => t.serialize(serializer),
-            DateBool::YearMonth(year, month) =>
-                serializer.serialize_str(&format!("{}-{:02}-00", year, month)),
+            DateBool::YearMonth(year, month) => {
+                serializer.serialize_str(&format!("{}-{:02}-00", year, month))
+            }
         }
     }
 }
 
 impl<'de> Deserialize<'de> for DateBool {
     fn deserialize<D>(deserializer: D) -> Result<DateBool, D::Error>
-    where D: Deserializer<'de> {
+    where
+        D: Deserializer<'de>,
+    {
         struct DateBoolVisitor;
 
         impl<'d> de::Visitor<'d> for DateBoolVisitor {
@@ -93,7 +98,7 @@ impl<'de> Deserialize<'de> for DateBool {
             }
 
             fn visit_bool<E: de::Error>(self, v: bool) -> Result<Self::Value, E> {
-                Ok(if v {DateBool::True} else {DateBool::False})
+                Ok(if v { DateBool::True } else { DateBool::False })
             }
 
             fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
@@ -108,17 +113,13 @@ impl<'de> Deserialize<'de> for DateBool {
                 if v == "0000-00-00" {
                     // MyAnimeList export does this
                     Ok(DateBool::False)
-                }
-                else if let Ok(ts) = chrono::DateTime::parse_from_rfc3339(v) {
+                } else if let Ok(ts) = chrono::DateTime::parse_from_rfc3339(v) {
                     Ok(DateBool::Timestamp(ts))
-                }
-                else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y/%m/%d") {
+                } else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y/%m/%d") {
                     Ok(DateBool::Date(ts))
-                }
-                else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y-%m-%d") {
+                } else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y-%m-%d") {
                     Ok(DateBool::Date(ts))
-                }
-                else {
+                } else {
                     let parts: Vec<&str> = v.split("-").collect();
                     if parts.len() == 3 {
                         let year = parts[0].parse::<u32>();

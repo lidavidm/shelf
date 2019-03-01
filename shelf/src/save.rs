@@ -50,22 +50,23 @@ impl ::std::fmt::Display for SaveError {
     }
 }
 
-impl ::std::error::Error for SaveError {
-}
+impl ::std::error::Error for SaveError {}
 
 impl DirectoryShelf {
     pub fn new<P: Into<path::PathBuf>>(p: P) -> Result<DirectoryShelf, SaveError> {
         let path = p.into();
 
         if !path.is_dir() {
-            return Err(SaveError::DirectoryError(
-                format!("Path {} is not a directory.", path.to_string_lossy())
-            ));
+            return Err(SaveError::DirectoryError(format!(
+                "Path {} is not a directory.",
+                path.to_string_lossy()
+            )));
         }
         if !path.is_absolute() {
-            return Err(SaveError::DirectoryError(
-                format!("Path {} should be an absolute path.", path.to_string_lossy())
-            ));
+            return Err(SaveError::DirectoryError(format!(
+                "Path {} should be an absolute path.",
+                path.to_string_lossy()
+            )));
         }
 
         let path = path.canonicalize()?;
@@ -91,7 +92,7 @@ impl DirectoryShelf {
                 }
 
                 repo
-            },
+            }
         };
 
         Ok(DirectoryShelf {
@@ -108,7 +109,9 @@ impl DirectoryShelf {
 
         let prev_head_ref = self.repository.head()?;
         let prev_head = self.repository.find_commit(
-            prev_head_ref.target().ok_or_else(|| SaveError::GitError("Can't find target of HEAD".to_owned()))?
+            prev_head_ref
+                .target()
+                .ok_or_else(|| SaveError::GitError("Can't find target of HEAD".to_owned()))?,
         )?;
 
         let wrote = {
@@ -168,7 +171,8 @@ impl DirectoryShelf {
                 } else {
                     format!("Update shelf ({} items)", updated.len())
                 };
-                self.repository.commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head])?;
+                self.repository
+                    .commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head])?;
             }
 
             // Preserve the index so that future commits don't forget what
@@ -196,12 +200,10 @@ impl DirectoryShelf {
                     if name.starts_with("person--") {
                         let file = File::open(entry.path())?;
                         people.push(serde_yaml::from_reader(file)?);
-                    }
-                    else if name.starts_with("item--") {
+                    } else if name.starts_with("item--") {
                         let file = File::open(entry.path())?;
                         items.push(serde_yaml::from_reader(file)?);
-                    }
-                    else if name.starts_with("series--") {
+                    } else if name.starts_with("series--") {
                         let file = File::open(entry.path())?;
                         series.push(serde_yaml::from_reader(file)?);
                     }
@@ -211,7 +213,9 @@ impl DirectoryShelf {
 
         people.into_iter().for_each(|p| shelf.insert_person(p));
         series.into_iter().for_each(|p| shelf.insert_series(p));
-        items.into_iter().for_each(|p| shelf.insert_item(p).unwrap());
+        items
+            .into_iter()
+            .for_each(|p| shelf.insert_item(p).unwrap());
 
         shelf.clear_all_dirty();
 
