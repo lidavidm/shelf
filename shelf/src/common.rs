@@ -49,6 +49,7 @@ pub enum Kind {
     Play,
     Collection,
     ShortStory,
+    Musical,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
