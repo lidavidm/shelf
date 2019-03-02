@@ -41,6 +41,7 @@
                         <option>Play</option>
                         <option>Collection</option>
                         <option :value="'ShortStory'">Short Story</option>
+                        <option>Musical</option>
                     </select>
                 </div>
 
