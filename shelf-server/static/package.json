@@ -18,5 +18,8 @@
     "thenby": "^1.2.5",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1"
+  },
+  "scripts": {
+    "watch": "parcel watch --no-hmr --public-url . index.html"
   }
 }
