@@ -42,6 +42,7 @@
                         <option>Collection</option>
                         <option :value="'ShortStory'">Short Story</option>
                         <option>Musical</option>
+                        <option :value="'VisualNovel'">Visual Novel</option>
                     </select>
                 </div>
 

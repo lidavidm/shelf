@@ -30,6 +30,10 @@ impl Shelf {
         }
     }
 
+    pub fn all_items(&self) -> &[Item] {
+        &self.items
+    }
+
     pub fn query_items(&self) -> impl Iterator<Item = ItemRef> {
         self.items.iter().map(move |item| ItemRef(self, item))
     }

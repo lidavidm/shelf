@@ -50,6 +50,7 @@ pub enum Kind {
     Collection,
     ShortStory,
     Musical,
+    VisualNovel,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
