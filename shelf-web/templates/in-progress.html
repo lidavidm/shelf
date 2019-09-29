@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="filter">
+    <form>
+        <label for="filter-status">Status:</label>
+        <select id="filter-status" multiple>
+            <option value="Completed">Completed</option>
+            <option value="InProgress">In Progress</option>
+            <option value="Planned">Planned</option>
+            <option value="OnHold">On Hold</option>
+            <option value="Dropped">Dropped</option>
+        </select>
+        <input type="submit" value="Search" />
+    </form>
+</section>
+
+<section id="item-card-grid">
+    {% for item in items %}
+    <section class="item-card">
+        <h2 title="{{ item.name.alternatives[item.name.default] }}">
+            <a href="item?key={{ item.key }}">{{ item.name.alternatives[item.name.default] }}</a>
+        </h2>
+        <div class="body">
+        </div>
+        <div class="bottom">
+            <div>
+                {{ item.kind }}
+            </div>
+            <div>
+                {{ item.status }}
+            </div>
+            <div>
+                {{ item.entries | count_completed }}/{{ item.entries | length }}
+            </div>
+        </div>
+    </section>
+    {% endfor %}
+</section>
+{% endblock content %}

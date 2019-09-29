@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="/static/main.css" />
+        {% block head %}
+        <title>
+            {% block title %}{% endblock title %} - shelf-web
+        </title>
+        {% endblock head %}
+    </head>
+    <body>
+        <main>
+            {% block content %}{% endblock content %}
+        </main>
+        <footer>
+            {% block footer %}
+            &copy; Copyright 2019 by <a href="https://www.lidavidm.me/">David Li</a>.
+            {% endblock footer %}
+        </footer>
+    </body>
+</html>

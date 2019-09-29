@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ item.name.alternatives[item.name.default] }} ({{ item.kind }})
+{% endblock title %}
+
+{% block content %}
+<section id="item">
+    <h2 title="{{ item.name.alternatives[item.name.default] }}">
+        {{ item.name.alternatives[item.name.default] }}
+    </h2>
+    <dl>
+        <dt>Key</dt>
+        <dd>{{ item.key }}</dd>
+        <dt>Added</dt>
+        <dd>{{ item.added }}</dd>
+        <dt>Kind</dt>
+        <dd>{{ item.kind }}</dd>
+        <dt>Season</dt>
+        <dd>{{ item.season }}</dd>
+        <dt>Publication Status</dt>
+        <dd>{{ item.publication_status }}</dd>
+        <dt>Status</dt>
+        <dd>{{ item.status }}</dd>
+        <dt>Rating</dt>
+        <dd>{{ item.rating }} / 10</dd>
+    </dl>
+</section>
+{% endblock content %}

@@ -1,0 +1,25 @@
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in items %}
+    <tr>
+        <td>
+            {{ item.kind }}
+        </td>
+        <td>
+            {{ item.name.alternatives[item.name.default] }}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
