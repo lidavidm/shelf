@@ -87,7 +87,8 @@
             v-if="editing || editingItem"
             v-bind:item="editing"
             v-bind:initdata="editingItem"
-            v-on:done="doneEditing"
+            v-on:done="doneEditing(true)"
+            v-on:done-nochange="doneEditing(false)"
         />
     </section>
 </template>
@@ -158,10 +159,12 @@
                 this.editing = key;
             },
 
-            doneEditing() {
+            doneEditing(reload) {
                 this.editing = null;
                 this.editingItem = null;
-                this.getItems();
+                if (reload) {
+                    this.getItems();
+                }
             },
 
             onFile(e) {

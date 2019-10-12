@@ -262,7 +262,7 @@
                 });
             },
             cancel() {
-                this.$emit("done");
+                this.$emit("done-nochange");
             },
 
             nextEntry(completed) {
