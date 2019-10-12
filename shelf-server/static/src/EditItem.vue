@@ -162,12 +162,6 @@
                     </tbody>
                 </table>
             </section>
-
-            <section id="item-json">
-                <code>
-{{ JSON.stringify(data, null, 4) }}
-                </code>
-            </section>
         </section>
         <nav id="item-nav">
             <button class="danger" v-on:click="cancel">Cancel</button>
