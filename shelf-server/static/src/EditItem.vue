@@ -47,10 +47,14 @@
                 </div>
 
                 <div>
-                    <label for="season">Season Name</label>
-                    <input id="season" type="text" v-model="data.season" />
+                    <label for="tags">Tags</label>
+                    {{data.tags}}
                 </div>
-
+                <!-- <div>
+                     <label for="season">Season Name</label>
+                     <input id="season" type="text" v-model="data.season" />
+                     </div>
+                -->
                 <div>
                     <label for="status">Status</label>
                     <select id="status" v-model="data.status">
