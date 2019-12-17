@@ -24,6 +24,8 @@ pub struct Item {
     pub entries: Vec<Entry>,
     pub status: Status,
     pub rating: Option<u32>,
+    #[serde(default)]
+    pub tags: Vec<String>,
     pub added: chrono::DateTime<chrono::FixedOffset>,
     #[serde(default)]
     pub started: DateBool,
