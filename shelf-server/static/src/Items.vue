@@ -48,6 +48,10 @@
                                 v-if="person[0] === 'Author' || person[0] === 'Director'">
                                 <em>by</em> {{getPersonName(person[1])}}
                             </span>
+                            <div class="tag-list" v-if="item.tags && item.tags.length > 0">
+                                <em>Tags:</em>
+                                <span class="tag" v-for="tag in item.tags">{{tag}}</span>
+                            </div>
                         </span>
                     </td>
                     <td class="progress">
@@ -334,6 +338,23 @@
         display: block;
         font-size: 0.9em;
         line-height: 1em;
+    }
+
+    .tag-list {
+        display: inline-block;
+    }
+
+    .tag-list .tag {
+        display: inline-block;
+    }
+
+    .tag-list .tag::after {
+        display: inline-block;
+        content: ", ";
+    }
+
+    .tag-list .tag:last-child::after {
+        content: "";
     }
 
     .edit {
