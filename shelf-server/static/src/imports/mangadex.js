@@ -50,8 +50,10 @@ export default function mangadex(url) {
                 status: "Planned",
                 rating: null,
                 added: moment().format(),
+                tags: [],
                 started: null,
                 completed: null,
+                publication_status: "Publishing",
                 extra: {
                     mangadex_url: url,
                 },
