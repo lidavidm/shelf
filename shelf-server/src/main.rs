@@ -1,240 +1,332 @@
-extern crate actix;
-extern crate actix_web;
 extern crate app_dirs;
-extern crate clap;
-extern crate futures;
 extern crate serde;
-#[macro_use] extern crate serde_derive;
 extern crate serde_yaml;
 extern crate shelf;
+extern crate warp;
 
-use std::ops::{Deref, DerefMut};
-use std::sync::{Arc, RwLock};
+use std::sync::Arc;
+use tokio::sync::Mutex;
 
-use actix_web::Result as ActixResult;
-use actix_web::{App, AsyncResponder, HttpMessage, HttpRequest, HttpResponse, Json, Path, error, http, server};
-use futures::Future;
+use warp::Filter;
 
-struct AppState {
-    shelf: Arc<RwLock<shelf::Shelf>>,
-    path: std::path::PathBuf,
-}
+// fn shutdown(_req: &HttpRequest<AppState>) -> String {
+//     actix::Arbiter::system().do_send(actix::msgs::SystemExit(0));
 
-impl AppState {
-    fn read_shelf<'a>(&'a self) -> ActixResult<impl Deref<Target=shelf::Shelf> + 'a> {
-        self.shelf.read().map_err(|_| error::ErrorInternalServerError("Could not acquire lock on shelf"))
-    }
+//     "Goodbye!".to_owned()
+// }
 
-    fn write_shelf<'a>(&'a self) -> ActixResult<impl DerefMut<Target=shelf::Shelf> + 'a> {
-        self.shelf.write().map_err(|_| error::ErrorInternalServerError("Could not acquire lock on shelf"))
-    }
+// fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResult<String> {
+//     use shelf::shelf::ShelfError;
+//     let (item, req) = params;
+//     let result = {
+//         let mut shelf = req.state().write_shelf()?;
+//         shelf
+//             .insert_item(item.clone())
+//             .map_err(|e| match e {
+//                 ShelfError::InvalidReference(r) => error::ErrorInternalServerError(format!(
+//                     "Unrecognized reference to entity {}",
+//                     r
+//                 )),
+//             })
+//             .map(|_| "created".to_owned())
+//     };
 
-    fn save<'a>(&'a self) -> ActixResult<()> {
-        let mut shelf_ref = self.write_shelf().unwrap();
-        match shelf::save::DirectoryShelf::new(&self.path) {
-            Ok(saver) => {
-                if let Err(err) = saver.save(&mut shelf_ref) {
-                    println!("Error while saving: {:?}", err);
-                    Err(error::ErrorInternalServerError(format!("Error while saving: {:?}", err)))
-                }
-                else {
-                    Ok(())
-                }
-            },
-            Err(err) => {
-                println!("Error while saving: {:?}", err);
-                Err(error::ErrorInternalServerError(format!("Error while saving: {:?}", err)))
-            },
-        }
-    }
-}
+//     req.state().save()?;
 
-fn shutdown(_req: &HttpRequest<AppState>) -> String {
-    actix::Arbiter::system().do_send(actix::msgs::SystemExit(0));
+//     result
+// }
 
-    "Goodbye!".to_owned()
-}
+// fn item(params: (Path<(String,)>, HttpRequest<AppState>)) -> ActixResult<Json<shelf::item::Item>> {
+//     let (path, req) = params;
+//     let key = &path.0;
+//     let shelf = req.state().read_shelf()?;
+//     let item = shelf
+//         .query_items()
+//         .filter(|x| &x.1.key == key)
+//         .map(|x| x.1.clone())
+//         .next();
+//     if let Some(rec) = item {
+//         Ok(Json(rec))
+//     } else {
+//         Err(error::ErrorNotFound(format!("Key {} not found", key)))
+//     }
+// }
 
-fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResult<String> {
-    use shelf::shelf::ShelfError;
-    let (item, req) = params;
-    let result = {
-        let mut shelf = req.state().write_shelf()?;
-        shelf.insert_item(item.clone())
-            .map_err(|e| match e {
-                ShelfError::InvalidReference(r) =>
-                    error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
-            })
-            .map(|_| "created".to_owned())
-    };
+// fn edit_item(
+//     params: (
+//         Path<(String,)>,
+//         Json<shelf::item::Item>,
+//         HttpRequest<AppState>,
+//     ),
+// ) -> ActixResult<String> {
+//     use shelf::shelf::ShelfError;
+//     let (_, item, req) = params;
+//     let result = {
+//         let mut shelf = req.state().write_shelf()?;
+//         shelf
+//             .replace_item(item.clone())
+//             // TODO: factor this out
+//             .map_err(|e| match e {
+//                 ShelfError::InvalidReference(r) => error::ErrorInternalServerError(format!(
+//                     "Unrecognized reference to entity {}",
+//                     r
+//                 )),
+//             })
+//             .map(|_| "updated".to_owned())
+//     };
 
-    req.state().save()?;
+//     req.state().save()?;
 
-    result
-}
+//     result
+// }
 
-fn items(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::item::Item>>> {
-    let shelf = req.state().read_shelf()?;
-    let items = shelf.query_items().map(|x| x.1.clone()).collect();
-    Ok(Json(items))
-}
+// fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> ActixResult<String> {
+//     let (person, req) = params;
+//     {
+//         let mut shelf = req.state().write_shelf()?;
+//         shelf.insert_person(person.clone());
+//     }
+//     req.state().save()?;
+//     Ok("created".to_owned())
+// }
 
-fn item(params: (Path<(String,)>, HttpRequest<AppState>)) -> ActixResult<Json<shelf::item::Item>> {
-    let (path, req) = params;
-    let key = &path.0;
-    let shelf = req.state().read_shelf()?;
-    let item = shelf.query_items()
-        .filter(|x| &x.1.key == key)
-        .map(|x| x.1.clone()).next();
-    if let Some(rec) = item {
-        Ok(Json(rec))
-    }
-    else {
-        Err(error::ErrorNotFound(format!("Key {} not found", key)))
-    }
-}
+// fn put_series(params: (Json<shelf::series::Series>, HttpRequest<AppState>)) -> ActixResult<String> {
+//     let (series, req) = params;
+//     {
+//         let mut shelf = req.state().write_shelf()?;
+//         shelf.insert_series(series.clone());
+//     }
+//     req.state().save()?;
+//     Ok("created".to_owned())
+// }
 
-fn edit_item(params: (Path<(String,)>,
-                      Json<shelf::item::Item>,
-                      HttpRequest<AppState>)) -> ActixResult<String> {
-    use shelf::shelf::ShelfError;
-    let (_, item, req) = params;
-    let result = {
-        let mut shelf = req.state().write_shelf()?;
-        shelf.replace_item(item.clone())
-        // TODO: factor this out
-            .map_err(|e| match e {
-                ShelfError::InvalidReference(r) =>
-                    error::ErrorInternalServerError(format!("Unrecognized reference to entity {}", r)),
-            })
-            .map(|_| "updated".to_owned())
-    };
-
-    req.state().save()?;
-
-    result
-}
-
-fn people(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::common::Person>>> {
-    let shelf = req.state().read_shelf()?;
-    let items = shelf.query_people().map(|p| p.clone()).collect();
-    Ok(Json(items))
-}
-
-fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> ActixResult<String> {
-    let (person, req) = params;
-    {
-        let mut shelf = req.state().write_shelf()?;
-        shelf.insert_person(person.clone());
-    }
-    req.state().save()?;
-    Ok("created".to_owned())
-}
-
-fn series(req: HttpRequest<AppState>) -> ActixResult<Json<Vec<shelf::series::Series>>> {
-    let shelf = req.state().read_shelf()?;
-    let items = shelf.query_series().map(|p| p.clone()).collect();
-    Ok(Json(items))
-}
-
-fn put_series(params: (Json<shelf::series::Series>, HttpRequest<AppState>)) -> ActixResult<String> {
-    let (series, req) = params;
-    {
-        let mut shelf = req.state().write_shelf()?;
-        shelf.insert_series(series.clone());
-    }
-    req.state().save()?;
-    Ok("created".to_owned())
-}
-
-#[derive(Deserialize)]
-struct ProxyParams {
-    url: String,
-}
-
-fn proxy(url: actix_web::Query<ProxyParams>) -> Box<Future<Item = HttpResponse, Error = error::Error>> {
-    actix_web::client::ClientRequest::get(url.into_inner().url)
-        .finish()
-        .map_err(|e| {
-            println!("{:?}", e);
-            error::Error::from(e)
-        })
-        .unwrap()
-        .send()
-        .map_err(|e| {
-            println!("{:?}", e);
-            error::Error::from(e)
-        })
-        .and_then(
-            |resp| resp.body()
-                .from_err()
-                .and_then(|body| {
-                    Ok(HttpResponse::Ok().body(body))
-                }))
-        .responder()
-}
-
-const APP_INFO : app_dirs::AppInfo = app_dirs::AppInfo {
+const APP_INFO: app_dirs::AppInfo = app_dirs::AppInfo {
     name: "shelf",
     author: "lidavidm",
 };
 
-fn main() -> Result<(), Box<::std::error::Error>> {
-    let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")?;
-    let path = library_root.clone();
+const LOG_NAME: &'static str = "shelf-server";
+
+#[tokio::main]
+async fn main() {
+    if std::env::var_os("RUST_LOG").is_none() {
+        // Set `RUST_LOG=shelf-server=debug` to see debug logs, this only
+        // shows access logs.
+        std::env::set_var("RUST_LOG", "shelf-server=info");
+    }
+
+    pretty_env_logger::init();
+
+    let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")
+        .expect("Could not find library root!");
 
     let mut shelf = shelf::Shelf::new();
-
     // Load the shelf, but discard the saver, since it can't be moved
     // across threads
     {
-        println!("Opening shelf: {}", library_root.to_string_lossy());
-        let saver = shelf::save::DirectoryShelf::new(&library_root)?;
-        saver.load(&mut shelf)?;
+        log::info!(
+            target: LOG_NAME,
+            "Opening shelf: {}",
+            library_root.to_string_lossy()
+        );
+        let saver =
+            shelf::save::DirectoryShelf::new(&library_root).expect("Could not open library");
+        saver.load(&mut shelf).expect("Could not load shelf");
+        log::info!(
+            target: LOG_NAME,
+            "Loaded shelf with {} items",
+            shelf.all_items().len()
+        );
     }
+    let shelf_ref = Arc::new(Mutex::new(shelf));
 
-    let shelf_ref = Arc::new(RwLock::new(shelf));
+    let api = routes::api(shelf_ref).with(warp::log(LOG_NAME));
+    let static_files = warp::path("static").and(warp::fs::dir("./static"));
+    log::info!(target: LOG_NAME, "Starting server on port 8088");
+    warp::serve(api.or(static_files))
+        .run(([127, 0, 0, 1], 8088))
+        .await;
 
-    let shr = shelf_ref.clone();
-
-    server::new(
-        move || App::with_state(AppState { shelf: shelf_ref.clone(), path: path.clone() })
-            .handler(
-                "/static",
-                actix_web::fs::StaticFiles::new("./static").unwrap().index_file("index.html"))
-            .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
-            .resource("/proxy", |r| r.method(http::Method::GET).with(proxy))
-            .resource("/item/{key}", |r| {
-                r.method(http::Method::GET).with(item);
-                r.method(http::Method::POST).with(edit_item);
-                    // .1.error_handler(|err, req| {
-                    //     println!("{:?}", err);
-                    //     error::ErrorBadRequest(format!("{:?}", err))
-                    // });
-            })
-            .resource("/item", |r| {
-                r.method(http::Method::PUT).with(begin);
-                    // .0.error_handler(|err, req| {
-                    //     println!("{:?}", err);
-                    //     error::ErrorBadRequest(format!("{:?}", err))
-                    // });
-                r.method(http::Method::GET).with(items);
-            })
-            .resource("/person", |r| {
-                r.method(http::Method::PUT).with(put_person);
-                r.method(http::Method::GET).with(people);
-            })
-            .resource("/series", |r| {
-                r.method(http::Method::PUT).with(put_series);
-                r.method(http::Method::GET).with(series);
-            })
-
-    ).bind("127.0.0.1:8088").expect("Could not bind to port 8088").run();
-
-    {
-        let saver = shelf::save::DirectoryShelf::new(&library_root)?;
-        saver.save(&mut shr.write().unwrap())?;
-    }
-
-    Ok(())
+    // TODO: warp::Server::bind_with_graceful_shutdown
+    log::info!(target: LOG_NAME, "Exiting...");
 }
+
+mod model {
+    use std::sync::Arc;
+    use tokio::sync::Mutex;
+    pub type ShelfDb = Arc<Mutex<shelf::Shelf>>;
+
+    /// The query parameters for /proxy.
+    #[derive(serde_derive::Deserialize)]
+    pub struct ProxyParams {
+        pub url: String,
+    }
+
+    #[derive(Debug)]
+    pub struct ReqwestError {
+        pub error: String,
+    }
+
+    impl warp::reject::Reject for ReqwestError {}
+}
+
+mod routes {
+    use crate::{handlers, model};
+    use warp::Filter;
+
+    pub fn api(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        return warp::path!("hello" / String)
+            .map(|name| format!("Hello, {}!", name))
+            .or(item_list(shelf.clone()))
+            .or(person_list(shelf.clone()))
+            .or(series_list(shelf.clone()))
+            .or(proxy());
+    }
+
+    fn with_shelf(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = (model::ShelfDb,), Error = std::convert::Infallible> + Clone {
+        warp::any().map(move || shelf.clone())
+    }
+
+    pub fn item_list(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("item")
+            .and(warp::get())
+            .and(with_shelf(shelf))
+            .and_then(handlers::item_list)
+    }
+
+    pub fn person_list(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("person")
+            .and(warp::get())
+            .and(with_shelf(shelf))
+            .and_then(handlers::person_list)
+    }
+
+    pub fn series_list(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("series")
+            .and(warp::get())
+            .and(with_shelf(shelf))
+            .and_then(handlers::series_list)
+    }
+
+    pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("proxy")
+            .and(warp::get())
+            .and(warp::query::<model::ProxyParams>())
+            .and_then(handlers::proxy)
+            .recover(|rej: warp::Rejection| {
+                async move {
+                    Ok(if let Some(model::ReqwestError { error }) = rej.find() {
+                        warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_GATEWAY)
+                    } else {
+                        warp::reply::with_status(
+                            format!("{:?}", rej),
+                            warp::http::StatusCode::INTERNAL_SERVER_ERROR,
+                        )
+                    })
+                }
+            })
+    }
+}
+
+mod handlers {
+    use crate::model;
+    use std::convert::Infallible;
+
+    pub async fn item_list(shelf: model::ShelfDb) -> Result<impl warp::Reply, Infallible> {
+        let shelf = shelf.lock().await;
+        let items: Vec<shelf::item::Item> = shelf.query_items().map(|x| x.1.clone()).collect();
+        Ok(warp::reply::json(&items))
+    }
+
+    pub async fn person_list(shelf: model::ShelfDb) -> Result<impl warp::Reply, Infallible> {
+        let shelf = shelf.lock().await;
+        let items: Vec<shelf::common::Person> = shelf.query_people().map(|p| p.clone()).collect();
+        Ok(warp::reply::json(&items))
+    }
+
+    pub async fn series_list(shelf: model::ShelfDb) -> Result<impl warp::Reply, Infallible> {
+        let shelf = shelf.lock().await;
+        let items: Vec<shelf::series::Series> = shelf.query_series().map(|p| p.clone()).collect();
+        Ok(warp::reply::json(&items))
+    }
+
+    pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
+        log::info!(target: crate::LOG_NAME, "GET /proxy URL: {}", params.url);
+        reqwest::get(&params.url)
+            .await
+            .map_err(|err| {
+                warp::reject::custom(model::ReqwestError {
+                    error: format!("{}", err),
+                })
+            })?
+            .text()
+            .await
+            .map_err(|err| {
+                warp::reject::custom(model::ReqwestError {
+                    error: format!("{}", err),
+                })
+            })
+    }
+}
+
+// fn main() -> Result<(), Box<::std::error::Error>> {
+//     let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")?;
+//     let path = library_root.clone();
+
+//     let mut shelf = shelf::Shelf::new();
+
+//     // Load the shelf, but discard the saver, since it can't be moved
+//     // across threads
+//     {
+//         println!("Opening shelf: {}", library_root.to_string_lossy());
+//         let saver = shelf::save::DirectoryShelf::new(&library_root)?;
+//         saver.load(&mut shelf)?;
+//     }
+
+//     let shelf_ref = Arc::new(RwLock::new(shelf));
+
+//     let shr = shelf_ref.clone();
+
+//     server::new(move || {
+//         .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
+//         .resource("/item/{key}", |r| {
+//             r.method(http::Method::GET).with(item);
+//             r.method(http::Method::POST).with(edit_item);
+//             // .1.error_handler(|err, req| {
+//             //     println!("{:?}", err);
+//             //     error::ErrorBadRequest(format!("{:?}", err))
+//             // });
+//         })
+//         .resource("/item", |r| {
+//             r.method(http::Method::PUT).with(begin);
+//             // .0.error_handler(|err, req| {
+//             //     println!("{:?}", err);
+//             //     error::ErrorBadRequest(format!("{:?}", err))
+//             // });
+//             r.method(http::Method::GET).with(items);
+//         })
+//         .resource("/person", |r| {
+//             r.method(http::Method::PUT).with(put_person);
+//         })
+//         .resource("/series", |r| {
+//             r.method(http::Method::PUT).with(put_series);
+//         })
+//     })
+
+//     {
+//         let saver = shelf::save::DirectoryShelf::new(&library_root)?;
+//         saver.save(&mut shr.write().unwrap())?;
+//     }
+
+//     Ok(())
+// }

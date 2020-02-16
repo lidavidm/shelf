@@ -1,17 +1,19 @@
 [package]
 name = "shelf-server"
-version = "0.1.0"
+edition = "2018"
+version = "0.2.0"
 authors = ["David Li <li.davidm96@gmail.com>"]
 
 [dependencies]
-actix = "~0.5"
-actix-web = { version = "~0.7", features = ["tls"] }
 app_dirs = "1.2"
-clap = "2.31"
-futures = "0.1"
+log = "0.4"
+pretty_env_logger = "0.3"
+reqwest = { version = "0.10" }
 serde = "1.0"
 serde_derive = "1.0"
 serde_yaml = "0.7"
+tokio = { version = "0.2", features = ["macros"] }
+warp = "0.2"
 
 [dependencies.shelf]
 path = "../shelf"
