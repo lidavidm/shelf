@@ -104,7 +104,14 @@ pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut items: Vec<shelf::item::Item> = shelf
         .query_items()
         .map(|item_ref| item_ref.1)
-        .filter(|item| item.status == shelf::common::Status::Completed)
+        .filter(|item| {
+            item.status == shelf::common::Status::Completed
+                && (item.kind == shelf::common::Kind::Novel
+                    || item.kind == shelf::common::Kind::Play
+                    || item.kind == shelf::common::Kind::Play
+                    || item.kind == shelf::common::Kind::Collection
+                    || item.kind == shelf::common::Kind::ShortStory)
+        })
         .cloned()
         .collect();
     items.sort_by_key(|item| {
