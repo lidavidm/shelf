@@ -7,6 +7,7 @@ export function byURL(rawURL) {
 
     switch (url.hostname.toLowerCase()) {
     case "mangadex.org":
+    case "mangadex.cc":
         return mangadex(rawURL);
     case "myanimelist.net":
         return malurl(rawURL);

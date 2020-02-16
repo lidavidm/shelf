@@ -236,7 +236,7 @@
                     if (!this.data.extra) {
                         this.data.extra = {};
                     }
-                    if (url.host === "mangadex.org") {
+                    if (url.host === "mangadex.org" || url.host === "mangadex.cc") {
                         this.data.extra.mangadex_url = value;
                     }
                     else {
