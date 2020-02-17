@@ -58,9 +58,16 @@ impl Shelf {
         return true;
     }
 
-    pub fn insert_series(&mut self, series: Series) {
+    pub fn insert_series(&mut self, series: Series) -> bool {
         self.dirty.insert(series.key.clone());
+        for s in self.series.iter_mut() {
+            if s.key == series.key {
+                *s = series;
+                return false;
+            }
+        }
         self.series.push(series);
+        return true;
     }
 
     pub fn validate_item(&self, item: &Item) -> Result<()> {

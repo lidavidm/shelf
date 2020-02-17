@@ -9,12 +9,6 @@ use tokio::sync::Mutex;
 
 use warp::Filter;
 
-// fn shutdown(_req: &HttpRequest<AppState>) -> String {
-//     actix::Arbiter::system().do_send(actix::msgs::SystemExit(0));
-
-//     "Goodbye!".to_owned()
-// }
-
 // fn begin(params: (Json<shelf::item::Item>, HttpRequest<AppState>)) -> ActixResult<String> {
 //     use shelf::shelf::ShelfError;
 //     let (item, req) = params;
@@ -34,60 +28,6 @@ use warp::Filter;
 //     req.state().save()?;
 
 //     result
-// }
-
-// fn item(params: (Path<(String,)>, HttpRequest<AppState>)) -> ActixResult<Json<shelf::item::Item>> {
-//     let (path, req) = params;
-//     let key = &path.0;
-//     let shelf = req.state().read_shelf()?;
-//     let item = shelf
-//         .query_items()
-//         .filter(|x| &x.1.key == key)
-//         .map(|x| x.1.clone())
-//         .next();
-//     if let Some(rec) = item {
-//         Ok(Json(rec))
-//     } else {
-//         Err(error::ErrorNotFound(format!("Key {} not found", key)))
-//     }
-// }
-
-// fn edit_item(
-//     params: (
-//         Path<(String,)>,
-//         Json<shelf::item::Item>,
-//         HttpRequest<AppState>,
-//     ),
-// ) -> ActixResult<String> {
-//     use shelf::shelf::ShelfError;
-//     let (_, item, req) = params;
-//     let result = {
-//         let mut shelf = req.state().write_shelf()?;
-//         shelf
-//             .replace_item(item.clone())
-//             // TODO: factor this out
-//             .map_err(|e| match e {
-//                 ShelfError::InvalidReference(r) => error::ErrorInternalServerError(format!(
-//                     "Unrecognized reference to entity {}",
-//                     r
-//                 )),
-//             })
-//             .map(|_| "updated".to_owned())
-//     };
-
-//     req.state().save()?;
-
-//     result
-// }
-
-// fn put_person(params: (Json<shelf::common::Person>, HttpRequest<AppState>)) -> ActixResult<String> {
-//     let (person, req) = params;
-//     {
-//         let mut shelf = req.state().write_shelf()?;
-//         shelf.insert_person(person.clone());
-//     }
-//     req.state().save()?;
-//     Ok("created".to_owned())
 // }
 
 // fn put_series(params: (Json<shelf::series::Series>, HttpRequest<AppState>)) -> ActixResult<String> {
@@ -231,6 +171,7 @@ mod routes {
             .or(person_list(shelf.clone()))
             .or(person_create(shelf.clone()))
             .or(series_list(shelf.clone()))
+            .or(series_create(shelf.clone()))
             .or(proxy())
             .recover(error_handler)
     }
@@ -296,6 +237,16 @@ mod routes {
             .and(warp::get())
             .and(with_shelf(shelf))
             .and_then(handlers::series_list)
+    }
+
+    pub fn series_create(
+        shelf: model::AppStateRef,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("series")
+            .and(warp::put())
+            .and(warp::body::content_length_limit(16 * 1024).and(warp::body::json()))
+            .and(with_shelf(shelf))
+            .and_then(handlers::series_create)
     }
 
     pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
@@ -433,6 +384,34 @@ mod handlers {
         Ok(warp::reply::json(&items))
     }
 
+    pub async fn series_create(
+        series: shelf::series::Series,
+        shelf: model::AppStateRef,
+    ) -> Result<impl warp::Reply, warp::Rejection> {
+        let mut state = shelf.lock().await;
+        let created = state.shelf.insert_series(series.clone());
+        let response = if created {
+            model::CreateResponse {
+                // status: model::CreateStatus::Created,
+                key: series.key,
+            };
+        } else {
+            model::CreateResponse {
+                // status: model::CreateStatus::Updated,
+                key: series.key,
+            };
+        };
+        state.save()?;
+        Ok(warp::reply::with_status(
+            warp::reply::json(&response),
+            if created {
+                warp::http::StatusCode::CREATED
+            } else {
+                warp::http::StatusCode::ACCEPTED
+            },
+        ))
+    }
+
     pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
         log::info!(target: crate::LOG_NAME, "GET /proxy URL: {}", params.url);
         reqwest::get(&params.url)
@@ -453,34 +432,9 @@ mod handlers {
 }
 
 // fn main() -> Result<(), Box<::std::error::Error>> {
-//     let library_root = app_dirs::app_dir(app_dirs::AppDataType::UserConfig, &APP_INFO, "shelf")?;
-//     let path = library_root.clone();
-
-//     let mut shelf = shelf::Shelf::new();
-
-//     // Load the shelf, but discard the saver, since it can't be moved
-//     // across threads
-//     {
-//         println!("Opening shelf: {}", library_root.to_string_lossy());
-//         let saver = shelf::save::DirectoryShelf::new(&library_root)?;
-//         saver.load(&mut shelf)?;
-//     }
-
-//     let shelf_ref = Arc::new(RwLock::new(shelf));
-
-//     let shr = shelf_ref.clone();
-
 //     server::new(move || {
-//         .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
-//         .resource("/item/{key}", |r| {
-//             r.method(http::Method::POST).with(edit_item);
-//         })
 //         .resource("/item", |r| {
 //             r.method(http::Method::PUT).with(begin);
-//             r.method(http::Method::GET).with(items);
-//         })
-//         .resource("/person", |r| {
-//             r.method(http::Method::PUT).with(put_person);
 //         })
 //         .resource("/series", |r| {
 //             r.method(http::Method::PUT).with(put_series);

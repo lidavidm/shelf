@@ -214,7 +214,9 @@ impl DirectoryShelf {
         people.into_iter().for_each(|p| {
             let _ = shelf.insert_person(p);
         });
-        series.into_iter().for_each(|p| shelf.insert_series(p));
+        series.into_iter().for_each(|p| {
+            let _ = shelf.insert_series(p);
+        });
         items
             .into_iter()
             .for_each(|p| shelf.insert_item(p).unwrap());
