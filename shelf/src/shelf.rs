@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use common::Person;
-use item::Item;
-use series::Series;
+use crate::common::Person;
+use crate::item::Item;
+use crate::series::Series;
 
 #[derive(Debug)]
 pub enum ShelfError {

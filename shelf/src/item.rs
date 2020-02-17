@@ -1,12 +1,12 @@
 use chrono;
 use serde_yaml;
 
-use common::Alternatives;
-use common::DateBool;
-use common::Kind;
-use common::PersonIdx;
-use common::Role;
-use common::Status;
+use crate::common::Alternatives;
+use crate::common::DateBool;
+use crate::common::Kind;
+use crate::common::PersonIdx;
+use crate::common::Role;
+use crate::common::Status;
 
 #[derive(Clone, Serialize, Deserialize, Debug, Eq, PartialEq)]
 pub enum PublicationStatus {

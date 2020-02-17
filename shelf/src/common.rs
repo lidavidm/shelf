@@ -5,12 +5,17 @@ use chrono;
 use serde::de;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+/// A reusable container for multiple named values for the same key.
+///
+/// For instance, for multi-lingual titles, this can be used to store
+/// different translations of the same title.
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Alternatives<T> {
     pub default: String,
     pub alternatives: HashMap<String, T>,
 }
 
+/// The role for a person associated with a work.
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Debug)]
 pub enum Role {
     Artist,
@@ -21,12 +26,14 @@ pub enum Role {
 
 pub type PersonIdx = String;
 
+/// A person associated with potentially many works.
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Person {
     pub key: PersonIdx,
     pub name: Alternatives<String>,
 }
 
+/// The read/watch status of an item.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Status {
     Completed,
@@ -36,6 +43,7 @@ pub enum Status {
     Dropped,
 }
 
+/// The type of a work.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 pub enum Kind {
     Unknown,
@@ -43,16 +51,25 @@ pub enum Kind {
     TV,
     Film,
     Novel,
+    /// Original Video Animation
     OVA,
+    /// Original Net Animation
     ONA,
+    /// Music Video
     Music,
+    /// Stage Play
     Play,
+    /// A collection of works.
     Collection,
+    /// A short story, published standalone.
     ShortStory,
     Musical,
     VisualNovel,
 }
 
+/// A hybrid date or Boolean, used to import data from sites that
+/// offer only a Boolean completed flag instead of a completion date,
+/// or a less granular completion date.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DateBool {
     False,
@@ -139,5 +156,16 @@ impl<'de> Deserialize<'de> for DateBool {
         }
 
         deserializer.deserialize_any(DateBoolVisitor)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::DateBool;
+    use serde_test::{assert_tokens, Token};
+
+    #[test]
+    fn test_ser_datebool_false_is_empty() {
+        assert_tokens(&DateBool::False, &[Token::None]);
     }
 }

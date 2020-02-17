@@ -1,5 +1,6 @@
 [package]
 name = "shelf"
+edition = "2018"
 version = "0.1.0"
 authors = ["David Li <li.davidm96@gmail.com>"]
 
@@ -9,3 +10,6 @@ git2 = "0.11"
 serde = "1.0"
 serde_derive = "1.0"
 serde_yaml = "0.8"
+
+[dev-dependencies]
+serde_test = "1.0"

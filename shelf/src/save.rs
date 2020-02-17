@@ -6,7 +6,7 @@ use std::path;
 use git2;
 use serde_yaml;
 
-use shelf::Shelf;
+use crate::shelf::Shelf;
 
 pub struct DirectoryShelf {
     directory: path::PathBuf,
@@ -190,9 +190,9 @@ impl DirectoryShelf {
     }
 
     pub fn load(&self, shelf: &mut Shelf) -> Result<(), SaveError> {
-        let mut people: Vec<::common::Person> = vec![];
-        let mut items: Vec<::item::Item> = vec![];
-        let mut series: Vec<::series::Series> = vec![];
+        let mut people: Vec<crate::common::Person> = vec![];
+        let mut items: Vec<crate::item::Item> = vec![];
+        let mut series: Vec<crate::series::Series> = vec![];
 
         for entry in self.directory.read_dir()? {
             if let Ok(entry) = entry {

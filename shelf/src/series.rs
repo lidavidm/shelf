@@ -1,6 +1,6 @@
-use common::Alternatives;
-use common::PersonIdx;
-use common::Role;
+use crate::common::Alternatives;
+use crate::common::PersonIdx;
+use crate::common::Role;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Series {
