@@ -2,6 +2,8 @@
 
 =shelf= is your reading and watch list. Keep track of the books you read, movies you watch, and more, regardless of what platform they're on (or even if they're just short stories in random blog posts).
 
+[[https://github.com/lidavidm/shelf/workflows/Rust/badge.svg?branch=master]]
+
 Currently supported:
 
 - Several media types (novels, movies, manga, short stories, visual novels, musicals, etc.)
