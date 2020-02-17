@@ -242,6 +242,7 @@
                     added: moment().format(),
                     started: null,
                     completed: null,
+                    publication_status: "Publishing",
                     extra: {},
                 };
             },
