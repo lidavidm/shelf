@@ -9,10 +9,26 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 ///
 /// For instance, for multi-lingual titles, this can be used to store
 /// different translations of the same title.
-#[derive(Clone, Serialize, Deserialize, Debug)]
-pub struct Alternatives<T> {
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
+pub struct Alternatives<T: PartialEq> {
     pub default: String,
     pub alternatives: HashMap<String, T>,
+}
+
+impl<T: PartialEq> Alternatives<T> {
+    pub fn new<S, S0>(default: S, value: S0) -> Alternatives<T>
+    where
+        S: Into<String>,
+        S0: Into<T>,
+    {
+        let default = default.into();
+        let mut alternatives = HashMap::new();
+        alternatives.insert(default.clone(), value.into());
+        Alternatives {
+            default,
+            alternatives,
+        }
+    }
 }
 
 /// The role for a person associated with a work.
@@ -27,7 +43,7 @@ pub enum Role {
 pub type PersonIdx = String;
 
 /// A person associated with potentially many works.
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Person {
     pub key: PersonIdx,
     pub name: Alternatives<String>,

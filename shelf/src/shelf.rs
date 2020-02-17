@@ -132,3 +132,46 @@ impl Shelf {
         self.dirty.clear()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Shelf;
+    use crate::common::{Alternatives, Person};
+
+    #[test]
+    fn test_shelf_insert_person() {
+        let mut shelf = Shelf::new();
+        let person = Person {
+            key: "person-makoto-shinkai".into(),
+            name: Alternatives::new("English", "Makoto Shinkai"),
+        };
+
+        assert_eq!(0, shelf.query_people().count());
+
+        assert!(shelf.insert_person(person.clone()));
+        assert_eq!(1, shelf.query_people().count());
+        assert_eq!(Some(&person), shelf.query_people().next());
+
+        // Overwrite, don't append
+        assert!(!shelf.insert_person(person.clone()));
+        assert_eq!(1, shelf.query_people().count());
+        assert_eq!(Some(&person), shelf.query_people().next());
+
+        // Overwrite with new person
+        let person_updated = Person {
+            key: "person-makoto-shinkai".into(),
+            name: Alternatives::new("English", "The Best Director"),
+        };
+        assert!(!shelf.insert_person(person_updated.clone()));
+        assert_eq!(1, shelf.query_people().count());
+        assert_eq!(Some(&person_updated), shelf.query_people().next());
+
+        // Add new person
+        let someone_else = Person {
+            key: "person-mizu-sahara".into(),
+            name: Alternatives::new("English", "The Best Mangaka"),
+        };
+        assert!(shelf.insert_person(someone_else.clone()));
+        assert_eq!(2, shelf.query_people().count());
+    }
+}
