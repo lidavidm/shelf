@@ -46,9 +46,16 @@ impl Shelf {
         self.series.iter()
     }
 
-    pub fn insert_person(&mut self, person: Person) {
+    pub fn insert_person(&mut self, person: Person) -> bool {
         self.dirty.insert(person.key.clone());
+        for p in self.people.iter_mut() {
+            if p.key == person.key {
+                *p = person;
+                return false;
+            }
+        }
         self.people.push(person);
+        return true;
     }
 
     pub fn insert_series(&mut self, series: Series) {
