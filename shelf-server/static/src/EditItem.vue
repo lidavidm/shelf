@@ -248,14 +248,15 @@
                 }
             },
             save() {
-                window.fetch(`/item/${this.item}`, {
+                let itemKey = this.item || this.data.key;
+                window.fetch(`/item/${itemKey}`, {
                     method: "POST",
                     body: JSON.stringify(this.data),
                     headers: {
                         "Content-Type": "application/json",
                     },
                 }).then((response) => {
-                    if (response.status === 200) {
+                    if (response.status >= 200 && response.status < 300) {
                         this.$emit("done");
                     }
                     else {
