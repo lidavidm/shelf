@@ -168,6 +168,11 @@ mod model {
     }
 
     impl warp::reject::Reject for ReqwestError {}
+
+    #[derive(Debug, serde_derive::Serialize)]
+    pub struct CreateResponse {
+        pub key: String,
+    }
 }
 
 mod routes {
@@ -177,12 +182,15 @@ mod routes {
     pub fn api(
         shelf: model::ShelfDb,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        return warp::path!("hello" / String)
+        warp::path!("hello" / String)
             .map(|name| format!("Hello, {}!", name))
             .or(item_list(shelf.clone()))
+            .or(item_get(shelf.clone()))
             .or(person_list(shelf.clone()))
+            .or(person_create(shelf.clone()))
             .or(series_list(shelf.clone()))
-            .or(proxy());
+            .or(proxy())
+            .recover(error_handler)
     }
 
     fn with_shelf(
@@ -200,6 +208,15 @@ mod routes {
             .and_then(handlers::item_list)
     }
 
+    pub fn item_get(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("item" / String)
+            .and(warp::get())
+            .and(with_shelf(shelf))
+            .and_then(handlers::item_get)
+    }
+
     pub fn person_list(
         shelf: model::ShelfDb,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
@@ -207,6 +224,16 @@ mod routes {
             .and(warp::get())
             .and(with_shelf(shelf))
             .and_then(handlers::person_list)
+    }
+
+    pub fn person_create(
+        shelf: model::ShelfDb,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("person")
+            .and(warp::put())
+            .and(warp::body::content_length_limit(16 * 1024).and(warp::body::json()))
+            .and(with_shelf(shelf))
+            .and_then(handlers::person_create)
     }
 
     pub fn series_list(
@@ -223,18 +250,24 @@ mod routes {
             .and(warp::get())
             .and(warp::query::<model::ProxyParams>())
             .and_then(handlers::proxy)
-            .recover(|rej: warp::Rejection| {
-                async move {
-                    Ok(if let Some(model::ReqwestError { error }) = rej.find() {
-                        warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_GATEWAY)
-                    } else {
-                        warp::reply::with_status(
-                            format!("{:?}", rej),
-                            warp::http::StatusCode::INTERNAL_SERVER_ERROR,
-                        )
-                    })
-                }
-            })
+    }
+
+    async fn error_handler(rej: warp::Rejection) -> Result<impl warp::Reply, warp::Rejection> {
+        Ok(if let Some(model::ReqwestError { error }) = rej.find() {
+            warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_GATEWAY)
+        } else if let Some(_) = rej.find::<warp::reject::UnsupportedMediaType>() {
+            warp::reply::with_status(
+                format!("{:?}", rej),
+                warp::http::StatusCode::UNSUPPORTED_MEDIA_TYPE,
+            )
+        } else if rej.is_not_found() {
+            warp::reply::with_status(format!("{:?}", rej), warp::http::StatusCode::NOT_FOUND)
+        } else {
+            warp::reply::with_status(
+                format!("{:?}", rej),
+                warp::http::StatusCode::INTERNAL_SERVER_ERROR,
+            )
+        })
     }
 }
 
@@ -248,10 +281,41 @@ mod handlers {
         Ok(warp::reply::json(&items))
     }
 
+    pub async fn item_get(
+        key: String,
+        shelf: model::ShelfDb,
+    ) -> Result<impl warp::Reply, warp::Rejection> {
+        let shelf = shelf.lock().await;
+        let item = shelf
+            .query_items()
+            .filter(|x| &x.1.key == &key)
+            .map(|x| x.1.clone())
+            .next();
+        if let Some(rec) = item {
+            Ok(warp::reply::json(&rec))
+        } else {
+            Err(warp::reject::not_found())
+        }
+    }
+
     pub async fn person_list(shelf: model::ShelfDb) -> Result<impl warp::Reply, Infallible> {
         let shelf = shelf.lock().await;
         let items: Vec<shelf::common::Person> = shelf.query_people().map(|p| p.clone()).collect();
         Ok(warp::reply::json(&items))
+    }
+
+    pub async fn person_create(
+        person: shelf::common::Person,
+        shelf: model::ShelfDb,
+    ) -> Result<impl warp::Reply, Infallible> {
+        let mut shelf = shelf.lock().await;
+        shelf.insert_person(person.clone());
+        // TODO: implement saving
+        let created = model::CreateResponse { key: person.key };
+        Ok(warp::reply::with_status(
+            warp::reply::json(&created),
+            warp::http::StatusCode::CREATED,
+        ))
     }
 
     pub async fn series_list(shelf: model::ShelfDb) -> Result<impl warp::Reply, Infallible> {
@@ -300,19 +364,10 @@ mod handlers {
 //     server::new(move || {
 //         .resource("/shutdown", |r| r.method(http::Method::POST).f(shutdown))
 //         .resource("/item/{key}", |r| {
-//             r.method(http::Method::GET).with(item);
 //             r.method(http::Method::POST).with(edit_item);
-//             // .1.error_handler(|err, req| {
-//             //     println!("{:?}", err);
-//             //     error::ErrorBadRequest(format!("{:?}", err))
-//             // });
 //         })
 //         .resource("/item", |r| {
 //             r.method(http::Method::PUT).with(begin);
-//             // .0.error_handler(|err, req| {
-//             //     println!("{:?}", err);
-//             //     error::ErrorBadRequest(format!("{:?}", err))
-//             // });
 //             r.method(http::Method::GET).with(items);
 //         })
 //         .resource("/person", |r| {
