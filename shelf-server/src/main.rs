@@ -143,7 +143,7 @@ async fn main() {
     let api = routes::api(shelf_ref).with(warp::log(LOG_NAME));
     let static_files = warp::path("static").and(warp::fs::dir("./static"));
     log::info!(target: LOG_NAME, "Starting server on port 8088");
-    warp::serve(api.or(static_files))
+    warp::serve(static_files.or(api))
         .run(([127, 0, 0, 1], 8088))
         .await;
 
