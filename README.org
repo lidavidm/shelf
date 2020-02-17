@@ -1,0 +1,17 @@
+* shelf: Organize Your Media Lists
+
+=shelf= is your reading and watch list. Keep track of the books you read, movies you watch, and more, regardless of what platform they're on (or even if they're just short stories in random blog posts).
+
+Currently supported:
+
+- Several media types (novels, movies, manga, short stories, visual novels, musicals, etc.)
+- Fine-grained metadata (e.g. individual chapters of a manga, with volume number and completed date/time) and fuzzy metadata (year-month, year-month-date, or a timestamp for completion date, or just a flag that you have completed it)
+- Basic web UI
+- Basic tagging
+- Importing from MyAnimeList and MangaDex
+
+Planned:
+
+- Faster/more responsive web UI
+- Easy export
+- More import sources
