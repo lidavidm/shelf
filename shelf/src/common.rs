@@ -162,10 +162,53 @@ impl<'de> Deserialize<'de> for DateBool {
 #[cfg(test)]
 mod tests {
     use super::DateBool;
-    use serde_test::{assert_tokens, Token};
+    use chrono::{DateTime, NaiveDate};
+    use serde_test::{assert_de_tokens, assert_tokens, Token};
 
     #[test]
-    fn test_ser_datebool_false_is_empty() {
+    fn test_ser_datebool() {
         assert_tokens(&DateBool::False, &[Token::None]);
+        assert_tokens(&DateBool::True, &[Token::Bool(true)]);
+        assert_tokens(
+            &DateBool::Timestamp(
+                DateTime::parse_from_rfc3339("1996-12-19T16:39:57-08:00").unwrap(),
+            ),
+            &[Token::String("1996-12-19T16:39:57-08:00")],
+        );
+        assert_tokens(
+            &DateBool::Date(NaiveDate::from_ymd(2018, 1, 1)),
+            &[Token::String("2018-01-01")],
+        );
+        assert_tokens(
+            &DateBool::YearMonth(2018, 1),
+            &[Token::String("2018-01-00")],
+        );
+    }
+
+    #[test]
+    fn test_de_datebool() {
+        assert_de_tokens(&DateBool::False, &[Token::None]);
+        assert_de_tokens(&DateBool::False, &[Token::String("0000-00-00")]);
+        assert_de_tokens(&DateBool::False, &[Token::Bool(false)]);
+        assert_de_tokens(&DateBool::False, &[Token::Unit]);
+        assert_de_tokens(&DateBool::True, &[Token::Bool(true)]);
+        assert_de_tokens(
+            &DateBool::Timestamp(
+                DateTime::parse_from_rfc3339("1996-12-19T16:39:57-08:00").unwrap(),
+            ),
+            &[Token::String("1996-12-19T16:39:57-08:00")],
+        );
+        assert_de_tokens(
+            &DateBool::Date(NaiveDate::from_ymd(2018, 1, 1)),
+            &[Token::String("2018-01-01")],
+        );
+        assert_de_tokens(
+            &DateBool::Date(NaiveDate::from_ymd(2018, 1, 1)),
+            &[Token::String("2018/01/01")],
+        );
+        assert_de_tokens(
+            &DateBool::YearMonth(2018, 1),
+            &[Token::String("2018-01-00")],
+        );
     }
 }
