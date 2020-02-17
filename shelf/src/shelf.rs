@@ -11,6 +11,7 @@ pub enum ShelfError {
 
 pub type Result<T> = ::std::result::Result<T, ShelfError>;
 
+#[derive(Default)]
 pub struct Shelf {
     people: Vec<Person>,
     items: Vec<Item>,
@@ -22,12 +23,7 @@ pub struct ItemRef<'a>(pub &'a Shelf, pub &'a Item);
 
 impl Shelf {
     pub fn new() -> Shelf {
-        Shelf {
-            people: Vec::new(),
-            items: Vec::new(),
-            series: Vec::new(),
-            dirty: HashSet::new(),
-        }
+        Default::default()
     }
 
     pub fn all_items(&self) -> &[Item] {
@@ -55,7 +51,7 @@ impl Shelf {
             }
         }
         self.people.push(person);
-        return true;
+        true
     }
 
     pub fn insert_series(&mut self, series: Series) -> bool {
@@ -67,7 +63,7 @@ impl Shelf {
             }
         }
         self.series.push(series);
-        return true;
+        true
     }
 
     pub fn validate_item(&self, item: &Item) -> Result<()> {

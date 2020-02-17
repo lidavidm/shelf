@@ -139,7 +139,7 @@ impl<'de> Deserialize<'de> for DateBool {
                 } else if let Ok(ts) = chrono::naive::NaiveDate::parse_from_str(v, "%Y-%m-%d") {
                     Ok(DateBool::Date(ts))
                 } else {
-                    let parts: Vec<&str> = v.split("-").collect();
+                    let parts: Vec<&str> = v.split('-').collect();
                     if parts.len() == 3 {
                         let year = parts[0].parse::<u32>();
                         let month = parts[1].parse::<u32>();

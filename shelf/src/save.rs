@@ -165,7 +165,7 @@ impl DirectoryShelf {
             let tree_id = index.write_tree()?;
 
             let tree = self.repository.find_tree(tree_id)?;
-            if updated.len() > 0 {
+            if !updated.is_empty() {
                 let message = if updated.len() == 1 {
                     format!("Updated \"{}\"", updated[0])
                 } else {
