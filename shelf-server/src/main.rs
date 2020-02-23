@@ -285,6 +285,7 @@ mod handlers {
         use shelf::shelf::ShelfError;
 
         if key != item.key {
+            // TODO: for unicode, key needs to be decoded
             return Err(warp::reject::custom(model::BadRequest {
                 error: format!(
                     "Item has key '{}' but this route is for key '{}'",

@@ -102,6 +102,7 @@
     import EditItem from "./EditItem";
 
     import * as imports from "./imports/index";
+    import * as util from "./util";
 
     export default {
         name: "items",
@@ -175,7 +176,7 @@
                     if (item.kind != prevKind) {
                         prevKind = item.kind;
                         this.itemsByCategory.push({
-                            "title": item.kind,
+                            "title": util.humanKind(item.kind),
                             "items": [],
                         });
                     }
@@ -330,6 +331,13 @@
         font-style: italic;
         padding: 0.25em 0;
         border-bottom: 2px solid black;
+        position: sticky;
+        top: 0;
+        background: #EFEFEF;
+    }
+
+    .items-category-title td {
+        text-align: center;
     }
 
     .item-status {
