@@ -22,8 +22,11 @@
                 </tr>
             </thead>
 
-            <tbody>
-                <tr v-for="item in items" v-bind:id="item.key">
+            <tbody v-for="category in itemsByCategory" v-bind:id="category.title">
+                <tr class="items-category-title">
+                    <td colspan="6">{{category.title}}</td>
+                </tr>
+                <tr v-for="item in category.items" v-bind:id="item.key">
                     <td class="item-status" v-bind:class="item['status']"></td>
                     <td class="type">{{ item["kind"] }}</td>
                     <td class="name">
@@ -71,7 +74,7 @@
                         >
                             Mangadex
                         </a>
-                         <a
+                        <a
                             v-if="item.extra.mal_id"
                             v-bind:href="malUrl(item.kind, item.extra.mal_id)"
                             target="_blank"
@@ -104,7 +107,10 @@
         name: "items",
         data() {
             return {
+                // The raw items
                 items: [],
+                // A list of { category: string, items: list } objects
+                itemsByCategory: [],
                 editing: null,
                 editingItem: null,
                 series: {},
@@ -149,10 +155,34 @@
             },
 
             sortItems() {
-                return this.items.sort(firstBy(v => v.status === "InProgress" ? 0 : 1)
+                this.itemsByCategory = [];
+                this.items.sort(firstBy(v => v.status === "InProgress" ? 0 : 1)
                     .thenBy(v => v.kind)
                     .thenBy(v => v.status)
                     .thenBy(v => v.name.alternatives[v.name.default].toLowerCase()));
+
+                const firstNotInProgress = this.items.findIndex(item => item.status !== "InProgress");
+                this.itemsByCategory.push({
+                    "title": "In Progress",
+                    "items": this.items.slice(
+                        0,
+                        firstNotInProgress === -1 ? this.items.length : firstNotInProgress
+                    ),
+                });
+                let prevKind = null;
+                for (let index = firstNotInProgress; index < this.items.length; index++) {
+                    const item = this.items[index];
+                    if (item.kind != prevKind) {
+                        prevKind = item.kind;
+                        this.itemsByCategory.push({
+                            "title": item.kind,
+                            "items": [],
+                        });
+                    }
+                    this.itemsByCategory[this.itemsByCategory.length - 1].items.push(item);
+                }
+
+                return this.items;
             },
 
             edit(key) {
@@ -294,6 +324,12 @@
     #items-list td a:hover {
         text-decoration: underline;
         cursor: pointer;
+    }
+
+    .items-category-title {
+        font-style: italic;
+        padding: 0.25em 0;
+        border-bottom: 2px solid black;
     }
 
     .item-status {
