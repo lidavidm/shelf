@@ -1,9 +1,5 @@
 <template>
     <section id="items">
-
-        <label for="import">Import MAL:</label>
-        <input id="import" type="file" v-on:change="onFile" />
-
         <form>
             <label for="import-url">Import URL:</label>
             <input id="import-url" type="text" />
@@ -198,20 +194,10 @@
                 e.preventDefault();
                 const url = document.querySelector("#import-url").value;
 
-                // TODO: need some way to approve the entry
                 imports.byURL(url).then((imported) => {
                     for (const result of imported) {
                         console.log(result);
                         this.editingItem = result;
-                        /* window.fetch("/item", {
-                         *     method: "PUT",
-                         *     body: JSON.stringify(result),
-                         *     headers: {
-                         *         "Content-Type": "application/json",
-                         *     },
-                         * });
-
-                         * this.items.push(result); */
                     }
                     this.sortItems();
                 });
