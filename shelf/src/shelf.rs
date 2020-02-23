@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use crate::common::Person;
 use crate::item::Item;
@@ -13,9 +13,9 @@ pub type Result<T> = ::std::result::Result<T, ShelfError>;
 
 #[derive(Default)]
 pub struct Shelf {
-    people: Vec<Person>,
+    people: HashMap<String, Person>,
     items: Vec<Item>,
-    series: Vec<Series>,
+    series: HashMap<String, Series>,
     dirty: HashSet<String>,
 }
 
@@ -35,60 +35,39 @@ impl Shelf {
     }
 
     pub fn query_people(&self) -> impl Iterator<Item = &Person> {
-        self.people.iter()
+        self.people.values()
     }
 
     pub fn query_series(&self) -> impl Iterator<Item = &Series> {
-        self.series.iter()
+        self.series.values()
     }
 
+    /// Insert or update a person.
+    ///
+    /// Returns true if the person did not previously exist.
     pub fn insert_person(&mut self, person: Person) -> bool {
         self.dirty.insert(person.key.clone());
-        for p in self.people.iter_mut() {
-            if p.key == person.key {
-                *p = person;
-                return false;
-            }
-        }
-        self.people.push(person);
-        true
+        self.people.insert(person.key.clone(), person).is_none()
     }
 
+    /// Insert or update a series.
+    ///
+    /// Returns true if the series did not previously exist.
     pub fn insert_series(&mut self, series: Series) -> bool {
+        // TODO: validate people
         self.dirty.insert(series.key.clone());
-        for s in self.series.iter_mut() {
-            if s.key == series.key {
-                *s = series;
-                return false;
-            }
-        }
-        self.series.push(series);
-        true
+        self.series.insert(series.key.clone(), series).is_none()
     }
 
     pub fn validate_item(&self, item: &Item) -> Result<()> {
         for (_, person) in item.people.iter() {
-            let mut found = false;
-            for person2 in self.people.iter() {
-                if person == &person2.key {
-                    found = true;
-                    break;
-                }
-            }
-            if !found {
+            if !self.people.contains_key(person) {
                 return Err(ShelfError::InvalidReference(person.to_owned()));
             }
         }
 
         if let Some((ref key, _)) = item.series {
-            let mut found = false;
-            for series in self.series.iter() {
-                if key == &series.key {
-                    found = true;
-                    break;
-                }
-            }
-            if !found {
+            if !self.series.contains_key(key) {
                 return Err(ShelfError::InvalidReference(key.to_owned()));
             }
         }
@@ -137,6 +116,7 @@ impl Shelf {
 mod tests {
     use super::Shelf;
     use crate::common::{Alternatives, Person};
+    use crate::series::Series;
 
     #[test]
     fn test_shelf_insert_person() {
@@ -173,5 +153,45 @@ mod tests {
         };
         assert!(shelf.insert_person(someone_else.clone()));
         assert_eq!(2, shelf.query_people().count());
+    }
+
+    #[test]
+    fn test_shelf_insert_series() {
+        let mut shelf = Shelf::new();
+        let series = Series {
+            key: "series-the-best".into(),
+            name: Alternatives::new("Japanese (Romaji)", "Kara no Kyoukai"),
+            people: Vec::new(),
+        };
+
+        assert_eq!(0, shelf.query_series().count());
+
+        assert!(shelf.insert_series(series.clone()));
+        assert_eq!(1, shelf.query_series().count());
+        assert_eq!(Some(&series), shelf.query_series().next());
+
+        // Overwrite, don't append
+        assert!(!shelf.insert_series(series.clone()));
+        assert_eq!(1, shelf.query_series().count());
+        assert_eq!(Some(&series), shelf.query_series().next());
+
+        // Overwrite with new series
+        let series_updated = Series {
+            key: "series-the-best".into(),
+            name: Alternatives::new("English", "Garden of Sinners"),
+            people: Vec::new(),
+        };
+        assert!(!shelf.insert_series(series_updated.clone()));
+        assert_eq!(1, shelf.query_series().count());
+        assert_eq!(Some(&series_updated), shelf.query_series().next());
+
+        // Add new series
+        let someone_else = Series {
+            key: "series-the-poppy-war".into(),
+            name: Alternatives::new("English", "The Poppy War"),
+            people: Vec::new(),
+        };
+        assert!(shelf.insert_series(someone_else.clone()));
+        assert_eq!(2, shelf.query_series().count());
     }
 }
