@@ -312,8 +312,9 @@
     }
 
     #items-list td {
+        padding-right: 0.25em;
         height: 2em;
-        line-height: 2em;
+        line-height: 1.5em;
         vertical-align: top;
     }
 
