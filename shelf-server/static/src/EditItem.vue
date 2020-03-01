@@ -10,41 +10,85 @@
                     <input id="key" type="text" v-model="data.key" />
                 </div>
 
-                <div>
-                    <label>Added to shelf</label>
-                    <span>{{ data.added }}</span>
-                </div>
+                <section id="simple-fields">
+                    <div class="field">
+                        <label>Added to shelf</label>
+                        <span>{{ data.added }}</span>
+                    </div>
 
-                <div>
-                    <label>Started on</label>
-                    <input id="started" type="text" v-model="data.started" />
-                    <button v-on:click="data.started = now()">Now</button>
-                </div>
+                   <div class="field">
+                        <label for="kind">Item Type</label>
+                        <select id="kind" v-model="data.kind">
+                            <option>Unknown</option>
+                            <option>Manga</option>
+                            <option>TV</option>
+                            <option>Film</option>
+                            <option>Novel</option>
+                            <option>OVA</option>
+                            <option>ONA</option>
+                            <option>Music</option>
+                            <option>Play</option>
+                            <option>Collection</option>
+                            <option :value="'ShortStory'">Short Story</option>
+                            <option>Musical</option>
+                            <option :value="'VisualNovel'">Visual Novel</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <label>Finished on</label>
-                    <input id="finished" type="text" v-model="data.completed" />
-                    <button v-on:click="data.completed = now()">Now</button>
-                </div>
+                    <div class="field">
+                        <label>Started on</label>
+                        <input id="started" type="text" v-model="data.started" />
+                        <button v-on:click="data.started = now()">Now</button>
+                    </div>
 
-                <div>
-                    <label for="kind">Item Type</label>
-                    <select id="kind" v-model="data.kind">
-                        <option>Unknown</option>
-                        <option>Manga</option>
-                        <option>TV</option>
-                        <option>Film</option>
-                        <option>Novel</option>
-                        <option>OVA</option>
-                        <option>ONA</option>
-                        <option>Music</option>
-                        <option>Play</option>
-                        <option>Collection</option>
-                        <option :value="'ShortStory'">Short Story</option>
-                        <option>Musical</option>
-                        <option :value="'VisualNovel'">Visual Novel</option>
-                    </select>
-                </div>
+                    <div class="field">
+                        <label>Finished on</label>
+                        <input id="finished" type="text" v-model="data.completed" />
+                        <button v-on:click="data.completed = now()">Now</button>
+                    </div>
+
+                    <div class="field">
+                        <label for="status">Status</label>
+                        <select id="status" v-model="data.status">
+                            <option>Planned</option>
+                            <option value="InProgress">In Progress</option>
+                            <option>Completed</option>
+                            <option value="OnHold">On Hold</option>
+                            <option>Dropped</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="publication-status">Publication Status</label>
+                        <select id="publication-status" v-model="data.publication_status">
+                            <option>Publishing</option>
+                            <option>Complete</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="rating">Rating</label>
+                        <select id="rating" v-model="data.rating">
+                            <option :value="null">-</option>
+                            <option :value="0">0</option>
+                            <option :value="1">1</option>
+                            <option :value="2">2</option>
+                            <option :value="3">3</option>
+                            <option :value="4">4</option>
+                            <option :value="5">5</option>
+                            <option :value="6">6</option>
+                            <option :value="7">7</option>
+                            <option :value="8">8</option>
+                            <option :value="9">9</option>
+                            <option :value="10">10</option>
+                        </select>
+                    </div>
+
+                    <section id="external" class="field">
+                        <label for="External URL">External URL</label>
+                        <input type="text" :value="externalUrl" @input="updateExternalUrl" />
+                    </section>
+                </section>
 
                 <edit-tags v-model="data.tags" />
 
@@ -53,43 +97,6 @@
                      <input id="season" type="text" v-model="data.season" />
                      </div>
                 -->
-
-                <div>
-                    <label for="status">Status</label>
-                    <select id="status" v-model="data.status">
-                        <option>Planned</option>
-                        <option value="InProgress">In Progress</option>
-                        <option>Completed</option>
-                        <option value="OnHold">On Hold</option>
-                        <option>Dropped</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="publication-status">Publication Status</label>
-                    <select id="publication-status" v-model="data.publication_status">
-                        <option>Publishing</option>
-                        <option>Complete</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="rating">Rating</label>
-                    <select id="rating" v-model="data.rating">
-                        <option :value="null">-</option>
-                        <option :value="0">0</option>
-                        <option :value="1">1</option>
-                        <option :value="2">2</option>
-                        <option :value="3">3</option>
-                        <option :value="4">4</option>
-                        <option :value="5">5</option>
-                        <option :value="6">6</option>
-                        <option :value="7">7</option>
-                        <option :value="8">8</option>
-                        <option :value="9">9</option>
-                        <option :value="10">10</option>
-                    </select>
-                </div>
 
                 <edit-series v-model="data.series" />
             </section>
@@ -104,11 +111,6 @@
 
             <section id="item-people">
                 <edit-people v-model="data.people" />
-            </section>
-
-            <section id="external">
-                <label for="External URL">External URL:</label>
-                <input type="text" :value="externalUrl" @input="updateExternalUrl" />
             </section>
 
             <section id="entries">
@@ -444,6 +446,32 @@
         overflow-y: auto;
         padding: 0em 1em;
         box-sizing: border-box;
+    }
+
+    #simple-fields {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .field {
+        flex: 1 0 50%;
+        padding: 0.25em 0.5em 0.25em 0;
+        box-sizing: border-box;
+        line-height: 2em;
+        height: 2em;
+        display: flex;
+    }
+
+    .field > * {
+        flex: 0 0 auto;
+    }
+
+    .field > label {
+        padding-right: 0.5em;
+    }
+
+    .field > select, .field > input[type="text"] {
+        flex: 1 0 auto;
     }
 
     #item-nav {
