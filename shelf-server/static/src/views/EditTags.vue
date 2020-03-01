@@ -6,14 +6,28 @@
                 {{tag}}
                 <button @click="removeTag(tag)">×</button>
             </li>
-            <li>
+            <li class="tag-input">
                 <input
                     type="text"
                     id="new-tag"
                     placeholder="New tag"
                     v-model:value="newTag"
                     @keyup.enter="addTag()"
+                <!-- TODO: full tab completion -->
+                <!-- @keyup.up="selectSuggestionUp()" -->
+                <!-- @keyup.down="selectSuggestionDown()" -->
+                    @keyup.tab="selectSuggestionCycle"
+                    @keydown.tab.stop.prevent=""
+                    @keyup.escape="clearSuggestions()"
                 />
+                <ul class="suggestions" v-if="suggestions.length > 0">
+                    <li
+                        v-for="(suggestion, index) in suggestions"
+                        v-bind:class="{ selected: index === selectedIndex }"
+                    >
+                        {{suggestion}}
+                    </li>
+                </ul>
             </li>
         </ul>
     </div>
@@ -21,6 +35,7 @@
 
 <script>
     import firstBy from "thenby";
+    import PrefixTrie from "../prefixtrie";
     import * as util from "../util";
 
     export default {
@@ -31,11 +46,19 @@
         data() {
             return {
                 tags: null,
+                autocomplete: null,
+                suggestions: [],
                 newTag: null,
+                selectedIndex: -1,
             };
         },
         mounted() {
             this.tags = this.value;
+            window.fetch("/tag")
+                  .then(r => r.json())
+                  .then(tags => {
+                      this.autocomplete = new PrefixTrie(tags);
+                  });
         },
         methods: {
             sort() {
@@ -46,17 +69,41 @@
             },
 
             addTag() {
-                if (this.newTag != null && !this.newTag.match(/^\s*$/)) {
+                if (this.selectedIndex >= 0) {
+                    this.tags.push(this.suggestions[this.selectedIndex]);
+                } else if (this.newTag != null && !this.newTag.match(/^\s*$/)) {
                     this.tags.push(this.newTag);
-                    this.sort();
-                    this.newTag = "";
                 } else {
                     alert("Tag must not be blank.");
+                    return;
                 }
+                this.sort();
+                this.newTag = "";
             },
 
             removeTag(tag) {
                 this.tags = this.tags.filter(x => x !== tag);
+            },
+
+            selectSuggestionCycle() {
+                if (this.suggestions.length > 0) {
+                    this.selectedIndex = (this.selectedIndex + 1) % this.suggestions.length;
+                }
+            },
+
+            clearSuggestions() {
+                this.suggestions = [];
+                this.selectedIndex = -1;
+            },
+        },
+        watch: {
+            newTag: function(prefix, oldPrefix) {
+                if (prefix === "") {
+                    this.clearSuggestions();
+                }
+                else if (prefix !== oldPrefix) {
+                    this.suggestions = Array.from(this.autocomplete.beginsWith(prefix)).sort();
+                }
             },
         },
     };
@@ -86,5 +133,29 @@
 
     input[type="text"] {
         border-bottom: 0;
+    }
+
+    .tag-input {
+        position: relative;
+    }
+
+    .suggestions {
+        position: absolute;
+        left: 0;
+        top: 2em;
+        z-index: 9999;
+        background: #FFF;
+        border: 1px solid #000;
+        box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+        flex-direction: column;
+    }
+
+    .suggestions li {
+        padding: 0 0.25em;
+    }
+
+    .suggestions li.selected {
+        font-weight: bold;
+        text-decoration: underline;
     }
 </style>

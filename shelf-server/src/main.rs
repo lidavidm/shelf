@@ -141,6 +141,7 @@ mod routes {
             .or(person_create(shelf.clone()))
             .or(series_list(shelf.clone()))
             .or(series_create(shelf.clone()))
+            .or(tag_list(shelf.clone()))
             .or(proxy())
             .recover(error_handler)
     }
@@ -218,6 +219,15 @@ mod routes {
             .and_then(handlers::series_create)
     }
 
+    pub fn tag_list(
+        shelf: model::AppStateRef,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+        warp::path!("tag")
+            .and(warp::get())
+            .and(with_shelf(shelf))
+            .and_then(handlers::tag_list)
+    }
+
     pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
         warp::path!("proxy")
             .and(warp::get())
@@ -252,6 +262,7 @@ mod routes {
 
 mod handlers {
     use crate::model;
+    use std::collections::HashSet;
     use std::convert::Infallible;
 
     pub async fn item_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Infallible> {
@@ -387,6 +398,17 @@ mod handlers {
                 warp::http::StatusCode::ACCEPTED
             },
         ))
+    }
+
+    pub async fn tag_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Infallible> {
+        let shelf = &shelf.lock().await.shelf;
+        let mut tags = HashSet::new();
+        for item in shelf.query_items() {
+            for tag in item.1.tags.iter() {
+                tags.insert(tag);
+            }
+        }
+        Ok(warp::reply::json(&tags))
     }
 
     pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {

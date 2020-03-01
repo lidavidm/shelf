@@ -20,6 +20,7 @@
     "vue-router": "^3.0.1"
   },
   "scripts": {
+    "test": "ava",
     "watch": "parcel watch --no-hmr --public-url . index.html"
   }
 }
