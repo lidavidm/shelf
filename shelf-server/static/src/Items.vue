@@ -1,14 +1,21 @@
 <template>
     <section id="items">
-        <form>
-            <label for="import-url">Import URL:</label>
-            <input id="import-url" type="text" />
-            <button v-on:click="onImportURL">Import</button>
-        </form>
+        <section id="controls">
+            <form>
+                <button v-on:click="addEntry">Add Entry</button>
 
-        <button v-on:click="addEntry">Add Entry</button>
+                <label for="import-url">Import URL:</label>
+                <input id="import-url" type="text" />
+                <button v-on:click="onImportURL">Import</button>
+            </form>
 
-        Stats: {{ items.length }} items
+            <form>
+                <label for="search">Search:</label>
+                <input ref="search" id="search" type="text" placeholder="by title" v-model="searchQuery" />
+            </form>
+
+            Stats: {{ items.length }} items
+        </section>
 
         <table id="items-list">
             <thead>
@@ -24,9 +31,12 @@
 
             <tbody v-for="category in itemsByCategory" v-bind:id="category.title">
                 <tr class="items-category-title">
-                    <td colspan="6">{{category.title}}</td>
+                    <td colspan="6">
+                        {{category.title}}
+                        ({{category.items.length}} items)
+                    </td>
                 </tr>
-                <tr v-for="item in category.items" v-bind:id="item.key">
+                <tr v-for="item in category.items" v-bind:id="item.key" v-if="searchMatches(item)">
                     <td class="item-status" v-bind:class="item['status']"></td>
                     <td class="type">{{ item["kind"] }}</td>
                     <td class="name">
@@ -112,6 +122,7 @@
                 items: [],
                 // A list of { category: string, items: list } objects
                 itemsByCategory: [],
+                searchQuery: "",
                 editing: null,
                 editingItem: null,
                 series: {},
@@ -120,6 +131,7 @@
         },
         mounted() {
             this.getItems();
+            this.$refs.search.focus();
         },
         methods: {
             hostname(url) {
@@ -249,6 +261,15 @@
                           this.editingItem = template;
                       });
             },
+
+            searchMatches(item) {
+                if (!this.searchQuery) {
+                    return true;
+                }
+
+                return Object.values(item.name.alternatives)
+                             .some((v) => v.toLowerCase().indexOf(this.searchQuery.toLowerCase()) >= 0);
+            },
         },
         components: {
             EditItem,
@@ -257,6 +278,10 @@
 </script>
 
 <style lang="css">
+    #controls > * {
+        margin: 1em 0;
+    }
+
     #items-list {
         border-collapse: collapse;
         min-width: 60em;

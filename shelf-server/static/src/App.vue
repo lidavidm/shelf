@@ -50,6 +50,7 @@
     #app h1 {
         font-size: 3em;
         font-weight: normal;
+        margin: 1rem 0;
     }
 
     h1, h2, h3 {
