@@ -184,8 +184,7 @@ impl DirectoryShelf {
 
         shelf.clear_all_dirty();
 
-        // TODO: return this info
-        println!("Wrote {} entries", wrote);
+        log::info!("Wrote {} entries", wrote);
         Ok(wrote)
     }
 

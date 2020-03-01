@@ -7,6 +7,7 @@ authors = ["David Li <li.davidm96@gmail.com>"]
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
 git2 = "0.11"
+log = "0.4"
 serde = "1.0"
 serde_derive = "1.0"
 serde_yaml = "0.8"
