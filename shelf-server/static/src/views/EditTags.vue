@@ -1,11 +1,19 @@
 <template>
-    <div>
+    <div class="tag-editor">
         <label for="series">Tags</label>
         <ul id="tags">
-            <li v-for="tag in tags">{{tag}}</li>
+            <li v-for="tag in tags" class="tag">
+                {{tag}}
+                <button @click="removeTag(tag)">×</button>
+            </li>
             <li>
-                <input type="text" v-model:value="newTag" id="new-tag" placeholder="New tag" />
-                <button @click="addTag">Add Tag</button>
+                <input
+                    type="text"
+                    id="new-tag"
+                    placeholder="New tag"
+                    v-model:value="newTag"
+                    @keyup.enter="addTag()"
+                />
             </li>
         </ul>
     </div>
@@ -46,9 +54,37 @@
                     alert("Tag must not be blank.");
                 }
             },
+
+            removeTag(tag) {
+                this.tags = this.tags.filter(x => x !== tag);
+            },
         },
     };
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: inline-flex;
+        justify-content: space-between;
+        min-height: 2em;
+        border-bottom: 1px solid #000;
+    }
+
+    li.tag {
+        display: flex;
+        flex: 0 0 auto;
+        margin-right: 0.5em;
+        padding: 0 0.25em;
+        background: var(--theme-4);
+        border-radius: 0.2em;
+        height: 1.75em;
+        line-height: 2em;
+    }
+
+    input[type="text"] {
+        border-bottom: 0;
+    }
 </style>

@@ -90,7 +90,7 @@
                     </section>
                 </section>
 
-                <edit-tags v-model="data.tags" />
+                <edit-tags v-model="data.tags" class="field" />
 
                 <!-- <div>
                      <label for="season">Season Name</label>
