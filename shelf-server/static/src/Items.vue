@@ -242,26 +242,12 @@
             },
 
             addEntry() {
-                this.editingItem = {
-                    key: null,
-                    kind: "Manga",
-                    name: {
-                        default: "English",
-                        alternatives: {
-                            "English": "",
-                        },
-                    },
-                    people: [],
-                    season: null,
-                    entries: [],
-                    status: "Planned",
-                    rating: null,
-                    added: moment().format(),
-                    started: null,
-                    completed: null,
-                    publication_status: "Publishing",
-                    extra: {},
-                };
+                window.fetch("/item/:template:")
+                      .then(r => r.json())
+                      .then((template) => {
+                          template.key = null;
+                          this.editingItem = template;
+                      });
             },
         },
         components: {

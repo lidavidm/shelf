@@ -38,6 +38,28 @@ pub struct Item {
     pub series: Option<(String, Option<String>)>,
 }
 
+impl Default for Item {
+    fn default() -> Self {
+        Item {
+            key: "".into(),
+            kind: Kind::Manga,
+            name: Alternatives::new("English", ""),
+            people: Vec::new(),
+            season: None,
+            entries: Vec::new(),
+            status: Status::Planned,
+            rating: None,
+            tags: Vec::new(),
+            added: chrono::prelude::Local::now().into(),
+            started: DateBool::False,
+            completed: DateBool::False,
+            extra: serde_yaml::Value::Null,
+            publication_status: PublicationStatus::Publishing,
+            series: None,
+        }
+    }
+}
+
 fn default_extras() -> serde_yaml::Value {
     serde_yaml::Value::Null
 }

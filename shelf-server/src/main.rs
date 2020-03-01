@@ -260,10 +260,17 @@ mod handlers {
         Ok(warp::reply::json(&items))
     }
 
+    // The key for a blank template item.
+    static ITEM_TEMPLATE_KEY: &'static str = ":template:";
+
     pub async fn item_get(
         key: String,
         shelf: model::AppStateRef,
     ) -> Result<impl warp::Reply, warp::Rejection> {
+        if key == ITEM_TEMPLATE_KEY {
+            return Ok(warp::reply::json::<shelf::item::Item>(&Default::default()));
+        }
+
         let shelf = &shelf.lock().await.shelf;
         let item = shelf
             .query_items()
