@@ -71,21 +71,21 @@
 
                     <td class="external">
                         <a
-                            v-if="item.extra.external_url"
+                            v-if="item.extra && item.extra.external_url"
                             v-bind:href="item.extra.external_url"
                             target="_blank"
                         >
                             {{hostname(item.extra.external_url)}}
                         </a>
                         <a
-                            v-if="item.extra.mangadex_url"
+                            v-if="item.extra && item.extra.mangadex_url"
                             v-bind:href="item.extra.mangadex_url"
                             target="_blank"
                         >
                             Mangadex
                         </a>
                         <a
-                            v-if="item.extra.mal_id"
+                            v-if="item.extra && item.extra.mal_id"
                             v-bind:href="malUrl(item.kind, item.extra.mal_id)"
                             target="_blank"
                         >
