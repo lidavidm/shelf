@@ -96,7 +96,7 @@
                         },
                     }),
                     headers: {
-                        "Content-Type": "text/json",
+                        "Content-Type": "application/json",
                     },
                 }).then(req => req.text()).then(() => this.getPeople());
                 this.creatingPerson = false;
