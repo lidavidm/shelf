@@ -106,15 +106,15 @@ You may obtain a copy of the License at
                     </section>
                 </section>
 
+                <edit-series v-model="data.series" />
                 <edit-tags v-model="data.tags" class="field" />
 
-                <!-- <div>
+                <!--
+                     <div>
                      <label for="season">Season Name</label>
                      <input id="season" type="text" v-model="data.season" />
                      </div>
                 -->
-
-                <edit-series v-model="data.series" />
             </section>
 
             <section>
