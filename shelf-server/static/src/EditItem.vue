@@ -302,7 +302,7 @@ You may obtain a copy of the License at
                         maxCompleted = Math.max(maxCompleted, entry.number);
                     }
                 }
-                number += 1
+                number += 1;
 
                 if (completed && maxCompleted !== null && maxCompleted < number) {
                     for (const entry of this.data.entries) {
