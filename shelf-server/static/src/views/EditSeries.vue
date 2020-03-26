@@ -97,11 +97,9 @@ You may obtain a copy of the License at
             update() {
                 const series = this.series;
                 if (series && !series[1]) {
-                    console.log(JSON.stringify([ series[0], null ]));
                     this.$emit("input", [ series[0], null ]);
                 }
                 else {
-                    console.log(JSON.stringify(series));
                     this.$emit("input", series);
                 }
             },
@@ -122,7 +120,7 @@ You may obtain a copy of the License at
                         people: [],
                     }),
                     headers: {
-                        "Content-Type": "text/json",
+                        "Content-Type": "application/json",
                     },
                 }).then(req => req.text()).then(() => this.getSeries());
                 this.addingSeries = false;
