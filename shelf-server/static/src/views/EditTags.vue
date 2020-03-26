@@ -33,9 +33,6 @@ You may obtain a copy of the License at
                     @keydown.tab.stop.prevent=""
                     @keyup.escape="clearSuggestions()"
                 />
-                <!-- TODO: full tab completion -->
-                <!-- @keyup.up="selectSuggestionUp()" -->
-                <!-- @keyup.down="selectSuggestionDown()" -->
                 <ul class="suggestions" v-if="suggestions.length > 0">
                     <li
                         v-for="(suggestion, index) in suggestions"
