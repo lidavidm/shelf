@@ -250,6 +250,7 @@ mod routes {
     }
 
     async fn error_handler(rej: warp::Rejection) -> Result<impl warp::Reply, warp::Rejection> {
+        log::info!(target: crate::LOG_NAME, "Processing rejection: {:?}", rej);
         Ok(if let Some(model::ReqwestError { error }) = rej.find() {
             warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_GATEWAY)
         } else if let Some(model::InternalServerError { error }) = rej.find() {
@@ -288,23 +289,51 @@ mod handlers {
     // The key for a blank template item.
     static ITEM_TEMPLATE_KEY: &'static str = ":template:";
 
+    // Helper to percent-decode keys
+    pub fn decode_key(key: &str) -> Result<std::borrow::Cow<str>, warp::Rejection> {
+        percent_encoding::percent_decode_str(&key)
+            .decode_utf8()
+            .map_err(|e| {
+                warp::reject::custom(model::BadRequest {
+                    error: format!("Could not percent-decode item {:?}: {}", &key, e),
+                })
+            })
+    }
+
     pub async fn item_get(
         key: String,
         shelf: model::AppStateRef,
     ) -> Result<impl warp::Reply, warp::Rejection> {
         if key == ITEM_TEMPLATE_KEY {
+            log::info!(
+                target: crate::LOG_NAME,
+                "GET /item KEY: {} (item template)",
+                key
+            );
             return Ok(warp::reply::json::<shelf::item::Item>(&Default::default()));
         }
+
+        let decoded_key = decode_key(&key)?;
 
         let shelf = &shelf.lock().await.shelf;
         let item = shelf
             .query_items()
-            .filter(|x| &x.1.key == &key)
+            .filter(|x| &x.1.key == &decoded_key)
             .map(|x| x.1.clone())
             .next();
         if let Some(rec) = item {
+            log::info!(
+                target: crate::LOG_NAME,
+                "GET /item KEY: {} (found)",
+                decoded_key
+            );
             Ok(warp::reply::json(&rec))
         } else {
+            log::info!(
+                target: crate::LOG_NAME,
+                "GET /item KEY: {} (not found)",
+                decoded_key
+            );
             Err(warp::reject::not_found())
         }
     }
@@ -316,7 +345,10 @@ mod handlers {
     ) -> Result<impl warp::Reply, warp::Rejection> {
         use shelf::shelf::ShelfError;
 
-        if key != item.key {
+        let decoded_key = decode_key(&key)?;
+        log::info!(target: crate::LOG_NAME, "POST /item KEY: {}", item.key);
+
+        if decoded_key != item.key {
             // TODO: for unicode, key needs to be decoded
             return Err(warp::reject::custom(model::BadRequest {
                 error: format!(
@@ -337,7 +369,7 @@ mod handlers {
 
         let response = model::CreateResponse {
             // status: model::CreateStatus::Updated,
-            key: key,
+            key: decoded_key.to_string(),
         };
         Ok(warp::reply::with_status(
             warp::reply::json(&response),
