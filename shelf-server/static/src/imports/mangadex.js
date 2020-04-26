@@ -39,9 +39,9 @@ export default function mangadex(url) {
                     "English": title,
                 },
             };
-            const nameList = page.querySelector("div.m-0:nth-child(1) > div:nth-child(2) > ul:nth-child(1)");
+            const nameList = page.querySelectorAll(".card-body.p-0 > .row > div:nth-child(2) > div:nth-child(2) .list-inline-item");
             let ctr = 1;
-            for (const el of nameList.querySelectorAll("li")) {
+            for (const el of nameList) {
                 names.alternatives[`Alternate Name ${ctr}`] = el.textContent.trim();
                 ctr++;
             }
@@ -54,25 +54,18 @@ export default function mangadex(url) {
 
             // }
 
-            const imported = [{
-                key,
-                kind: "Manga",
-                name: names,
-                people: [],
-                season: null,
-                entries,
-                status: "Planned",
-                rating: null,
-                added: moment().format(),
-                tags: [],
-                started: null,
-                completed: null,
-                publication_status: "Publishing",
-                extra: {
-                    mangadex_url: url,
-                },
-            }];
+            const template = window.fetch("/item/:template:")
+                  .then(r => r.json());
 
-            return imported;
+            return template.then((template) => {
+                template.key = key;
+                template.kind = "Manga";
+                template.name = names;
+                template.added = moment().format();
+                template.extra = {
+                    mangadex_url: url,
+                };
+                return [template];
+            });
         });
 }
