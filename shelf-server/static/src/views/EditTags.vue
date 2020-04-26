@@ -92,10 +92,12 @@ You may obtain a copy of the License at
                 }
                 this.sort();
                 this.newTag = "";
+                this.$emit("input", this.tags);
             },
 
             removeTag(tag) {
                 this.tags = this.tags.filter(x => x !== tag);
+                this.$emit("input", this.tags);
             },
 
             selectSuggestionCycle() {
