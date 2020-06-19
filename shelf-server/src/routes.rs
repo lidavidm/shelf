@@ -43,8 +43,8 @@ pub fn api(
 
 fn with_shelf(
     shelf: model::AppStateRef,
-) -> impl Filter<Extract = (model::AppStateRef,), Error = std::convert::Infallible> + Clone {
-    warp::any().map(move || shelf.clone())
+) -> warp::filters::BoxedFilter<(std::sync::Arc<tokio::sync::Mutex<model::AppState>>,)> {
+    warp::any().map(move || shelf.clone()).boxed()
 }
 
 pub fn item_list(
@@ -52,7 +52,9 @@ pub fn item_list(
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("item")
         .and(warp::get())
+        .boxed()
         .and(with_shelf(shelf))
+        .boxed()
         .and_then(handlers::item_list)
 }
 
@@ -61,7 +63,9 @@ pub fn item_get(
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("item" / String)
         .and(warp::get())
+        .boxed()
         .and(with_shelf(shelf))
+        .boxed()
         .and_then(handlers::item_get)
 }
 
