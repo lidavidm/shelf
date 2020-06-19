@@ -28,6 +28,12 @@ pub enum PublicationStatus {
     Complete,
 }
 
+#[derive(Clone, Serialize, Deserialize, Debug, Eq, PartialEq)]
+pub struct Cover {
+    pub key: String,
+    pub description: String,
+}
+
 #[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Item {
     pub key: String,
@@ -50,6 +56,12 @@ pub struct Item {
     pub publication_status: PublicationStatus,
     // series key, series index/entry name
     pub series: Option<(String, Option<String>)>,
+    #[serde(default)]
+    pub synopsis: String,
+    #[serde(default)]
+    pub comments: String,
+    #[serde(default)]
+    pub covers: Vec<Cover>,
 }
 
 impl Default for Item {
@@ -70,6 +82,9 @@ impl Default for Item {
             extra: serde_yaml::Value::Null,
             publication_status: PublicationStatus::Publishing,
             series: None,
+            synopsis: "".into(),
+            comments: "".into(),
+            covers: Vec::new(),
         }
     }
 }

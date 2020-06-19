@@ -31,6 +31,7 @@ pub struct Shelf {
     items: Vec<Item>,
     series: HashMap<String, Series>,
     dirty: HashSet<String>,
+    blobs: HashSet<String>,
 }
 
 pub struct ItemRef<'a>(pub &'a Shelf, pub &'a Item);
@@ -56,6 +57,10 @@ impl Shelf {
         self.series.values()
     }
 
+    pub fn query_blobs(&self) -> impl Iterator<Item = &String> {
+        self.blobs.iter()
+    }
+
     /// Insert or update a person.
     ///
     /// Returns true if the person did not previously exist.
@@ -73,10 +78,21 @@ impl Shelf {
         self.series.insert(series.key.clone(), series).is_none()
     }
 
+    pub fn insert_blob(&mut self, key: &str) -> bool {
+        self.dirty.insert(key.to_owned());
+        self.blobs.insert(key.to_owned())
+    }
+
     pub fn validate_item(&self, item: &Item) -> Result<()> {
         for (_, person) in item.people.iter() {
             if !self.people.contains_key(person) {
                 return Err(ShelfError::InvalidReference(person.to_owned()));
+            }
+        }
+
+        for cover in item.covers.iter() {
+            if !self.blobs.contains(&cover.key) {
+                return Err(ShelfError::InvalidReference(cover.key.clone()));
             }
         }
 
@@ -130,6 +146,7 @@ impl Shelf {
 mod tests {
     use super::Shelf;
     use crate::common::{Alternatives, Person};
+    use crate::item::{Cover, Item};
     use crate::series::Series;
 
     #[test]
@@ -207,5 +224,20 @@ mod tests {
         };
         assert!(shelf.insert_series(someone_else.clone()));
         assert_eq!(2, shelf.query_series().count());
+    }
+
+    #[test]
+    fn test_shelf_insert_item() {
+        let mut shelf = Shelf::new();
+        let item: Item = Default::default();
+        assert!(shelf.insert_item(item).is_ok());
+        let mut item: Item = Default::default();
+        item.covers.push(Cover {
+            key: "foo".into(),
+            description: "".into(),
+        });
+        assert!(shelf.insert_item(item.clone()).is_err());
+        assert!(shelf.insert_blob("foo"));
+        assert!(shelf.insert_item(item).is_ok());
     }
 }

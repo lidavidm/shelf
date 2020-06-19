@@ -32,6 +32,7 @@ pub enum SaveError {
     DirectoryError(String),
     GitError(String),
     SerializationError(String),
+    MissingBlob(String),
 }
 
 impl From<io::Error> for SaveError {
@@ -115,9 +116,20 @@ impl DirectoryShelf {
         })
     }
 
+    /// Save a binary blob into the shelf.
+    ///
+    /// Given an identifier, returns the absolute path where the blob should be saved.
+    /// The key must already be normalized (a valid path).
+    #[must_use]
+    pub fn insert_blob(&self, key: &str) -> Result<path::PathBuf, SaveError> {
+        let blobs = self.directory.join("blobs");
+        fs::create_dir_all(&blobs)?;
+        let path = blobs.join(key);
+        Ok(path)
+    }
+
     #[must_use]
     pub fn save(&self, shelf: &mut Shelf) -> Result<usize, SaveError> {
-        // TODO: ERROR HANDLING!!
         let sig = self.repository.signature()?;
         let mut index = self.repository.index()?;
 
@@ -176,6 +188,18 @@ impl DirectoryShelf {
                 updated.push(&item.1.key);
             }
 
+            for blob in shelf.query_blobs() {
+                if !shelf.is_dirty(blob) {
+                    continue;
+                }
+                let filename = self.insert_blob(blob)?;
+                if !filename.exists() {
+                    return Err(SaveError::MissingBlob(blob.to_owned()));
+                }
+                index.add_path(filename.strip_prefix(&self.directory)?)?;
+                updated.push(blob);
+            }
+
             let tree_id = index.write_tree()?;
 
             let tree = self.repository.find_tree(tree_id)?;
@@ -183,7 +207,12 @@ impl DirectoryShelf {
                 let message = if updated.len() == 1 {
                     format!("Updated \"{}\"", updated[0])
                 } else {
-                    format!("Update shelf ({} items)", updated.len())
+                    let mut buf = String::new();
+                    buf.push_str(&format!("Update shelf ({} items)\n\n", updated.len()));
+                    for key in updated.iter() {
+                        buf.push_str(&format!("- {}\n", key));
+                    }
+                    buf
                 };
                 self.repository
                     .commit(Some("HEAD"), &sig, &sig, &message, &tree, &[&prev_head])?;
@@ -237,5 +266,36 @@ impl DirectoryShelf {
         shelf.clear_all_dirty();
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::DirectoryShelf;
+    use crate::shelf::Shelf;
+    use std::fs::File;
+    use tempfile::Builder;
+
+    #[test]
+    fn insert_blob() {
+        let tmp_dir = Builder::new()
+            .prefix("shelf-test-")
+            .tempdir()
+            .expect("Could not make temp dir");
+        let saver = DirectoryShelf::new(tmp_dir.path()).expect("Could not make temp shelf");
+        let blob = saver
+            .insert_blob("cover-foo")
+            .expect("Could not insert blob");
+        assert!(blob.ends_with("blobs/cover-foo"));
+
+        let mut shelf = Shelf::new();
+        assert!(saver.save(&mut shelf).is_ok());
+        shelf.insert_blob("cover-foo");
+        assert!(saver.save(&mut shelf).is_err());
+        File::create(&blob)
+            .expect(&format!("Could not create {:?}", blob))
+            .sync_all()
+            .expect(&format!("Could not create {:?}", blob));
+        assert!(saver.save(&mut shelf).is_ok());
     }
 }
