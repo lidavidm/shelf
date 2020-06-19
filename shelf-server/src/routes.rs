@@ -21,14 +21,23 @@ pub fn api(
     warp::path!("hello" / String)
         .map(|name| format!("Hello, {}!", name))
         .or(item_list(shelf.clone()))
+        .boxed()
         .or(item_get(shelf.clone()))
+        .boxed()
         .or(item_post(shelf.clone()))
+        .boxed()
         .or(person_list(shelf.clone()))
+        .boxed()
         .or(person_create(shelf.clone()))
+        .boxed()
         .or(series_list(shelf.clone()))
+        .boxed()
         .or(series_create(shelf.clone()))
+        .boxed()
         .or(tag_list(shelf.clone()))
+        .boxed()
         .or(proxy())
+        .boxed()
         .recover(error_handler)
 }
 
@@ -124,8 +133,6 @@ async fn error_handler(rej: warp::Rejection) -> Result<impl warp::Reply, warp::R
     log::info!(target: crate::LOG_NAME, "Processing rejection: {:?}", rej);
     Ok(if let Some(model::ReqwestError { error }) = rej.find() {
         warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_GATEWAY)
-    } else if let Some(model::InternalServerError { error }) = rej.find() {
-        warp::reply::with_status(error.into(), warp::http::StatusCode::INTERNAL_SERVER_ERROR)
     } else if let Some(model::BadRequest { error }) = rej.find() {
         warp::reply::with_status(error.into(), warp::http::StatusCode::BAD_REQUEST)
     } else if let Some(_) = rej.find::<warp::reject::UnsupportedMediaType>() {
@@ -137,6 +144,8 @@ async fn error_handler(rej: warp::Rejection) -> Result<impl warp::Reply, warp::R
         warp::reply::with_status(format!("{:?}", err), warp::http::StatusCode::BAD_REQUEST)
     } else if rej.is_not_found() {
         warp::reply::with_status(format!("{:?}", rej), warp::http::StatusCode::NOT_FOUND)
+    } else if let Some(model::InternalServerError { error }) = rej.find() {
+        warp::reply::with_status(error.into(), warp::http::StatusCode::INTERNAL_SERVER_ERROR)
     } else {
         warp::reply::with_status(
             format!("{:?}", rej),
