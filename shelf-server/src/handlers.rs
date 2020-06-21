@@ -192,6 +192,27 @@ pub async fn tag_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Inf
     Ok(warp::reply::json(&tags))
 }
 
+pub async fn blob_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Infallible> {
+    let shelf = &shelf.lock().await.shelf;
+    let mut blobs = HashSet::new();
+    for key in shelf.query_blobs() {
+        blobs.insert(key);
+    }
+    Ok(warp::reply::json(&blobs))
+}
+
+pub async fn blob_create(
+    shelf: model::AppStateRef,
+    form: warp::multipart::FormData,
+) -> Result<impl warp::Reply, Infallible> {
+    let shelf = &shelf.lock().await.shelf;
+    let mut blobs = HashSet::new();
+    for key in shelf.query_blobs() {
+        blobs.insert(key);
+    }
+    Ok(warp::reply::json(&blobs))
+}
+
 pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
     log::info!(target: crate::LOG_NAME, "GET /proxy URL: {}", params.url);
     reqwest::get(&params.url)

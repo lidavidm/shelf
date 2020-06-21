@@ -36,14 +36,14 @@ pub fn api(
         .boxed()
         .or(tag_list(shelf.clone()))
         .boxed()
+        .or(blob_list(shelf.clone()))
+        .boxed()
         .or(proxy())
         .boxed()
         .recover(error_handler)
 }
 
-fn with_shelf(
-    shelf: model::AppStateRef,
-) -> warp::filters::BoxedFilter<(std::sync::Arc<tokio::sync::Mutex<model::AppState>>,)> {
+fn with_shelf(shelf: model::AppStateRef) -> warp::filters::BoxedFilter<(model::AppStateRef,)> {
     warp::any().map(move || shelf.clone()).boxed()
 }
 
@@ -124,6 +124,15 @@ pub fn tag_list(
         .and(warp::get())
         .and(with_shelf(shelf))
         .and_then(handlers::tag_list)
+}
+
+pub fn blob_list(
+    shelf: model::AppStateRef,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    warp::path!("blob")
+        .and(warp::get())
+        .and(with_shelf(shelf))
+        .and_then(handlers::blob_list)
 }
 
 pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
