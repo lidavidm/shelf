@@ -12,7 +12,7 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-use crate::handler::Handler;
+use crate::handler::{self, Handler};
 
 struct Route {
     method: hyper::Method,
@@ -28,7 +28,7 @@ pub struct Router {
 impl Router {
     pub fn new() -> Router {
         Router {
-            default_handler: Box::new(|ctx: &crate::handler::RequestContext| {
+            default_handler: handler::simple(|ctx: crate::handler::RequestContext| async {
                 hyper::Response::builder()
                     .status(hyper::StatusCode::NOT_FOUND)
                     .body(hyper::Body::from("Not found"))

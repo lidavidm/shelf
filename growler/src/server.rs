@@ -40,9 +40,7 @@ impl Service<Request<hyper::Body>> for Growler {
     fn call(&mut self, req: Request<hyper::Body>) -> Self::Future {
         let handler = self.router.route(req.method(), req.uri().path());
         let context = crate::handler::RequestContext { raw_request: req };
-        let resp: Response<hyper::Body> = handler.handle(&context);
-        let fut = async { Ok(resp) };
-        Box::pin(fut)
+        handler.handle(context)
     }
 }
 

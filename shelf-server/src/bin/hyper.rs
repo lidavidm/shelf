@@ -17,10 +17,34 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-fn handle_root(ctx: &handler::RequestContext) -> hyper::Response<hyper::Body> {
+async fn handle_root(ctx: handler::RequestContext) -> hyper::Response<hyper::Body> {
     hyper::Response::builder()
         .status(hyper::StatusCode::OK)
         .body(hyper::Body::from("Welcome to Shelf"))
+        .expect("Unable to create `http::Response`")
+}
+
+async fn item_list(
+    ctx: handler::RequestContext,
+    state: Arc<Mutex<AppState>>,
+) -> Result<hyper::Response<hyper::Body>, Box<dyn std::error::Error>> {
+    let shelf = &state.lock().await.shelf;
+    let items: Vec<shelf::item::Item> = shelf.query_items().map(|x| x.1.clone()).collect();
+    Ok(serde_json::ser::to_vec(&items).map(|body| {
+        hyper::Response::builder()
+            .status(hyper::StatusCode::OK)
+            .body(hyper::Body::from(body))
+            .expect("Unable to create `http::Response`")
+    })?)
+}
+
+fn format_error(err: Box<dyn std::error::Error>) -> hyper::Response<hyper::Body> {
+    hyper::Response::builder()
+        .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+        .body(hyper::Body::from(format!(
+            "Could not serialize response: {}",
+            err
+        )))
         .expect("Unable to create `http::Response`")
 }
 
@@ -54,10 +78,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     );
     let saver = shelf::save::DirectoryShelf::new(&library_root)?;
     saver.load(&mut shelf)?;
+    log::info!(
+        target: LOG_NAME,
+        "Loaded shelf with {} items",
+        shelf.all_items().len()
+    );
     let shelf_ref = Arc::new(Mutex::new(AppState { shelf, saver }));
 
     let mut routes = growler::router::Router::new();
-    routes.add(hyper::Method::GET, "/", handle_root);
+    routes.add(hyper::Method::GET, "/", handler::simple(handle_root));
+    routes.add(
+        hyper::Method::GET,
+        "/item",
+        handler::simple(handler::with_error(
+            handler::with_state(item_list, shelf_ref.clone()),
+            format_error,
+        )),
+    );
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     let mut server = growler::server::Server::new(routes);
