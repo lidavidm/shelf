@@ -28,11 +28,14 @@ pub struct Router {
 impl Router {
     pub fn new() -> Router {
         Router {
-            default_handler: handler::simple(|ctx: crate::handler::RequestContext| async {
-                hyper::Response::builder()
+            default_handler: handler::simple(|ctx: crate::handler::RequestContext| async move {
+                Ok(hyper::Response::builder()
                     .status(hyper::StatusCode::NOT_FOUND)
-                    .body(hyper::Body::from("Not found"))
-                    .expect("Unable to create `http::Response`")
+                    .body(hyper::Body::from(format!(
+                        "404 NOT FOUND: {:?} {}\n",
+                        ctx.raw_request.method(),
+                        ctx.raw_request.uri().path()
+                    )))?)
             }),
             routes: Vec::new(),
         }

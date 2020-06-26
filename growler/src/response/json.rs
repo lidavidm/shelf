@@ -12,25 +12,16 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-pub fn json<T>(value: &T) -> hyper::Response<hyper::Body>
+pub fn json<T>(value: &T) -> crate::handler::Result
 where
     T: serde::Serialize,
 {
-    serde_json::ser::to_vec(value).map_or_else(
-        |err| {
-            hyper::Response::builder()
-                .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
-                .body(hyper::Body::from(format!(
-                    "Could not serialize response: {}",
-                    err
-                )))
-                .expect("Unable to create `http::Response`")
-        },
-        |body| {
+    serde_json::ser::to_vec(value)
+        .map_err(|err| crate::handler::Error::Other(Box::new(err)))
+        .and_then(|body| {
             hyper::Response::builder()
                 .status(hyper::StatusCode::OK)
                 .body(hyper::Body::from(body))
-                .expect("Unable to create `http::Response`")
-        },
-    )
+                .map_err(|err| crate::handler::Error::Http(err))
+        })
 }

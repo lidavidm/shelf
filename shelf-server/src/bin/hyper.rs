@@ -17,35 +17,25 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-async fn handle_root(ctx: handler::RequestContext) -> hyper::Response<hyper::Body> {
-    hyper::Response::builder()
+async fn handle_root(_ctx: handler::RequestContext) -> handler::Result {
+    Ok(hyper::Response::builder()
         .status(hyper::StatusCode::OK)
-        .body(hyper::Body::from("Welcome to Shelf"))
-        .expect("Unable to create `http::Response`")
+        .body(hyper::Body::from("Welcome to Shelf"))?)
 }
 
-async fn item_list(
-    ctx: handler::RequestContext,
-    state: Arc<Mutex<AppState>>,
-) -> Result<hyper::Response<hyper::Body>, Box<dyn std::error::Error>> {
+async fn item_list(_ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -> handler::Result {
     let shelf = &state.lock().await.shelf;
     let items: Vec<shelf::item::Item> = shelf.query_items().map(|x| x.1.clone()).collect();
-    Ok(serde_json::ser::to_vec(&items).map(|body| {
-        hyper::Response::builder()
-            .status(hyper::StatusCode::OK)
-            .body(hyper::Body::from(body))
-            .expect("Unable to create `http::Response`")
-    })?)
+    growler::response::json::json(&items)
 }
 
-fn format_error(err: Box<dyn std::error::Error>) -> hyper::Response<hyper::Body> {
-    hyper::Response::builder()
+fn format_error(err: growler::handler::Error) -> handler::Result {
+    Ok(hyper::Response::builder()
         .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
         .body(hyper::Body::from(format!(
             "Could not serialize response: {}",
             err
-        )))
-        .expect("Unable to create `http::Response`")
+        )))?)
 }
 
 const APP_INFO: app_dirs::AppInfo = app_dirs::AppInfo {

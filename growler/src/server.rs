@@ -30,7 +30,7 @@ struct MakeService {
 
 impl Service<Request<hyper::Body>> for Growler {
     type Response = Response<hyper::Body>;
-    type Error = hyper::Error;
+    type Error = crate::handler::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
 
     fn poll_ready(&mut self, _: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
