@@ -9,6 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set Up Git
+      run: git config --global user.name "David Li"
+    - name: Set Up Git
+      run: git config --global user.email "li.davidm96@gmail.com"
     - name: Build
       run: cargo build
       working-directory: shelf
