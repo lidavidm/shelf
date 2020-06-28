@@ -21,6 +21,7 @@ where
         .and_then(|body| {
             hyper::Response::builder()
                 .status(hyper::StatusCode::OK)
+                .header("Content-Type", "application/json")
                 .body(hyper::Body::from(body))
                 .map_err(|err| crate::handler::Error::Http(err))
         })

@@ -17,6 +17,7 @@ use crate::handler::{self, Handler};
 struct Route {
     method: hyper::Method,
     path: String,
+    regex: regex::Regex,
     handler: Box<dyn Handler>,
 }
 
@@ -25,9 +26,33 @@ pub struct Router {
     routes: Vec<Route>,
 }
 
+pub struct Builder {
+    default_handler: Box<dyn Handler>,
+    routes: Vec<Route>,
+}
+
 impl Router {
-    pub fn new() -> Router {
-        Router {
+    pub fn route(&self, method: &hyper::Method, path: &str) -> (&dyn Handler, Vec<String>) {
+        for route in self.routes.iter() {
+            if method == route.method {
+                if let Some(captures) = route.regex.captures(path) {
+                    let parts = captures
+                        .iter()
+                        .skip(1)
+                        .flatten()
+                        .map(|m| m.as_str().to_owned())
+                        .collect();
+                    return (&*route.handler, parts);
+                }
+            }
+        }
+        (&*self.default_handler, Vec::new())
+    }
+}
+
+impl Builder {
+    pub fn new() -> Builder {
+        Builder {
             default_handler: handler::simple(|ctx: crate::handler::RequestContext| async move {
                 Ok(hyper::Response::builder()
                     .status(hyper::StatusCode::NOT_FOUND)
@@ -46,21 +71,25 @@ impl Router {
         method: hyper::Method,
         path: &str,
         handler: H,
-    ) -> &mut Router {
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        // TODO: error enum; validate the path
+        let mut path_regex = String::new();
+        path_regex += "^";
+        path_regex += &path.replace("?", "([^/]*)");
+        path_regex += "$";
         self.routes.push(Route {
             method: method.clone(),
             path: path.to_owned(),
+            regex: regex::Regex::new(&path_regex)?,
             handler: Box::new(handler),
         });
-        self
+        Ok(())
     }
 
-    pub fn route(&self, method: &hyper::Method, path: &str) -> &Box<dyn Handler> {
-        for route in self.routes.iter() {
-            if method == route.method && path == route.path {
-                return &route.handler;
-            }
+    pub fn build(self) -> Router {
+        Router {
+            default_handler: self.default_handler,
+            routes: self.routes,
         }
-        &self.default_handler
     }
 }

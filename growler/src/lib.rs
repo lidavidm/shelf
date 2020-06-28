@@ -16,3 +16,4 @@ pub mod handler;
 pub mod response;
 pub mod router;
 pub mod server;
+pub mod testing;

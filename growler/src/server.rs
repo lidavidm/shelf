@@ -38,8 +38,11 @@ impl Service<Request<hyper::Body>> for Growler {
     }
 
     fn call(&mut self, req: Request<hyper::Body>) -> Self::Future {
-        let handler = self.router.route(req.method(), req.uri().path());
-        let context = crate::handler::RequestContext { raw_request: req };
+        let (handler, parts) = self.router.route(req.method(), req.uri().path());
+        let context = crate::handler::RequestContext {
+            raw_request: req,
+            route_parts: parts,
+        };
         handler.handle(context)
     }
 }

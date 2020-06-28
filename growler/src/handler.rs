@@ -17,6 +17,7 @@ use std::pin::Pin;
 
 pub struct RequestContext {
     pub raw_request: hyper::Request<hyper::Body>,
+    pub route_parts: Vec<String>,
 }
 
 #[derive(Debug)]

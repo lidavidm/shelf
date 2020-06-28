@@ -13,3 +13,11 @@
 //     limitations under the License.
 
 pub mod json;
+
+pub fn with_code<T>(
+    mut response: hyper::Response<T>,
+    code: hyper::StatusCode,
+) -> hyper::Response<T> {
+    *response.status_mut() = code;
+    response
+}
