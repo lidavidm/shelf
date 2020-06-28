@@ -23,6 +23,8 @@ export function makeKey(kind, name) {
 /** Map an item kind to a user-friendly string. */
 export function humanKind(kind) {
     switch (kind) {
+    case "NonFiction":
+        return "Non-Fiction";
     case "OVA":
         return "OVA (Original Video Animation)";
     case "ONA":

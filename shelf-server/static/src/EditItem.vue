@@ -39,6 +39,7 @@ You may obtain a copy of the License at
                             <option>Manga</option>
                             <option>TV</option>
                             <option>Film</option>
+                            <option :value="'NonFiction'">Non-Fiction</option>
                             <option>Novel</option>
                             <option>OVA</option>
                             <option>ONA</option>

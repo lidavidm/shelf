@@ -95,6 +95,7 @@ pub enum Kind {
     ShortStory,
     Musical,
     VisualNovel,
+    NonFiction,
 }
 
 /// A hybrid date or Boolean, used to import data from sites that
