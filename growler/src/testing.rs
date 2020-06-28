@@ -38,3 +38,16 @@ pub fn req(
     };
     Ok(futures::executor::block_on(handler.handle(context))?)
 }
+
+pub fn into_bytes(body: hyper::Body) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync>> {
+    let bytes = futures::executor::block_on(hyper::body::to_bytes(body))?;
+    Ok(bytes.to_vec())
+}
+
+pub fn into_json<T>(body: hyper::Body) -> Result<T, Box<dyn std::error::Error + Send + Sync>>
+where
+    T: serde::de::DeserializeOwned,
+{
+    let bytes = into_bytes(body)?;
+    Ok(serde_json::from_slice(&bytes)?)
+}

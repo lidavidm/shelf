@@ -156,10 +156,30 @@ mod tests {
 
     #[test]
     fn item_404() -> Result<(), AnyError> {
-        let shelf = Shelf::new()?.load()?;
-        let router = super::routes(shelf)?;
+        let state = Shelf::new()?.load()?;
+        let router = super::routes(state)?;
         let response = growler::testing::run(&router, hyper::Method::GET, "/item/foo")?;
         assert_eq!(hyper::StatusCode::NOT_FOUND, response.status());
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn item_200() -> Result<(), AnyError> {
+        let state = Shelf::new()?.load()?;
+        let item = {
+            let mut temp: shelf::item::Item = Default::default();
+            temp.key = "foo".into();
+            temp
+        };
+        {
+            let shelf = &mut state.lock().await.shelf;
+            shelf.insert_item(item.clone())?;
+        }
+        let router = super::routes(state)?;
+        let response = growler::testing::run(&router, hyper::Method::GET, "/item/foo")?;
+        assert_eq!(hyper::StatusCode::OK, response.status());
+        let body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
+        assert_eq!(item, body);
         Ok(())
     }
 }
