@@ -34,7 +34,7 @@ pub struct Cover {
     pub description: String,
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Item {
     pub key: String,
     pub kind: Kind,
@@ -93,7 +93,7 @@ fn default_extras() -> serde_yaml::Value {
     serde_yaml::Value::Null
 }
 
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone, Serialize, Deserialize, Debug, PartialEq)]
 pub struct Entry {
     pub name: Option<Alternatives<String>>,
     pub number: Option<u32>,
