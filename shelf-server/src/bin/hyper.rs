@@ -17,6 +17,38 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+const APP_INFO: app_dirs::AppInfo = app_dirs::AppInfo {
+    name: "shelf",
+    author: "lidavidm",
+};
+
+const LOG_NAME: &'static str = "shelf-server";
+static ITEM_TEMPLATE_KEY: &'static str = ":template:";
+
+type AnyError = Box<dyn ::std::error::Error + Send + Sync>;
+
+struct AppState {
+    shelf: shelf::Shelf,
+    saver: shelf::save::DirectoryShelf,
+}
+
+/// Percent-decode the given string (as the framework doesn't).
+pub fn decode_key(key: &str) -> Result<std::borrow::Cow<str>, handler::Error> {
+    percent_encoding::percent_decode_str(&key)
+        .decode_utf8()
+        .map_err(|e| {
+            match hyper::Response::builder()
+                .status(hyper::StatusCode::BAD_REQUEST)
+                .body(hyper::Body::from(format!(
+                    "Could not percent-decode '{}': {:?}",
+                    key, e
+                ))) {
+                Ok(response) => handler::Error::Rejection(response),
+                Err(err) => handler::Error::Other(err.into()),
+            }
+        })
+}
+
 async fn handle_root(_ctx: handler::RequestContext) -> handler::Result {
     Ok(hyper::Response::builder()
         .status(hyper::StatusCode::OK)
@@ -31,12 +63,18 @@ async fn item_list(_ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -
 
 async fn item_get(ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -> handler::Result {
     if let Some(key) = ctx.route_parts.first() {
-        let shelf = &state.lock().await.shelf;
-        let item = shelf
-            .query_items()
-            .filter(|x| &x.1.key == key)
-            .map(|x| x.1.clone())
-            .next();
+        let key = decode_key(key)?;
+        let item = if key == ITEM_TEMPLATE_KEY {
+            Some(Default::default())
+        } else {
+            let shelf = &state.lock().await.shelf;
+            let item = shelf
+                .query_items()
+                .filter(|x| x.1.key.as_ref() == key)
+                .map(|x| x.1.clone())
+                .next();
+            item
+        };
         if let Some(item) = item {
             growler::response::json::json(&item)
         } else {
@@ -58,20 +96,6 @@ fn format_error(err: growler::handler::Error) -> handler::Result {
             "Could not serialize response: {}",
             err
         )))?)
-}
-
-const APP_INFO: app_dirs::AppInfo = app_dirs::AppInfo {
-    name: "shelf",
-    author: "lidavidm",
-};
-
-const LOG_NAME: &'static str = "shelf-server";
-
-type AnyError = Box<dyn ::std::error::Error + Send + Sync>;
-
-struct AppState {
-    shelf: shelf::Shelf,
-    saver: shelf::save::DirectoryShelf,
 }
 
 fn routes(shelf_ref: Arc<Mutex<AppState>>) -> Result<growler::router::Router, AnyError> {
@@ -133,6 +157,8 @@ mod tests {
     use std::sync::Arc;
     use tokio::sync::Mutex;
 
+    static INIT: std::sync::Once = std::sync::Once::new();
+
     struct Shelf {
         tempdir: tempfile::TempDir,
     }
@@ -154,10 +180,22 @@ mod tests {
         }
     }
 
+    fn make_state() -> Result<(Arc<Mutex<AppState>>, growler::router::Router), AnyError> {
+        INIT.call_once(|| {
+            if std::env::var_os("RUST_LOG").is_none() {
+                std::env::set_var("RUST_LOG", "shelf-server=info,growler=debug");
+            }
+            pretty_env_logger::init();
+        });
+
+        let state = Shelf::new()?.load()?;
+        let router = super::routes(state.clone())?;
+        Ok((state, router))
+    }
+
     #[test]
     fn item_404() -> Result<(), AnyError> {
-        let state = Shelf::new()?.load()?;
-        let router = super::routes(state)?;
+        let (_, router) = make_state()?;
         let response = growler::testing::run(&router, hyper::Method::GET, "/item/foo")?;
         assert_eq!(hyper::StatusCode::NOT_FOUND, response.status());
         Ok(())
@@ -165,7 +203,7 @@ mod tests {
 
     #[tokio::test]
     async fn item_200() -> Result<(), AnyError> {
-        let state = Shelf::new()?.load()?;
+        let (state, router) = make_state()?;
         let item = {
             let mut temp: shelf::item::Item = Default::default();
             temp.key = "foo".into();
@@ -175,8 +213,48 @@ mod tests {
             let shelf = &mut state.lock().await.shelf;
             shelf.insert_item(item.clone())?;
         }
-        let router = super::routes(state)?;
         let response = growler::testing::run(&router, hyper::Method::GET, "/item/foo")?;
+        assert_eq!(hyper::StatusCode::OK, response.status());
+        let body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
+        assert_eq!(item, body);
+        Ok(())
+    }
+
+    /// Ensure we can get the item template with the special path.
+    #[tokio::test]
+    async fn item_template() -> Result<(), AnyError> {
+        let (_, router) = make_state()?;
+        let response = growler::testing::run(
+            &router,
+            hyper::Method::GET,
+            &format!("/item/{}", super::ITEM_TEMPLATE_KEY),
+        )?;
+        assert_eq!(hyper::StatusCode::OK, response.status());
+        let mut body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
+        let expected: shelf::item::Item = Default::default();
+        // Fix up timestamps
+        body.added = expected.added;
+        assert_eq!(expected, body);
+        Ok(())
+    }
+
+    /// Ensure we can get items with Unicode keys.
+    #[tokio::test]
+    async fn item_unicode_key() -> Result<(), AnyError> {
+        let (state, router) = make_state()?;
+        let key = "マイガール（佐原 ミス）゙";
+        let encoded = "%E3%83%9E%E3%82%A4%E3%82%AC%E3%83%BC%E3%83%AB%EF%BC%88%E4%BD%90%E5%8E%9F%20%E3%83%9F%E3%82%B9%EF%BC%89%E3%82%99";
+        let item = {
+            let mut temp: shelf::item::Item = Default::default();
+            temp.key = key.into();
+            temp
+        };
+        {
+            let shelf = &mut state.lock().await.shelf;
+            shelf.insert_item(item.clone())?;
+        }
+        let response =
+            growler::testing::run(&router, hyper::Method::GET, &format!("/item/{}", encoded))?;
         assert_eq!(hyper::StatusCode::OK, response.status());
         let body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
         assert_eq!(item, body);
