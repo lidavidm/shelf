@@ -30,13 +30,9 @@ pub fn req(
     router: &router::Router,
     req: hyper::Request<hyper::Body>,
 ) -> Result<hyper::Response<hyper::Body>, Box<dyn std::error::Error + Send + Sync>> {
-    // TODO: share this code with server.rs
-    let (handler, parts) = router.route(req.method(), req.uri().path());
-    let context = crate::handler::RequestContext {
-        raw_request: req,
-        route_parts: parts,
-    };
-    Ok(futures::executor::block_on(handler.handle(context))?)
+    Ok(futures::executor::block_on(crate::server::call_router(
+        router, req,
+    ))?)
 }
 
 pub fn into_bytes(body: hyper::Body) -> Result<Vec<u8>, Box<dyn std::error::Error + Send + Sync>> {

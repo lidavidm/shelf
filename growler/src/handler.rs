@@ -23,6 +23,7 @@ pub struct RequestContext {
 #[derive(Debug)]
 pub enum Error {
     Http(http::Error),
+    Rejection(hyper::Response<hyper::Body>),
     /// Maps to 500.
     Other(Box<dyn std::error::Error + Send + Sync>),
 }
@@ -35,10 +36,11 @@ impl std::fmt::Display for Error {
 
 impl std::error::Error for Error {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        Some(match self {
-            Error::Http(e) => e,
-            Error::Other(e) => e.as_ref(),
-        })
+        match self {
+            Error::Http(e) => Some(e),
+            Error::Rejection(_) => None,
+            Error::Other(e) => Some(e.as_ref()),
+        }
     }
 }
 

@@ -12,9 +12,4 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-pub(crate) mod constants;
-pub mod handler;
-pub mod response;
-pub mod router;
-pub mod server;
-pub mod testing;
+pub const LOG_NAME: &'static str = "growler";

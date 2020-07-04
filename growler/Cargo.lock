@@ -185,6 +185,7 @@ dependencies = [
  "futures",
  "http",
  "hyper",
+ "log",
  "regex",
  "serde",
  "serde_json",

@@ -12,6 +12,7 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
+use futures::FutureExt;
 use hyper::service::Service;
 use hyper::{Request, Response};
 use std::future::Future;
@@ -20,12 +21,41 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
+use crate::constants::LOG_NAME;
+
 struct Growler {
     router: Arc<crate::router::Router>,
 }
 
 struct MakeService {
     router: Arc<crate::router::Router>,
+}
+
+pub(crate) fn call_router(
+    router: &crate::router::Router,
+    req: Request<hyper::Body>,
+) -> Pin<Box<dyn Future<Output = Result<Response<hyper::Body>, crate::handler::Error>> + Send>> {
+    let start = std::time::Instant::now();
+    let (handler, parts) = router.route(req.method(), req.uri().path());
+    let method = req.method().clone();
+    let path = req.uri().path().to_string();
+    let context = crate::handler::RequestContext {
+        raw_request: req,
+        route_parts: parts,
+    };
+    Box::pin(handler.handle(context).then(move |res| async move {
+        log::info!(
+            target: LOG_NAME,
+            "{} {} {} {:.002}ms",
+            method,
+            path,
+            res.as_ref()
+                .map_or(hyper::StatusCode::INTERNAL_SERVER_ERROR, |r| r.status())
+                .as_str(),
+            1000. * start.elapsed().as_secs_f32()
+        );
+        res
+    }))
 }
 
 impl Service<Request<hyper::Body>> for Growler {
@@ -38,12 +68,7 @@ impl Service<Request<hyper::Body>> for Growler {
     }
 
     fn call(&mut self, req: Request<hyper::Body>) -> Self::Future {
-        let (handler, parts) = self.router.route(req.method(), req.uri().path());
-        let context = crate::handler::RequestContext {
-            raw_request: req,
-            route_parts: parts,
-        };
-        handler.handle(context)
+        call_router(&self.router, req)
     }
 }
 
