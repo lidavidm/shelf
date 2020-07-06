@@ -182,6 +182,7 @@ dependencies = [
 name = "growler"
 version = "0.1.0"
 dependencies = [
+ "bytes",
  "futures",
  "http",
  "hyper",

@@ -12,19 +12,11 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-pub mod json;
-
-pub fn with_code<T>(
-    mut response: hyper::Response<T>,
-    code: hyper::StatusCode,
-) -> hyper::Response<T> {
-    *response.status_mut() = code;
-    response
-}
-
-pub fn reject<B: Into<hyper::Body>>(code: hyper::StatusCode, body: B) -> crate::handler::Error {
-    match hyper::Response::builder().status(code).body(body.into()) {
-        Ok(response) => crate::handler::Error::Rejection(response),
-        Err(err) => err.into(),
-    }
+pub async fn from_json<T>(body: hyper::Body) -> Result<T, crate::handler::Error>
+where
+    T: serde::de::DeserializeOwned,
+{
+    let bytes = hyper::body::to_bytes(body).await?.to_vec();
+    Ok(serde_json::from_slice(&bytes)
+        .map_err(|err| crate::handler::Error::Request(Box::new(err)))?)
 }

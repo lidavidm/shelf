@@ -23,7 +23,10 @@ pub struct RequestContext {
 #[derive(Debug)]
 pub enum Error {
     Http(http::Error),
+    Internal(hyper::Error),
     Rejection(hyper::Response<hyper::Body>),
+    /// Maps to 400 BAD REQUEST.
+    Request(Box<dyn std::error::Error + Send + Sync>),
     /// Maps to 500.
     Other(Box<dyn std::error::Error + Send + Sync>),
 }
@@ -38,7 +41,9 @@ impl std::error::Error for Error {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             Error::Http(e) => Some(e),
+            Error::Internal(e) => Some(e),
             Error::Rejection(_) => None,
+            Error::Request(_) => None,
             Error::Other(e) => Some(e.as_ref()),
         }
     }
@@ -47,6 +52,12 @@ impl std::error::Error for Error {
 impl From<http::Error> for Error {
     fn from(err: http::Error) -> Error {
         Error::Http(err)
+    }
+}
+
+impl From<hyper::Error> for Error {
+    fn from(err: hyper::Error) -> Error {
+        Error::Internal(err)
     }
 }
 
