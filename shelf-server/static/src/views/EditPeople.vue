@@ -42,6 +42,9 @@ You may obtain a copy of the License at
                         <option>Translator</option>
                     </select>
                 </td>
+                <td>
+                    <button v-on:click="removePerson(idx)">Remove</button>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -92,6 +95,10 @@ You may obtain a copy of the License at
             },
             addPerson() {
                 this.people.push(["Author", this.allPeople[0].key]);
+                this.update();
+            },
+            removePerson(index) {
+                this.people.splice(index, 1);
                 this.update();
             },
             createPerson() {
