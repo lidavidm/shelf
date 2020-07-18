@@ -137,6 +137,7 @@ You may obtain a copy of the License at
                 </header>
 
                 <button v-on:click="nextEntry(now())">Complete Next {{ entryCategorization() }}</button>
+                <button v-on:click="completeMultiple(now())">Complete Multiple {{ entryCategorization() }}</button>
                 <button v-on:click="nextEntry(false)">Add Next {{ entryCategorization() }}</button>
                 <button v-on:click="multipleEntry()">Add Multiple {{ entryCategorization() }}</button>
                 <table class="entries">
@@ -352,6 +353,19 @@ You may obtain a copy of the License at
                         volume: null,
                         completed: false,
                     });
+                }
+            },
+
+            completeMultiple(completed) {
+                let toComplete = parseInt(window.prompt("Number of entries to complete?"), 10);
+                for (const entry of this.data.entries) {
+                    if (toComplete <= 0) {
+                        break;
+                    }
+                    if (!entry.completed) {
+                        entry.completed = completed;
+                        toComplete--;
+                    }
                 }
             },
 
