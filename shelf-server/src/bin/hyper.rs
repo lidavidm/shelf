@@ -32,6 +32,17 @@ struct AppState {
     saver: shelf::save::DirectoryShelf,
 }
 
+impl AppState {
+    fn save(&mut self) -> Result<usize, handler::Error> {
+        self.saver.save(&mut self.shelf).map_err(|e| {
+            growler::response::reject(
+                hyper::StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Could not save shelf: {}", e),
+            )
+        })
+    }
+}
+
 /// Percent-decode the given string (as the framework doesn't).
 pub fn decode_key(key: &str) -> Result<std::borrow::Cow<str>, handler::Error> {
     percent_encoding::percent_decode_str(&key)
@@ -61,41 +72,85 @@ async fn item_list(_ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -
     growler::response::json::json(&items)
 }
 
-async fn item_get(ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -> handler::Result {
+fn extract_key(ctx: &handler::RequestContext) -> Result<std::borrow::Cow<str>, handler::Error> {
     if let Some(key) = ctx.route_parts.first() {
-        let key = decode_key(key)?;
-        let item = if key == ITEM_TEMPLATE_KEY {
-            Some(Default::default())
-        } else {
-            let shelf = &state.lock().await.shelf;
-            let item = shelf
-                .query_items()
-                .filter(|x| x.1.key.as_ref() == key)
-                .map(|x| x.1.clone())
-                .next();
-            item
-        };
-        if let Some(item) = item {
-            growler::response::json::json(&item)
-        } else {
-            Ok(hyper::Response::builder()
-                .status(hyper::StatusCode::NOT_FOUND)
-                .body(hyper::Body::from(format!("Key not found: {}\n", key)))?)
-        }
+        decode_key(key)
     } else {
-        Ok(hyper::Response::builder()
-            .status(hyper::StatusCode::BAD_REQUEST)
-            .body(hyper::Body::from("Missing key"))?)
+        Err(handler::Error::Rejection(
+            hyper::Response::builder()
+                .status(hyper::StatusCode::BAD_REQUEST)
+                .body(hyper::Body::from("Missing key"))?,
+        ))
     }
 }
 
-fn format_error(err: growler::handler::Error) -> handler::Result {
+async fn item_get(ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -> handler::Result {
+    let key = extract_key(&ctx)?;
+    let item = if key == ITEM_TEMPLATE_KEY {
+        Some(Default::default())
+    } else {
+        let shelf = &state.lock().await.shelf;
+        let item = shelf
+            .query_items()
+            .filter(|x| x.1.key.as_ref() == key)
+            .map(|x| x.1.clone())
+            .next();
+        item
+    };
+    if let Some(item) = item {
+        growler::response::json::json(&item)
+    } else {
+        Ok(hyper::Response::builder()
+            .status(hyper::StatusCode::NOT_FOUND)
+            .body(hyper::Body::from(format!("Key not found: {}\n", key)))?)
+    }
+}
+
+async fn item_post(ctx: handler::RequestContext, state: Arc<Mutex<AppState>>) -> handler::Result {
+    use shelf::shelf::ShelfError;
+    let key = extract_key(&ctx)?.to_string();
+    let body: shelf::item::Item = growler::request::from_json(ctx.raw_request.into_body()).await?;
+    if key != body.key {
+        return Ok(hyper::Response::builder()
+            .status(hyper::StatusCode::BAD_REQUEST)
+            .body(hyper::Body::from(format!(
+                "Item has key '{}' but this route is for key '{}'",
+                &body.key, key
+            )))?);
+    }
+
+    let state = &mut state.lock().await;
+    state.shelf.replace_item(body).map_err(|e| match e {
+        ShelfError::InvalidReference(r) => growler::response::reject(
+            hyper::StatusCode::BAD_REQUEST,
+            format!("Unknown reference to {}", r),
+        ),
+    })?;
+    state.save()?;
+
     Ok(hyper::Response::builder()
-        .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
-        .body(hyper::Body::from(format!(
-            "Could not serialize response: {}",
-            err
-        )))?)
+        .status(hyper::StatusCode::ACCEPTED)
+        .body(hyper::Body::from(key))?)
+}
+
+fn format_error(err: growler::handler::Error) -> handler::Result {
+    use growler::handler::Error::*;
+    match err {
+        Http(_) | Internal(_) => Err(err),
+        Rejection(response) => Ok(response),
+        Request(err) => Ok(hyper::Response::builder()
+            .status(hyper::StatusCode::BAD_REQUEST)
+            .body(hyper::Body::from(format!(
+                "Could not serialize response: {}",
+                err
+            )))?),
+        Other(err) => Ok(hyper::Response::builder()
+            .status(hyper::StatusCode::INTERNAL_SERVER_ERROR)
+            .body(hyper::Body::from(format!(
+                "Could not serialize response: {}",
+                err
+            )))?),
+    }
 }
 
 fn routes(shelf_ref: Arc<Mutex<AppState>>) -> Result<growler::router::Router, AnyError> {
@@ -114,6 +169,14 @@ fn routes(shelf_ref: Arc<Mutex<AppState>>) -> Result<growler::router::Router, An
         "/item/?",
         handler::simple(handler::with_error(
             handler::with_state(item_get, shelf_ref.clone()),
+            format_error,
+        )),
+    )?;
+    builder.add(
+        hyper::Method::POST,
+        "/item/?",
+        handler::simple(handler::with_error(
+            handler::with_state(item_post, shelf_ref.clone()),
             format_error,
         )),
     )?;
@@ -258,6 +321,44 @@ mod tests {
         assert_eq!(hyper::StatusCode::OK, response.status());
         let body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
         assert_eq!(item, body);
+        Ok(())
+    }
+
+    /// Create an item and read it back.
+    #[tokio::test]
+    async fn item_roundtrip() -> Result<(), AnyError> {
+        let (_, router) = make_state()?;
+        let key = "item-foo";
+        let mut item: shelf::item::Item = Default::default();
+        item.key = key.to_owned();
+        let response = growler::testing::req(
+            &router,
+            hyper::Request::builder()
+                .uri(format!("/item/{}", key))
+                .method(hyper::Method::POST)
+                .body(hyper::Body::from(serde_json::ser::to_vec(&item)?))?,
+        )?;
+        dbg!(&response);
+        assert_eq!(hyper::StatusCode::ACCEPTED, response.status());
+        // let mut body: shelf::item::Item = growler::testing::into_json(response.into_body())?;
+        Ok(())
+    }
+
+    /// Edit an existing item.
+    #[tokio::test]
+    async fn item_edit() -> Result<(), AnyError> {
+        Ok(())
+    }
+
+    /// Try to create an item with an undefined reference.
+    #[tokio::test]
+    async fn item_reference_error() -> Result<(), AnyError> {
+        Ok(())
+    }
+
+    /// Try to create an item with an mismatched key.
+    #[tokio::test]
+    async fn item_key_error() -> Result<(), AnyError> {
         Ok(())
     }
 }
