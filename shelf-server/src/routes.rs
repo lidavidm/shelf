@@ -151,7 +151,8 @@ pub fn blob_create(
     warp::path!("blob")
         .and(warp::put())
         .and(with_shelf(shelf))
-        .and(warp::filters::multipart::form())
+        // Allow uploads up to 50 MiB
+        .and(warp::filters::multipart::form().max_length(50 * 1024 * 1024))
         .and_then(handlers::blob_create)
         .boxed()
 }
