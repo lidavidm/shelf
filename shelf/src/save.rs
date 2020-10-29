@@ -135,6 +135,10 @@ impl DirectoryShelf {
         Ok(path)
     }
 
+    pub fn get_blob(&self, key: &str) -> path::PathBuf {
+        self.directory.join(BLOBS_PATH).join(key)
+    }
+
     #[must_use]
     pub fn save(&self, shelf: &mut Shelf) -> Result<usize, SaveError> {
         let sig = self.repository.signature()?;

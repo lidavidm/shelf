@@ -70,6 +70,10 @@ impl Shelf {
         self.blobs.values()
     }
 
+    pub fn get_blob(&self, key: &str) -> Option<&Blob> {
+        self.blobs.get(key)
+    }
+
     /// Insert or update a person.
     ///
     /// Returns true if the person did not previously exist.

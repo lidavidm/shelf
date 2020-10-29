@@ -37,6 +37,8 @@ pub fn api(
         .boxed()
         .or(blob_create(shelf.clone()))
         .boxed()
+        .or(blob_get_contents(shelf.clone()))
+        .boxed()
         .or(proxy())
         .boxed()
         .recover(error_handler)
@@ -131,6 +133,16 @@ pub fn blob_list(
         .and(warp::get())
         .and(with_shelf(shelf))
         .and_then(handlers::blob_list)
+}
+
+pub fn blob_get_contents(
+    shelf: model::AppStateRef,
+) -> warp::filters::BoxedFilter<(warp::reply::WithHeader<Vec<u8>>,)> {
+    warp::path!("blob" / String / "contents")
+        .and(warp::get())
+        .and(with_shelf(shelf))
+        .and_then(handlers::blob_get_contents)
+        .boxed()
 }
 
 pub fn blob_create(

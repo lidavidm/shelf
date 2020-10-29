@@ -204,6 +204,34 @@ pub async fn blob_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, In
     Ok(warp::reply::json(&blobs))
 }
 
+pub async fn blob_get_contents(
+    key: String,
+    shelf: model::AppStateRef,
+) -> Result<warp::reply::WithHeader<Vec<u8>>, warp::Rejection> {
+    use std::io::Read;
+    let state = &shelf.lock().await;
+    for blob in state.shelf.query_blobs() {
+        log::info!(target: crate::LOG_NAME, "Blob: {:?}", blob);
+    }
+    let blob = state
+        .shelf
+        .get_blob(&key)
+        .ok_or_else(|| warp::reject::not_found())?;
+    let path = state.saver.get_blob(&blob.key);
+
+    let mut data = Vec::new();
+    std::fs::File::open(path)
+        .map_err(to_internal_err)?
+        .read_to_end(&mut data)
+        .map_err(to_internal_err)?;
+
+    Ok(warp::reply::with_header(
+        data,
+        "content-type",
+        &blob.mime_type,
+    ))
+}
+
 pub async fn blob_create(
     shelf: model::AppStateRef,
     form: warp::multipart::FormData,
