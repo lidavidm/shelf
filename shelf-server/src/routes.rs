@@ -137,10 +137,11 @@ pub fn blob_list(
 
 pub fn blob_get_contents(
     shelf: model::AppStateRef,
-) -> warp::filters::BoxedFilter<(warp::reply::WithHeader<Vec<u8>>,)> {
+) -> warp::filters::BoxedFilter<(impl warp::Reply,)> {
     warp::path!("blob" / String / "contents")
         .and(warp::get())
         .and(with_shelf(shelf))
+        .and(warp::header::optional::<String>("if-none-match"))
         .and_then(handlers::blob_get_contents)
         .boxed()
 }

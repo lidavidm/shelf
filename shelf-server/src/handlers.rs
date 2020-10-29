@@ -207,7 +207,16 @@ pub async fn blob_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, In
 pub async fn blob_get_contents(
     key: String,
     shelf: model::AppStateRef,
-) -> Result<warp::reply::WithHeader<Vec<u8>>, warp::Rejection> {
+    if_none_match: Option<String>,
+) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
+    if if_none_match.is_some() {
+        return Ok(Box::new(warp::reply::with_header(
+            warp::http::StatusCode::NOT_MODIFIED,
+            "ETag",
+            "\"foo\"",
+        )));
+    }
+
     use std::io::Read;
     let state = &shelf.lock().await;
     for blob in state.shelf.query_blobs() {
@@ -225,11 +234,15 @@ pub async fn blob_get_contents(
         .read_to_end(&mut data)
         .map_err(to_internal_err)?;
 
-    Ok(warp::reply::with_header(
-        data,
-        "content-type",
-        &blob.mime_type,
-    ))
+    Ok(Box::new(warp::reply::with_header(
+        warp::reply::with_header(
+            warp::reply::with_header(data, "content-type", &blob.mime_type),
+            "cache-control",
+            "public, max-age=604800, immutable",
+        ),
+        "ETag",
+        "\"foo\"",
+    )))
 }
 
 pub async fn blob_create(
