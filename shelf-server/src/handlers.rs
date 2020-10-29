@@ -13,10 +13,10 @@
 //     limitations under the License.
 
 use crate::model;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::convert::Infallible;
 
-pub async fn item_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Infallible> {
+pub async fn item_list(shelf: model::AppStateRef) -> Result<warp::reply::Json, Infallible> {
     let shelf = &shelf.lock().await.shelf;
     let items: Vec<shelf::item::Item> = shelf.query_items().map(|x| x.1.clone()).collect();
     Ok(warp::reply::json(&items))
@@ -98,6 +98,9 @@ pub async fn item_post(
     state.shelf.replace_item(item).map_err(|e| match e {
         ShelfError::InvalidReference(r) => warp::reject::custom(model::BadRequest {
             error: format!("Unrecognized reference to entity {}", r),
+        }),
+        ShelfError::InvalidKey(r) => warp::reject::custom(model::BadRequest {
+            error: format!("Invalid key '{}'", r),
         }),
     })?;
 
@@ -194,9 +197,9 @@ pub async fn tag_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Inf
 
 pub async fn blob_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, Infallible> {
     let shelf = &shelf.lock().await.shelf;
-    let mut blobs = HashSet::new();
-    for key in shelf.query_blobs() {
-        blobs.insert(key);
+    let mut blobs = HashMap::new();
+    for blob in shelf.query_blobs() {
+        blobs.insert(blob.key.clone(), blob.clone());
     }
     Ok(warp::reply::json(&blobs))
 }
@@ -204,13 +207,66 @@ pub async fn blob_list(shelf: model::AppStateRef) -> Result<impl warp::Reply, In
 pub async fn blob_create(
     shelf: model::AppStateRef,
     form: warp::multipart::FormData,
-) -> Result<impl warp::Reply, Infallible> {
-    let shelf = &shelf.lock().await.shelf;
-    let mut blobs = HashSet::new();
-    for key in shelf.query_blobs() {
-        blobs.insert(key);
+) -> Result<warp::reply::WithStatus<warp::reply::Json>, warp::Rejection> {
+    use bytes::BufMut;
+    use futures::{TryFutureExt, TryStreamExt};
+    use tokio::fs::File;
+    use tokio::io::AsyncWriteExt;
+    let raw_part: Result<Vec<(String, Option<String>, Vec<u8>)>, warp::Rejection> = form
+        .and_then(|part| {
+            let name = part.name().to_string();
+            let content_type = part.content_type().map(|t| t.to_string());
+            part.stream()
+                .try_fold(Vec::new(), |mut vec, data| {
+                    vec.put(data);
+                    async move { Ok(vec) }
+                })
+                .map_ok(move |vec| (name, content_type, vec))
+        })
+        .try_collect()
+        .await
+        .map_err(to_internal_err);
+    let parts: Vec<(String, String, Vec<u8>)> = raw_part?
+        .into_iter()
+        .map(|(name, content_type, buf)| match content_type {
+            Some(typ) => Ok((name, typ, buf)),
+            None => Err(warp::reject::custom(model::BadRequest {
+                error: format!("Blob {} is missing a content-type", name),
+            })),
+        })
+        .collect::<Result<Vec<_>, warp::Rejection>>()?;
+
+    let mut state = shelf.lock().await;
+    let mut keys = Vec::new();
+    for raw_blob in parts {
+        keys.push(raw_blob.0.clone());
+        let path = state.saver.insert_blob(&raw_blob.0).map_err(|err| {
+            warp::reject::custom(model::BadRequest {
+                error: format!("Could not save blob: {:?}", err),
+            })
+        })?;
+        let blob = shelf::common::Blob::new_with_mime(raw_blob.0, raw_blob.1);
+        state.shelf.insert_blob(blob.clone()).map_err(|err| {
+            warp::reject::custom(model::BadRequest {
+                error: format!("Could not insert blob: {}", err),
+            })
+        })?;
+        let mut file = File::create(&path).await.map_err(to_internal_err)?;
+        file.write_all(&raw_blob.2).await.map_err(to_internal_err)?;
+        file.sync_all().await.map_err(to_internal_err)?;
+        log::info!(
+            target: crate::LOG_NAME,
+            "blob_create: created {:?} of length {}",
+            &blob,
+            raw_blob.2.len()
+        );
     }
-    Ok(warp::reply::json(&blobs))
+    state.save()?;
+    let response = model::MultiCreateResponse { keys };
+    Ok(warp::reply::with_status(
+        warp::reply::json(&response),
+        warp::http::StatusCode::ACCEPTED,
+    ))
 }
 
 pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
@@ -229,4 +285,10 @@ pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp:
                 error: format!("{}", err),
             })
         })
+}
+
+fn to_internal_err<E: std::fmt::Display>(err: E) -> warp::Rejection {
+    warp::reject::custom(model::InternalServerError {
+        error: format!("{}", err),
+    })
 }

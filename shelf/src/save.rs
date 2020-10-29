@@ -33,6 +33,7 @@ pub enum SaveError {
     GitError(String),
     SerializationError(String),
     MissingBlob(String),
+    InvalidKey(String),
 }
 
 impl From<io::Error> for SaveError {
@@ -66,6 +67,9 @@ impl ::std::fmt::Display for SaveError {
 }
 
 impl ::std::error::Error for SaveError {}
+
+const BLOBS_PATH: &'static str = "blobs";
+const BLOBS_INDEX: &'static str = "index.yaml";
 
 impl DirectoryShelf {
     pub fn new<P: Into<path::PathBuf>>(p: P) -> Result<DirectoryShelf, SaveError> {
@@ -122,8 +126,11 @@ impl DirectoryShelf {
     /// The key must already be normalized (a valid path).
     #[must_use]
     pub fn insert_blob(&self, key: &str) -> Result<path::PathBuf, SaveError> {
-        let blobs = self.directory.join("blobs");
+        let blobs = self.directory.join(BLOBS_PATH);
         fs::create_dir_all(&blobs)?;
+        if !key.starts_with("blob-") {
+            return Err(SaveError::InvalidKey(key.to_string()));
+        }
         let path = blobs.join(key);
         Ok(path)
     }
@@ -188,16 +195,27 @@ impl DirectoryShelf {
                 updated.push(&item.1.key);
             }
 
+            let mut blob_modified = false;
             for blob in shelf.query_blobs() {
-                if !shelf.is_dirty(blob) {
+                if !shelf.is_dirty(&blob.key) {
                     continue;
                 }
-                let filename = self.insert_blob(blob)?;
+                let filename = self.insert_blob(&blob.key)?;
                 if !filename.exists() {
-                    return Err(SaveError::MissingBlob(blob.to_owned()));
+                    return Err(SaveError::MissingBlob(blob.key.clone()));
                 }
                 index.add_path(filename.strip_prefix(&self.directory)?)?;
-                updated.push(blob);
+                updated.push(&blob.key);
+                blob_modified = true;
+            }
+            if blob_modified {
+                let mut blobs: Vec<&crate::common::Blob> = shelf.query_blobs().collect();
+                blobs.sort_by_key(|b| &b.key);
+                let path = self.directory.join(BLOBS_PATH).join(BLOBS_INDEX);
+                let file = File::create(&path)?;
+                serde_yaml::to_writer(&file, &blobs)?;
+                file.sync_all()?;
+                index.add_path(path.strip_prefix(&self.directory)?)?;
             }
 
             let tree_id = index.write_tree()?;
@@ -253,6 +271,18 @@ impl DirectoryShelf {
             }
         }
 
+        let blobs_index = self.directory.join(BLOBS_PATH).join(BLOBS_INDEX);
+        if blobs_index.is_file() {
+            let file = File::open(blobs_index)?;
+            let blobs: Vec<crate::common::Blob> = serde_yaml::from_reader(file)?;
+            for blob in blobs {
+                shelf.insert_blob(blob).map_err(|err| match err {
+                    crate::shelf::ShelfError::InvalidReference(key) => SaveError::InvalidKey(key),
+                    crate::shelf::ShelfError::InvalidKey(key) => SaveError::InvalidKey(key),
+                })?;
+            }
+        }
+
         people.into_iter().for_each(|p| {
             let _ = shelf.insert_person(p);
         });
@@ -272,6 +302,7 @@ impl DirectoryShelf {
 #[cfg(test)]
 mod tests {
     use super::DirectoryShelf;
+    use crate::common::Blob;
     use crate::shelf::Shelf;
     use std::fs::File;
     use tempfile::Builder;
@@ -284,18 +315,58 @@ mod tests {
             .expect("Could not make temp dir");
         let saver = DirectoryShelf::new(tmp_dir.path()).expect("Could not make temp shelf");
         let blob = saver
-            .insert_blob("cover-foo")
+            .insert_blob("blob-cover-foo")
             .expect("Could not insert blob");
-        assert!(blob.ends_with("blobs/cover-foo"));
+        assert!(blob.ends_with("blobs/blob-cover-foo"));
 
         let mut shelf = Shelf::new();
         assert!(saver.save(&mut shelf).is_ok());
-        shelf.insert_blob("cover-foo");
+        shelf
+            .insert_blob(Blob::new_with_mime(
+                "blob-cover-foo".to_owned(),
+                "text/plain".to_owned(),
+            ))
+            .unwrap();
         assert!(saver.save(&mut shelf).is_err());
         File::create(&blob)
             .expect(&format!("Could not create {:?}", blob))
             .sync_all()
             .expect(&format!("Could not create {:?}", blob));
         assert!(saver.save(&mut shelf).is_ok());
+    }
+
+    #[test]
+    fn roundtrip_blob() {
+        let tmp_dir = Builder::new()
+            .prefix("shelf-test-")
+            .tempdir()
+            .expect("Could not make temp dir");
+        let saver = DirectoryShelf::new(tmp_dir.path()).expect("Could not make temp shelf");
+        let blob = saver
+            .insert_blob("blob-cover-foo")
+            .expect("Could not insert blob");
+        assert!(blob.ends_with("blobs/blob-cover-foo"));
+        File::create(&blob)
+            .expect(&format!("Could not create {:?}", blob))
+            .sync_all()
+            .expect(&format!("Could not create {:?}", blob));
+
+        let mut shelf = Shelf::new();
+        assert!(saver.save(&mut shelf).is_ok());
+        shelf
+            .insert_blob(Blob::new_with_mime(
+                "blob-cover-foo".to_owned(),
+                "text/plain".to_owned(),
+            ))
+            .unwrap();
+        assert!(saver.save(&mut shelf).is_ok());
+
+        let mut shelf = Shelf::new();
+        assert!(saver.load(&mut shelf).is_ok());
+        let blob = shelf
+            .query_blobs()
+            .filter(|x| &x.key == "blob-cover-foo")
+            .next();
+        assert!(blob.is_some());
     }
 }

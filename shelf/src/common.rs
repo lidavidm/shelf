@@ -98,6 +98,19 @@ pub enum Kind {
     NonFiction,
 }
 
+/// A binary blob stored in a shelf (for things like cover images).
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize)]
+pub struct Blob {
+    pub key: String,
+    pub mime_type: String,
+}
+
+impl Blob {
+    pub fn new_with_mime(key: String, mime_type: String) -> Blob {
+        Blob { key, mime_type }
+    }
+}
+
 /// A hybrid date or Boolean, used to import data from sites that
 /// offer only a Boolean completed flag instead of a completion date,
 /// or a less granular completion date.

@@ -18,10 +18,7 @@ use warp::Filter;
 pub fn api(
     shelf: model::AppStateRef,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    warp::path!("hello" / String)
-        .map(|name| format!("Hello, {}!", name))
-        .or(item_list(shelf.clone()))
-        .boxed()
+    item_list(shelf.clone())
         .or(item_get(shelf.clone()))
         .boxed()
         .or(item_post(shelf.clone()))
@@ -38,6 +35,8 @@ pub fn api(
         .boxed()
         .or(blob_list(shelf.clone()))
         .boxed()
+        .or(blob_create(shelf.clone()))
+        .boxed()
         .or(proxy())
         .boxed()
         .recover(error_handler)
@@ -47,15 +46,14 @@ fn with_shelf(shelf: model::AppStateRef) -> warp::filters::BoxedFilter<(model::A
     warp::any().map(move || shelf.clone()).boxed()
 }
 
-pub fn item_list(
-    shelf: model::AppStateRef,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+pub fn item_list(shelf: model::AppStateRef) -> warp::filters::BoxedFilter<(warp::reply::Json,)> {
     warp::path!("item")
         .and(warp::get())
         .boxed()
         .and(with_shelf(shelf))
         .boxed()
         .and_then(handlers::item_list)
+        .boxed()
 }
 
 pub fn item_get(
@@ -133,6 +131,17 @@ pub fn blob_list(
         .and(warp::get())
         .and(with_shelf(shelf))
         .and_then(handlers::blob_list)
+}
+
+pub fn blob_create(
+    shelf: model::AppStateRef,
+) -> warp::filters::BoxedFilter<(warp::reply::WithStatus<warp::reply::Json>,)> {
+    warp::path!("blob")
+        .and(warp::put())
+        .and(with_shelf(shelf))
+        .and(warp::filters::multipart::form())
+        .and_then(handlers::blob_create)
+        .boxed()
 }
 
 pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {

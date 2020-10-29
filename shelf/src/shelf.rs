@@ -14,13 +14,14 @@
 
 use std::collections::{HashMap, HashSet};
 
-use crate::common::Person;
+use crate::common::{Blob, Person};
 use crate::item::Item;
 use crate::series::Series;
 
 #[derive(Debug)]
 pub enum ShelfError {
     InvalidReference(String),
+    InvalidKey(String),
 }
 
 impl std::fmt::Display for ShelfError {
@@ -39,7 +40,7 @@ pub struct Shelf {
     items: Vec<Item>,
     series: HashMap<String, Series>,
     dirty: HashSet<String>,
-    blobs: HashSet<String>,
+    blobs: HashMap<String, Blob>,
 }
 
 pub struct ItemRef<'a>(pub &'a Shelf, pub &'a Item);
@@ -65,8 +66,8 @@ impl Shelf {
         self.series.values()
     }
 
-    pub fn query_blobs(&self) -> impl Iterator<Item = &String> {
-        self.blobs.iter()
+    pub fn query_blobs(&self) -> impl Iterator<Item = &Blob> {
+        self.blobs.values()
     }
 
     /// Insert or update a person.
@@ -86,9 +87,12 @@ impl Shelf {
         self.series.insert(series.key.clone(), series).is_none()
     }
 
-    pub fn insert_blob(&mut self, key: &str) -> bool {
-        self.dirty.insert(key.to_owned());
-        self.blobs.insert(key.to_owned())
+    pub fn insert_blob(&mut self, blob: Blob) -> Result<bool> {
+        if !blob.key.starts_with("blob-") {
+            return Err(ShelfError::InvalidKey(blob.key.clone()));
+        }
+        self.dirty.insert(blob.key.clone());
+        Ok(self.blobs.insert(blob.key.clone(), blob).is_none())
     }
 
     pub fn validate_item(&self, item: &Item) -> Result<()> {
@@ -99,7 +103,7 @@ impl Shelf {
         }
 
         for cover in item.covers.iter() {
-            if !self.blobs.contains(&cover.key) {
+            if !self.blobs.contains_key(&cover.key) {
                 return Err(ShelfError::InvalidReference(cover.key.clone()));
             }
         }
@@ -153,7 +157,7 @@ impl Shelf {
 #[cfg(test)]
 mod tests {
     use super::Shelf;
-    use crate::common::{Alternatives, Person};
+    use crate::common::{Alternatives, Blob, Person};
     use crate::item::{Cover, Item};
     use crate::series::Series;
 
@@ -241,11 +245,16 @@ mod tests {
         assert!(shelf.insert_item(item).is_ok());
         let mut item: Item = Default::default();
         item.covers.push(Cover {
-            key: "foo".into(),
+            key: "blob-foo".into(),
             description: "".into(),
         });
         assert!(shelf.insert_item(item.clone()).is_err());
-        assert!(shelf.insert_blob("foo"));
+        assert!(shelf
+            .insert_blob(Blob::new_with_mime(
+                "blob-foo".to_owned(),
+                "text/plain".to_owned()
+            ))
+            .unwrap());
         assert!(shelf.insert_item(item).is_ok());
     }
 }

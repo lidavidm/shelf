@@ -79,3 +79,8 @@ pub enum CreateStatus {
 pub struct CreateResponse {
     pub key: String,
 }
+
+#[derive(Debug, serde_derive::Serialize)]
+pub struct MultiCreateResponse {
+    pub keys: Vec<String>,
+}
