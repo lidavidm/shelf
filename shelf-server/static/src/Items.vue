@@ -56,28 +56,38 @@ You may obtain a copy of the License at
                     <td class="item-status" v-bind:class="item['status']"></td>
                     <td class="type">{{ item["kind"] }}</td>
                     <td class="name">
-                        <a
-                            v-on:click="edit(item.key)"
-                            title="Click to edit"
-                        >
-                            {{ item["name"]["alternatives"][item["name"]["default"]] }}
-                        </a>
-                        <span
-                            class="item-series"
-                        >
-                            <span v-if="item.series && series[item.series[0]]">
-                                {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
-                            </span>
-                            <span
-                                v-for="person in item.people"
-                                v-if="person[0] === 'Author' || person[0] === 'Director'">
-                                <em>by</em> {{getPersonName(person[1])}}
-                            </span>
-                            <div class="tag-list" v-if="item.tags && item.tags.length > 0">
-                                <em>Tags:</em>
-                                <span class="tag" v-for="tag in item.tags">{{tag}}</span>
+                        <div>
+                            <img
+                                v-if="item.covers.length > 0"
+                                v-bind:src="'/blob/' + item.covers[0].key + '/contents'"
+                                v-bind:alt="item.covers[0].description"
+                                v-bind:title="item.covers[0].description"
+                            />
+                            <div>
+                                <a
+                                    v-on:click="edit(item.key)"
+                                    title="Click to edit"
+                                >
+                                    {{ item["name"]["alternatives"][item["name"]["default"]] }}
+                                </a>
+                                <span
+                                    class="item-series"
+                                >
+                                    <span v-if="item.series && series[item.series[0]]">
+                                        {{series[item.series[0]]}}<template v-if="item.series[1]">, {{item.series[1]}}</template>
+                                    </span>
+                                    <span
+                                        v-for="person in item.people"
+                                        v-if="person[0] === 'Author' || person[0] === 'Director'">
+                                        <em>by</em> {{getPersonName(person[1])}}
+                                    </span>
+                                    <div class="tag-list" v-if="item.tags && item.tags.length > 0">
+                                        <em>Tags:</em>
+                                        <span class="tag" v-for="tag in item.tags">{{tag}}</span>
+                                    </div>
+                                </span>
                             </div>
-                        </span>
+                        </div>
                     </td>
                     <td class="progress">
                         {{ item["entries"].filter(e => e.completed).length }} /
@@ -343,6 +353,18 @@ You may obtain a copy of the License at
         height: 2em;
         line-height: 1.5em;
         vertical-align: top;
+    }
+
+    #items-list td.name > div {
+        align-items: center;
+        display: flex;
+    }
+
+    #items-list td.name > div > img {
+        height: 8em;
+    }
+
+    #items-list td.name > div > div {
     }
 
     #items-list td a {
