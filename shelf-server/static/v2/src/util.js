@@ -26,9 +26,9 @@ export function humanKind(kind) {
     case "NonFiction":
         return "Non-Fiction";
     case "OVA":
-        return "OVA (Original Video Animation)";
+        return "OVA";
     case "ONA":
-        return "ONA (Original Net Animation)";
+        return "ONA";
     case "ShortStory":
         return "Short Story";
     case "VisualNovel":

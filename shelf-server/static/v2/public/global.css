@@ -35,7 +35,14 @@ body {
     margin: 1rem 0;
 }
 
-h1, h2, h3 {
+h1 {
+    font-weight: normal;
+}
+
+h2 {
+    font-style: italic;
+    font-weight: normal;
+    text-align: center;
 }
 
 h3 {

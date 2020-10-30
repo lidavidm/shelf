@@ -2,15 +2,19 @@
     import { onMount } from "svelte";
     import firstBy from "thenby";
 
+    import importKitsu from "./import/kitsu.mjs";
+    import importMangadex from "./import/mangadex.mjs";
     import * as util from "./util";
 
     export let router;
 
+    let displayed = {"In Progress": true};
     let itemsByCategory = [];
     let people = {};
     let series = {};
+    let urlToImport = "";
 
-    onMount(async function() {
+    async function reload() {
         const [itemList, peopleList, seriesList] = await Promise.all([
             fetch("/item").then(r => r.json()),
             fetch("/person").then(r => r.json()),
@@ -20,7 +24,8 @@
         people = buildMap(peopleList);
         series = buildMap(seriesList);
         itemsByCategory = sortItems(itemList);
-    });
+    }
+    onMount(reload);
 
     function buildMap(items) {
         const result = {};
@@ -71,22 +76,94 @@
             const item = items[index];
             if (item.kind != prevKind) {
                 prevKind = item.kind;
+                const title = util.humanKind(item.kind);
                 itemsByCategory.push({
-                    "title": util.humanKind(item.kind),
-                    "items": [],
+                    title,
+                    items: [],
                 });
+                if (typeof displayed[title] === "undefined") {
+                    displayed = {...displayed, [title]: false};
+                }
             }
             itemsByCategory[itemsByCategory.length - 1].items.push(item);
         }
         return itemsByCategory;
     }
+
+    async function importUrl() {
+        const url = new URL(urlToImport);
+        let importer;
+        switch (url.hostname) {
+            case "kitsu.io":
+                importer = importKitsu;
+                break;
+            case "mangadex.org":
+                importer = importMangadex;
+                break;
+            default:
+                alert(`Unknown source: ${urlToImport} (hostname ${url.hostname})`);
+                return;
+        }
+
+        const {cover, item} = await window.fetch("/item/:template:")
+              .then(r => r.json())
+              .then(template => importer(urlToImport, { template }));
+        const coverRequest = await window.fetch("/proxy?url=" + encodeURIComponent(cover));
+        const coverBlob = await coverRequest.blob();
+        const formData = new FormData();
+        const blobKey = `blob-${item.key}-cover`;
+        formData.append(blobKey, coverBlob);
+
+        const blobUpload = await window.fetch("/blob", {
+            method: "PUT",
+            body: formData,
+        });
+        const blobResult = await blobUpload.json();
+        console.log(blobResult);
+
+        item.covers = [{key: blobKey, description: "Cover"}];
+        const itemBody = JSON.stringify(item, null, 2);
+        console.log(itemBody)
+        const itemUpload = await window.fetch("/item/" + encodeURIComponent(item.key), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: itemBody,
+        });
+        console.log(await itemUpload.json());
+        reload();
+    }
 </script>
 
 <main>
-    {#each itemsByCategory as category (category.title)}
+    <section id="import">
+        <div>
+            <label for="import">Import URL:</label>
+            <input id="import" type="text" bind:value={urlToImport} />
+            <button on:click={importUrl}>Import</button>
+        </div>
+    </section>
+    <section id="filters">
+        <h2>Filters</h2>
+        <div>
+            <section class="filter-group">
+                <h3>Categories</h3>
+                <div class="filter-group-inner">
+                    {#each Object.keys(displayed) as title (title)}
+                        <div>
+                            <input id={'filter-' + title} type="checkbox" bind:checked={displayed[title]} />
+                            <label for={'filter-' + title}>{title}</label>
+                        </div>
+                    {/each}
+                </div>
+            </section>
+        </div>
+    </section>
+    {#each itemsByCategory.filter(cat => displayed[cat.title]) as category (category.title)}
         <section>
             <header>
-                <h2>{category.title}</h2>
+                <h2>{category.title} ({category.items.length} items)</h2>
             </header>
             <ul class="item-list">
                 {#each category.items as item (item.key)}
@@ -132,6 +209,17 @@
                                 Rating: {item.rating ? item.rating : "-"}/10
                             </span>
 
+                            {#if item.completed}
+                            <span>
+                                Completed:
+                                {#if item.completed.indexOf('T') > 0}
+                                {new Date(item.completed).toLocaleDateString('en-GB')}
+                                {:else}
+                                {item.completed}
+                                {/if}
+                            </span>
+                            {/if}
+
                             <div class="spacer"></div>
 
                             {#if item.tags && item.tags.length > 0}
@@ -156,7 +244,7 @@
                                 {/if}
                             </div>
                             <div class="item-bar">
-                                <span>{item.kind}</span>
+                                <span><strong>{item.kind}</strong></span>
                                 <span class={'item-status ' + item.status}>{item.status}</span>
                                 <span>
                                     {item.entries.filter(e => e.completed).length}
@@ -178,9 +266,41 @@
         font-style: italic;
     }
 
+    #filters > div {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .filter-group {
+        border: 1px solid #CCC;
+        border-radius: 5px;
+        box-sizing: border-box;
+        flex: 0 0;
+        min-width: 40em;
+        padding: 1em;
+        position: relative;
+        width: 33%;
+    }
+
+    .filter-group h3 {
+        position: absolute;
+        top: -0.75em;
+        background: #FFF;
+    }
+
+    .filter-group > .filter-group-inner {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .filter-group > .filter-group-inner > div {
+        flex: 0 0 8em;
+    }
+
     .item-list {
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
         list-style-type: none;
         margin: 0;
         padding: 0;
@@ -189,7 +309,7 @@
     .item-list li {
         border-bottom: 1px solid #000;
         display: flex;
-        width: 25em;
+        width: 30em;
     }
 
     .item-list li > .cover {

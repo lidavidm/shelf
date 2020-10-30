@@ -1,0 +1,853 @@
+{
+  "data": [
+    {
+      "id": "10350",
+      "type": "anime",
+      "links": {
+        "self": "https://kitsu.io/api/edge/anime/10350"
+      },
+      "attributes": {
+        "createdAt": "2015-01-30T14:27:42.702Z",
+        "updatedAt": "2020-10-30T12:00:21.893Z",
+        "slug": "jitsu-wa-watashi-wa",
+        "synopsis": "One day after school, Asahi Kuromine stumbles upon the truth that Youko Shiragami, the girl he has a crush on, is actually a vampire. According to her father's rules, Youko must now quit school in order to keep her family safe. However, Asahi does not want her to go and promises that he will keep her true nature secret. Unfortunately, this turns out to be easier said than done, as Asahi is a man who is easy to read and is unable to keep any secrets to himself.\nAnd this is the only the beginning of his troubles—more supernatural beings enter his life, and he is forced to protect all of their identities or face the consequences. Jitsu wa Watashi wa follows Asahi as he deals with his new friends and the unique challenges they bring, struggles to keep his mouth shut, and desperately tries to win Youko's heart in the process.\n[Written by MAL Rewrite]",
+        "description": "One day after school, Asahi Kuromine stumbles upon the truth that Youko Shiragami, the girl he has a crush on, is actually a vampire. According to her father's rules, Youko must now quit school in order to keep her family safe. However, Asahi does not want her to go and promises that he will keep her true nature secret. Unfortunately, this turns out to be easier said than done, as Asahi is a man who is easy to read and is unable to keep any secrets to himself.\nAnd this is the only the beginning of his troubles—more supernatural beings enter his life, and he is forced to protect all of their identities or face the consequences. Jitsu wa Watashi wa follows Asahi as he deals with his new friends and the unique challenges they bring, struggles to keep his mouth shut, and desperately tries to win Youko's heart in the process.\n[Written by MAL Rewrite]",
+        "coverImageTopOffset": 80,
+        "titles": {
+          "en": "Actually, I am . . .",
+          "en_jp": "Jitsu wa Watashi wa",
+          "en_us": "Actually, I am...",
+          "ja_jp": "実は私は"
+        },
+        "canonicalTitle": "Jitsu wa Watashi wa",
+        "abbreviatedTitles": [
+          "Jitsuwata",
+          "The Truth Is I Am...",
+          "I am..."
+        ],
+        "averageRating": "69.84",
+        "ratingFrequencies": {
+          "2": "39",
+          "3": "1",
+          "4": "43",
+          "5": "3",
+          "6": "151",
+          "7": "3",
+          "8": "336",
+          "9": "9",
+          "10": "539",
+          "11": "22",
+          "12": "1168",
+          "13": "47",
+          "14": "2039",
+          "15": "59",
+          "16": "1206",
+          "17": "22",
+          "18": "397",
+          "19": "4",
+          "20": "615"
+        },
+        "userCount": 14697,
+        "favoritesCount": 70,
+        "startDate": "2015-07-07",
+        "endDate": "2015-09-29",
+        "nextRelease": null,
+        "popularityRank": 774,
+        "ratingRank": 4076,
+        "ageRating": "PG",
+        "ageRatingGuide": "Teens 13 or older",
+        "subtype": "TV",
+        "status": "finished",
+        "tba": null,
+        "posterImage": {
+          "tiny": "https://media.kitsu.io/anime/poster_images/10350/tiny.jpg?1597697462",
+          "small": "https://media.kitsu.io/anime/poster_images/10350/small.jpg?1597697462",
+          "medium": "https://media.kitsu.io/anime/poster_images/10350/medium.jpg?1597697462",
+          "large": "https://media.kitsu.io/anime/poster_images/10350/large.jpg?1597697462",
+          "original": "https://media.kitsu.io/anime/poster_images/10350/original.jpg?1597697462",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 110,
+                "height": 156
+              },
+              "small": {
+                "width": 284,
+                "height": 402
+              },
+              "medium": {
+                "width": 390,
+                "height": 554
+              },
+              "large": {
+                "width": 550,
+                "height": 780
+              }
+            }
+          }
+        },
+        "coverImage": {
+          "tiny": "https://media.kitsu.io/anime/cover_images/10350/tiny.jpg?1597703003",
+          "small": "https://media.kitsu.io/anime/cover_images/10350/small.jpg?1597703003",
+          "large": "https://media.kitsu.io/anime/cover_images/10350/large.jpg?1597703003",
+          "original": "https://media.kitsu.io/anime/cover_images/10350/original.jpg?1597703003",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 840,
+                "height": 200
+              },
+              "small": {
+                "width": 1680,
+                "height": 400
+              },
+              "large": {
+                "width": 3360,
+                "height": 800
+              }
+            }
+          }
+        },
+        "episodeCount": 13,
+        "episodeLength": 23,
+        "totalLength": 299,
+        "youtubeVideoId": "BDonHeTke1w",
+        "showType": "TV",
+        "nsfw": false
+      },
+      "relationships": {
+        "genres": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/genres",
+            "related": "https://kitsu.io/api/edge/anime/10350/genres"
+          }
+        },
+        "categories": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/categories",
+            "related": "https://kitsu.io/api/edge/anime/10350/categories"
+          }
+        },
+        "castings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/castings",
+            "related": "https://kitsu.io/api/edge/anime/10350/castings"
+          }
+        },
+        "installments": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/installments",
+            "related": "https://kitsu.io/api/edge/anime/10350/installments"
+          }
+        },
+        "mappings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/mappings",
+            "related": "https://kitsu.io/api/edge/anime/10350/mappings"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/anime/10350/reviews"
+          }
+        },
+        "mediaRelationships": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/media-relationships",
+            "related": "https://kitsu.io/api/edge/anime/10350/media-relationships"
+          }
+        },
+        "characters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/characters",
+            "related": "https://kitsu.io/api/edge/anime/10350/characters"
+          }
+        },
+        "staff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/staff",
+            "related": "https://kitsu.io/api/edge/anime/10350/staff"
+          }
+        },
+        "productions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/productions",
+            "related": "https://kitsu.io/api/edge/anime/10350/productions"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/anime/10350/quotes"
+          }
+        },
+        "episodes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/episodes",
+            "related": "https://kitsu.io/api/edge/anime/10350/episodes"
+          },
+          "data": [
+            {
+              "type": "episodes",
+              "id": "178190"
+            },
+            {
+              "type": "episodes",
+              "id": "178191"
+            },
+            {
+              "type": "episodes",
+              "id": "178192"
+            },
+            {
+              "type": "episodes",
+              "id": "178193"
+            },
+            {
+              "type": "episodes",
+              "id": "178194"
+            },
+            {
+              "type": "episodes",
+              "id": "178195"
+            },
+            {
+              "type": "episodes",
+              "id": "178196"
+            },
+            {
+              "type": "episodes",
+              "id": "178197"
+            },
+            {
+              "type": "episodes",
+              "id": "178198"
+            },
+            {
+              "type": "episodes",
+              "id": "178199"
+            },
+            {
+              "type": "episodes",
+              "id": "178200"
+            },
+            {
+              "type": "episodes",
+              "id": "178201"
+            },
+            {
+              "type": "episodes",
+              "id": "178202"
+            }
+          ]
+        },
+        "streamingLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/streaming-links",
+            "related": "https://kitsu.io/api/edge/anime/10350/streaming-links"
+          }
+        },
+        "animeProductions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/anime-productions",
+            "related": "https://kitsu.io/api/edge/anime/10350/anime-productions"
+          }
+        },
+        "animeCharacters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/anime-characters",
+            "related": "https://kitsu.io/api/edge/anime/10350/anime-characters"
+          }
+        },
+        "animeStaff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/10350/relationships/anime-staff",
+            "related": "https://kitsu.io/api/edge/anime/10350/anime-staff"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "178190",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178190"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.273Z",
+        "updatedAt": "2020-08-17T21:45:00.417Z",
+        "synopsis": "Asahi Kuromine, a high-school boy who has trouble keeping a secret from anyone, has a crush on his cool and reserved classmate Yōko Shiragami. While he worries about getting rejected in a similar manner to his confession of love with Class President Nagisa Aizawa, his classmates encourage him to try again. Upon reaching the classroom to confess to Yōko, he finds her unfurling a large pair of wings from her back. Yōko admits to Asahi that she is a vampire, but could only come to school if she hid her true identity from everyone. Asahi swears that he'll be her friend and keep her secret safe. Meanwhile, Newspaper Club head Mikan Akemi plans to see how Asahi's confession went, and Nagisa appears to be spying on Asahi from afar.",
+        "description": "Asahi Kuromine, a high-school boy who has trouble keeping a secret from anyone, has a crush on his cool and reserved classmate Yōko Shiragami. While he worries about getting rejected in a similar manner to his confession of love with Class President Nagisa Aizawa, his classmates encourage him to try again. Upon reaching the classroom to confess to Yōko, he finds her unfurling a large pair of wings from her back. Yōko admits to Asahi that she is a vampire, but could only come to school if she hid her true identity from everyone. Asahi swears that he'll be her friend and keep her secret safe. Meanwhile, Newspaper Club head Mikan Akemi plans to see how Asahi's confession went, and Nagisa appears to be spying on Asahi from afar.",
+        "titles": {
+          "en_jp": "Kokuhaku Shiyou!",
+          "en_us": "I'll Confess!",
+          "ja_jp": "告白しよう！"
+        },
+        "canonicalTitle": "I'll Confess!",
+        "seasonNumber": 1,
+        "number": 1,
+        "relativeNumber": 1,
+        "airdate": "2015-07-07",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178190/original.jpg?1597700699",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178190/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178190/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178190/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178190/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178191",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178191"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.399Z",
+        "updatedAt": "2020-08-17T21:45:34.900Z",
+        "synopsis": "Asahi tells his friends that he decided to be just friends with Yōko for now. Meanwhile, Nagisa reflects on how she brutally rejected Asahi the previous summer to prevent him from getting too close to her, but now acts jealous after seeing him with Yōko. Later, Yōko eats her lunch with Asahi in an otherwise-empty classroom, and finds some cream puffs that Nagisa left on his desk, but the puff is too spicy for her to eat. She inadvertently reveals her wings as Nagisa steps into the room, but Nagisa in turn accidentally reveals herself to be a tiny alien, stepping out of her human-sized \"External Unit\" while holding a tiny raygun at Yōko. While worrying about her own secret getting out, Nagisa chases after Asahi with a hammer she refers to as a \"Memory Erasure Apparatus,\" but Yōko saves Asahi from getting hit by it. In the end, the three decide to keep each other's secrets safe, while Mikan is shown digging a listening device out of an uneaten cream puff. ",
+        "description": "Asahi tells his friends that he decided to be just friends with Yōko for now. Meanwhile, Nagisa reflects on how she brutally rejected Asahi the previous summer to prevent him from getting too close to her, but now acts jealous after seeing him with Yōko. Later, Yōko eats her lunch with Asahi in an otherwise-empty classroom, and finds some cream puffs that Nagisa left on his desk, but the puff is too spicy for her to eat. She inadvertently reveals her wings as Nagisa steps into the room, but Nagisa in turn accidentally reveals herself to be a tiny alien, stepping out of her human-sized \"External Unit\" while holding a tiny raygun at Yōko. While worrying about her own secret getting out, Nagisa chases after Asahi with a hammer she refers to as a \"Memory Erasure Apparatus,\" but Yōko saves Asahi from getting hit by it. In the end, the three decide to keep each other's secrets safe, while Mikan is shown digging a listening device out of an uneaten cream puff. ",
+        "titles": {
+          "en_jp": "Himitsu wo Mamorou!",
+          "en_us": "I'll Keep This Secret!",
+          "ja_jp": "秘密を守ろう！"
+        },
+        "canonicalTitle": "I'll Keep This Secret!",
+        "seasonNumber": 1,
+        "number": 2,
+        "relativeNumber": 2,
+        "airdate": "2015-07-14",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178191/original.jpg?1597700733",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178191/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178191/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178191/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178191/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178192",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178192"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.521Z",
+        "updatedAt": "2020-08-17T21:45:35.804Z",
+        "synopsis": "Mikan tortures Asahi and his friends for more information about Asahi's meeting in the classroom with Yoko, but he refuses to tell her anything, fearing that she would spread the information around school like she did in the past. Later, Asahi's teacher asks him to deliver homework to Yoko, as she is sick and can't come to school. Mikan decides to follow him, but Nagisa appears to help him off her trail. Asahi decides to stop for a brief visit at Yoko's student apartment, but gets a call from Nagisa that Mikan managed to get past her and run to Yoko's house. Mikan is accidentally knocked unconscious after being buried under a pile of Yoko's junk from the closet, but decides to photoshop a romantic encounter between Asahi and Yoko and threatens to display it throughout the school. Asahi confronts Mikan on the rooftop and begs her not to do it, but the pleading only makes her stronger, so Asahi takes the opposite route and decides to let her put up the pictures, draining her resolve as she didn't want him to feel happy. After school, a spirit residing in Mikan's glasses assumes that she secretly has feelings for Asahi, but Mikan angrily denies this as she twists her own glasses around. ",
+        "description": "Mikan tortures Asahi and his friends for more information about Asahi's meeting in the classroom with Yoko, but he refuses to tell her anything, fearing that she would spread the information around school like she did in the past. Later, Asahi's teacher asks him to deliver homework to Yoko, as she is sick and can't come to school. Mikan decides to follow him, but Nagisa appears to help him off her trail. Asahi decides to stop for a brief visit at Yoko's student apartment, but gets a call from Nagisa that Mikan managed to get past her and run to Yoko's house. Mikan is accidentally knocked unconscious after being buried under a pile of Yoko's junk from the closet, but decides to photoshop a romantic encounter between Asahi and Yoko and threatens to display it throughout the school. Asahi confronts Mikan on the rooftop and begs her not to do it, but the pleading only makes her stronger, so Asahi takes the opposite route and decides to let her put up the pictures, draining her resolve as she didn't want him to feel happy. After school, a spirit residing in Mikan's glasses assumes that she secretly has feelings for Asahi, but Mikan angrily denies this as she twists her own glasses around. ",
+        "titles": {
+          "en_jp": "Osananajimi wo Tsukeyou!",
+          "en_us": "Beware Childhood Friends!",
+          "ja_jp": "幼馴染に気をつけよう！"
+        },
+        "canonicalTitle": "Beware Childhood Friends!",
+        "seasonNumber": 1,
+        "number": 3,
+        "relativeNumber": 3,
+        "airdate": "2015-07-21",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178192/original.jpg?1597700734",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178192/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178192/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178192/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178192/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178193",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178193"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.609Z",
+        "updatedAt": "2020-08-17T21:45:44.071Z",
+        "synopsis": "Nagisa begs Asahi for help as her External Unit ran out of battery power before it could recharge and she was forced to come to him in her lilliputian form. Asahi sneaks into the girls' bathroom and carries Nagisa's body down to the nurse's office with Yoko's help. However, on their way out, Mikan stumbles upon the tiny form of the real Nagisa, so Asahi tries to play her off as a life-like figurine. Unfortunately, this only excites Mikan and Shimada (who arrives later) while Nagisa has trouble maintaining a doll-like composure, forcing Asahi to snatch Nagisa back and hide from his friends. After taking shelter in a gym storage shed, Nagisa mysteriously grows to human size and gets embarassed about revealing her antenna to Asahi while Mikan, Shimada and Yoko all hunt them down. Asahi decides to have the human-sized Nagisa punch him out of the shed and escape, pretending to be angry. A mysterious horned lady magically returns Nagisa to her normal size, while Asahi and Yoko clear up their misunderstanding after school. ",
+        "description": "Nagisa begs Asahi for help as her External Unit ran out of battery power before it could recharge and she was forced to come to him in her lilliputian form. Asahi sneaks into the girls' bathroom and carries Nagisa's body down to the nurse's office with Yoko's help. However, on their way out, Mikan stumbles upon the tiny form of the real Nagisa, so Asahi tries to play her off as a life-like figurine. Unfortunately, this only excites Mikan and Shimada (who arrives later) while Nagisa has trouble maintaining a doll-like composure, forcing Asahi to snatch Nagisa back and hide from his friends. After taking shelter in a gym storage shed, Nagisa mysteriously grows to human size and gets embarassed about revealing her antenna to Asahi while Mikan, Shimada and Yoko all hunt them down. Asahi decides to have the human-sized Nagisa punch him out of the shed and escape, pretending to be angry. A mysterious horned lady magically returns Nagisa to her normal size, while Asahi and Yoko clear up their misunderstanding after school. ",
+        "titles": {
+          "en_jp": "Iinchou wo Tasukeyou!",
+          "en_us": "Help the Class Rep!",
+          "ja_jp": "委員長を助けよう！"
+        },
+        "canonicalTitle": "Help the Class Rep!",
+        "seasonNumber": 1,
+        "number": 4,
+        "relativeNumber": 4,
+        "airdate": "2015-07-28",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178193/original.jpg?1597700743",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178193/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178193/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178193/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178193/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178194",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178194"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.680Z",
+        "updatedAt": "2020-08-17T21:45:13.188Z",
+        "synopsis": "After discovering that UV rays from sunlight cause Yoko's skin to instantly tan, Nagisa decides to train her into dodging sunlight on her route to and from school. Asahi studies up on vampire weaknesses while Nagisa encourages Yoko to do a field test with her new training. On the way, they walk through a shopping arcade, where Asahi tries to protect Yoko from salesmen offering garlic and crosses. However, like sunlight, their effects on Yoko are much less harmful than their depictions in popular fiction: crosses simply make her annoyed and garlic makes her eyes water. After coming across an uncovered bridge, Yoko is about to give up her new daytime route when Asahi asks if she's tried using sunscreen. Yoko ends up using it for the first time the next day at school. The following weekend, Asahi and Yoko go to an amusement park together. Yoko saw it as a chance to get him closer to Nagisa, but Nagisa declined, seeing it as an opportunity to have Yoko go on a date with Asahi. The two of them go through the attractions, including a haunted house where Yoko is scared at first but becomes upset at the actor portraying a blood-sucking vampire. Later that evening, Yoko notes that their outing was similar to the relationship that her own parents had with each other, to the point where they even attended her current school together. Meanwhile, Yoko's father is suspicious of Yoko's new boyfriend, and tasks the werewolf Shiro Shishido with bringing her back home if her secret has been revealed.",
+        "description": "After discovering that UV rays from sunlight cause Yoko's skin to instantly tan, Nagisa decides to train her into dodging sunlight on her route to and from school. Asahi studies up on vampire weaknesses while Nagisa encourages Yoko to do a field test with her new training. On the way, they walk through a shopping arcade, where Asahi tries to protect Yoko from salesmen offering garlic and crosses. However, like sunlight, their effects on Yoko are much less harmful than their depictions in popular fiction: crosses simply make her annoyed and garlic makes her eyes water. After coming across an uncovered bridge, Yoko is about to give up her new daytime route when Asahi asks if she's tried using sunscreen. Yoko ends up using it for the first time the next day at school. The following weekend, Asahi and Yoko go to an amusement park together. Yoko saw it as a chance to get him closer to Nagisa, but Nagisa declined, seeing it as an opportunity to have Yoko go on a date with Asahi. The two of them go through the attractions, including a haunted house where Yoko is scared at first but becomes upset at the actor portraying a blood-sucking vampire. Later that evening, Yoko notes that their outing was similar to the relationship that her own parents had with each other, to the point where they even attended her current school together. Meanwhile, Yoko's father is suspicious of Yoko's new boyfriend, and tasks the werewolf Shiro Shishido with bringing her back home if her secret has been revealed.",
+        "titles": {
+          "en_jp": "Date? Shiyou!",
+          "en_us": "Let's Go on a... Date?",
+          "ja_jp": "デート？しよう！"
+        },
+        "canonicalTitle": "Let's Go on a... Date?",
+        "seasonNumber": 1,
+        "number": 5,
+        "relativeNumber": 5,
+        "airdate": "2015-08-04",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178194/original.jpg?1597700711",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178194/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178194/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178194/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178194/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178195",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178195"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.759Z",
+        "updatedAt": "2020-08-17T21:45:54.629Z",
+        "synopsis": "While returning home from the amusement park, Asahi and Yoko encounter a scary wolfman with fangs. Yoko recognizes him as her childhood friend Shiro, but he threatens Asahi anyway. When Shiro sees the moon in the evening sky, he ends up transforming into a sexy lady named Shiho. The three then go to Yoko's home where Shiho explains that she is the dominant personality in the body she shares with Shiro. Shiho then starts teasing Asahi, making Yoko jealous as she reveals that the wolfman can change at any depiction of the moon, including a picture she shows to Shiho. Meanwhile, Nagisa heads to Yoko's home to make a peace offering with her homemade cake, but upon arriving finds Shiho pinning down Asahi and leaves. When she returns a moment later, she sees Shiro in the same position, and flees at the sight. Eventually, the girls clear up the misunderstanding, while Shiho tells Yoko in a private moment that she should be more honest about her relationship with Nagisa. The next day, Shiho appears in Nagisa's class as a transfer student, introducing herself as \"a pervert.\"",
+        "description": "While returning home from the amusement park, Asahi and Yoko encounter a scary wolfman with fangs. Yoko recognizes him as her childhood friend Shiro, but he threatens Asahi anyway. When Shiro sees the moon in the evening sky, he ends up transforming into a sexy lady named Shiho. The three then go to Yoko's home where Shiho explains that she is the dominant personality in the body she shares with Shiro. Shiho then starts teasing Asahi, making Yoko jealous as she reveals that the wolfman can change at any depiction of the moon, including a picture she shows to Shiho. Meanwhile, Nagisa heads to Yoko's home to make a peace offering with her homemade cake, but upon arriving finds Shiho pinning down Asahi and leaves. When she returns a moment later, she sees Shiro in the same position, and flees at the sight. Eventually, the girls clear up the misunderstanding, while Shiho tells Yoko in a private moment that she should be more honest about her relationship with Nagisa. The next day, Shiho appears in Nagisa's class as a transfer student, introducing herself as \"a pervert.\"",
+        "titles": {
+          "en_jp": "Ookamiotoko ni Chuui Shiyou!",
+          "en_us": "Beware of the Wolf Man!",
+          "ja_jp": "狼男に注意しよう！"
+        },
+        "canonicalTitle": "Beware of the Wolf Man!",
+        "seasonNumber": 1,
+        "number": 6,
+        "relativeNumber": 6,
+        "airdate": "2015-08-11",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178195/original.jpg?1597700753",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178195/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178195/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178195/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178195/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178196",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178196"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.855Z",
+        "updatedAt": "2020-08-17T21:45:00.530Z",
+        "synopsis": "After being relentlessly teased by Shiho's body in school, Asahi begins to projectile-nosebleed while Nagisa starts to get jealous. Asahi runs away to meet with Yoko when the two see a tiny girl with horns walking by them. Soon, Yoko decides to speak directly with the girl who tells Yoko that she is Akane Komoto, related to their homeroom teacher. Akari, the teacher, then shows up to wrangle Akane back to her office, where Asahi and Yoko learn that Akane is actually a thousand year-old devil with real horns and Akari's great-great-grandmother. Akane also claims that it was thanks to her that the various supernatural characters were allowed to transfer into the same class. Despite Akane's attempts to portray herself as an adult, Yoko keeps baiting her into childish reactions with snacks and claims to be the more mature girl. The two girls then decide to have a \"sexy\" contest in the empty school gym with Shiho acting as the judge while Nagisa starts tracking mysterious demonic energy from her cat-like spacecraft elsewhere in the city. In multiple contests, Yoko and Akane try to one-up each other to prove their sexiness, except Shiho keeps getting the strongest reaction from Asahi. Finally, Yoko challenges Akane to survive eating awful cream puffs that Mikan made earlier. The contest ends with Yoko and Akane blowing up the gym in a large explosion and sending Nagisa's spacecraft flying from the shockwave.",
+        "description": "After being relentlessly teased by Shiho's body in school, Asahi begins to projectile-nosebleed while Nagisa starts to get jealous. Asahi runs away to meet with Yoko when the two see a tiny girl with horns walking by them. Soon, Yoko decides to speak directly with the girl who tells Yoko that she is Akane Komoto, related to their homeroom teacher. Akari, the teacher, then shows up to wrangle Akane back to her office, where Asahi and Yoko learn that Akane is actually a thousand year-old devil with real horns and Akari's great-great-grandmother. Akane also claims that it was thanks to her that the various supernatural characters were allowed to transfer into the same class. Despite Akane's attempts to portray herself as an adult, Yoko keeps baiting her into childish reactions with snacks and claims to be the more mature girl. The two girls then decide to have a \"sexy\" contest in the empty school gym with Shiho acting as the judge while Nagisa starts tracking mysterious demonic energy from her cat-like spacecraft elsewhere in the city. In multiple contests, Yoko and Akane try to one-up each other to prove their sexiness, except Shiho keeps getting the strongest reaction from Asahi. Finally, Yoko challenges Akane to survive eating awful cream puffs that Mikan made earlier. The contest ends with Yoko and Akane blowing up the gym in a large explosion and sending Nagisa's spacecraft flying from the shockwave.",
+        "titles": {
+          "en_jp": "Sexy ni Narou!",
+          "en_us": "Let's Get Sexy!",
+          "ja_jp": "セクシーになろう！"
+        },
+        "canonicalTitle": "Let's Get Sexy!",
+        "seasonNumber": 1,
+        "number": 7,
+        "relativeNumber": 7,
+        "airdate": "2015-08-18",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178196/original.jpg?1597700699",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178196/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178196/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178196/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178196/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178197",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178197"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:14.926Z",
+        "updatedAt": "2020-08-17T21:45:41.418Z",
+        "synopsis": "Asahi finds out he has to retake a cooking class, having missed the previous one. He is delighted to find out that Yōko, Nagisa, and Shiho are joining him in making curry, but soon finds out that all three girls have trouble making it. Nagisa's directions lead her to make a chocolate cake, which is accidentally tossed out a nearby window where Akane catches it with her horn. After taking a bite, she falls in love with it. Mikan decides to buy Akane lots of snacks in hopes of getting an interview with her, but Akane slips away until Akari appears to wrangle her back to the home economics room. However, both women are sickened to find that Yōko and Nagisa got too enthusiastic and added something to the curry that causes it to spew poison gas. Later that night, Akane breaks down the wall of Akari's apartment and demands that she get Nagisa to make more chocolate for her. When Akari refuses, Akane responds by magically steering an asteroid towards Earth, threatening to destroy the planet. Yōko, Nagisa, and Shiho reunite to make chocolate in the same room, but Akari discovers that the asteroid veers off course when Akane loses concentration, so she ties her down to a chair and force-feeds her chocolates made by everyone except Nagisa. Even as Akane tries copying herself to reach Nagisa's chocolate, the other girls manage to fight Akane's clones off until she loses enough focus that Nagisa's comrades in outer space force the asteroid to make a U-turn, saving Earth from destruction.",
+        "description": "Asahi finds out he has to retake a cooking class, having missed the previous one. He is delighted to find out that Yōko, Nagisa, and Shiho are joining him in making curry, but soon finds out that all three girls have trouble making it. Nagisa's directions lead her to make a chocolate cake, which is accidentally tossed out a nearby window where Akane catches it with her horn. After taking a bite, she falls in love with it. Mikan decides to buy Akane lots of snacks in hopes of getting an interview with her, but Akane slips away until Akari appears to wrangle her back to the home economics room. However, both women are sickened to find that Yōko and Nagisa got too enthusiastic and added something to the curry that causes it to spew poison gas. Later that night, Akane breaks down the wall of Akari's apartment and demands that she get Nagisa to make more chocolate for her. When Akari refuses, Akane responds by magically steering an asteroid towards Earth, threatening to destroy the planet. Yōko, Nagisa, and Shiho reunite to make chocolate in the same room, but Akari discovers that the asteroid veers off course when Akane loses concentration, so she ties her down to a chair and force-feeds her chocolates made by everyone except Nagisa. Even as Akane tries copying herself to reach Nagisa's chocolate, the other girls manage to fight Akane's clones off until she loses enough focus that Nagisa's comrades in outer space force the asteroid to make a U-turn, saving Earth from destruction.",
+        "titles": {
+          "en_jp": "Sekai wo Sukuou!",
+          "en_us": "Let's Save the World!",
+          "ja_jp": "世界を救おう！"
+        },
+        "canonicalTitle": "Let's Save the World!",
+        "seasonNumber": 1,
+        "number": 8,
+        "relativeNumber": 8,
+        "airdate": "2015-08-25",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178197/original.jpg?1597700740",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178197/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178197/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178197/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178197/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178198",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178198"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:15.021Z",
+        "updatedAt": "2020-08-17T21:45:10.712Z",
+        "synopsis": "Now that it's summer, Asahi gets up the nerve to invite Yoko to the pool. The problem is, Yoko doesn't know how to swim and thinks that Asahi is asking her so they both could practice. To Asahi's consternation, Yoko invites both Nagisa and Shiho to join them, and Asahi's three friends wind up going too. Shiho leads the swimming lesson, with Nagisa as her assistant, but her perverted instructions get Shimada into big trouble. Her next set of instructions cause Nagisa to knock her out and take her place as instructor (naturally in a militaristic manner!), but her teaching style nearly drowns both Yoko and Asahi! Mikan then shows up with her two little brothers (and without her camera for once!) and for the first time shows a softer side when talking about Asahi. After the pool closes and everyone is on their way home, Asahi and Yoko both make excuses and ditch the gang, meeting at the school that evening; it turns out that Yoko wants to continue her swimming lessons at the school pool. After some more practice, Yoko tells Asahi about how her parents learned to swim and how her life has changed for the better since she and Asahi met, but things take an embarrassing turn when they begin to address each other by their first names for the very first time (secretly watched by Akane)!",
+        "description": "Now that it's summer, Asahi gets up the nerve to invite Yoko to the pool. The problem is, Yoko doesn't know how to swim and thinks that Asahi is asking her so they both could practice. To Asahi's consternation, Yoko invites both Nagisa and Shiho to join them, and Asahi's three friends wind up going too. Shiho leads the swimming lesson, with Nagisa as her assistant, but her perverted instructions get Shimada into big trouble. Her next set of instructions cause Nagisa to knock her out and take her place as instructor (naturally in a militaristic manner!), but her teaching style nearly drowns both Yoko and Asahi! Mikan then shows up with her two little brothers (and without her camera for once!) and for the first time shows a softer side when talking about Asahi. After the pool closes and everyone is on their way home, Asahi and Yoko both make excuses and ditch the gang, meeting at the school that evening; it turns out that Yoko wants to continue her swimming lessons at the school pool. After some more practice, Yoko tells Asahi about how her parents learned to swim and how her life has changed for the better since she and Asahi met, but things take an embarrassing turn when they begin to address each other by their first names for the very first time (secretly watched by Akane)!",
+        "titles": {
+          "en_jp": "Mizugi ni Kikaeyou!",
+          "en_us": "Let's Put On Our Swimsuits!",
+          "ja_jp": "水着に着替えよう！"
+        },
+        "canonicalTitle": "Let's Put On Our Swimsuits!",
+        "seasonNumber": 1,
+        "number": 9,
+        "relativeNumber": 9,
+        "airdate": "2015-09-01",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178198/original.jpg?1597700709",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178198/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178198/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178198/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178198/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178199",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178199"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:15.110Z",
+        "updatedAt": "2020-08-17T21:45:06.634Z",
+        "synopsis": "Okada, Sakurada and Shimada invite Asahi and Yoko to join them at a buffet restaurant, but Yoko is reluctant for fear of revealing hber secret. However, Asahi convinces her, and although there is constant danger of Yoko's being exposed (such as the bats hovering outside or her wings appearing), things seem to bwe going wqell...until Mikan (who is working at the restaurant as a waitress) appears with her latest batch of Russian Cream Puffs for Yoko to try! To protect Yoko, Asahi (joined by Shimada, who doesn't know the lethal effects of Mikan's pastry) eat them all, with the expected result! The next day at school, Mikan is distraught, having lost her \"Heathen Queen\" glasses; Asahi, Yoko and Nagisa join her in searching for them. It turns out that Akani stole them, and a major chase through the school begins with Akani using her magic tricks, culminating in her creating clones wearing identical glasses, but Akari breaks up the chase, returns the glasses and drags Akani off for punishment! Later, by the riverside, Nagisa learns the truth about the glasses: that they are inhabited by a fukunokami, a god of good fortune (in this case, a god-in-training!) and that this fukunokami inhabited the glasses because they were filled with the good memories about Mikan's childhood and her true feelings for Asahi. Rather than admit to her true feelings, Mikan repeatedly tries to throw the glasses away, but is stopped by Nagisa, who challenges her to face Asahi without them. The glasses tell Mikan that if she won't admit her feelings to Asahi it will just as Asahi and Yoko join them. In a panoic, Mikan tries to put the glasses on again, and in the ensuing confusion Nagisa winds up wearing the glasses just as the fukunokami blurts out, \"Asahi-kun, the truth is I am in love with you!\", making it sound (to everybody's shock) that Nagisa had spoken! ",
+        "description": "Okada, Sakurada and Shimada invite Asahi and Yoko to join them at a buffet restaurant, but Yoko is reluctant for fear of revealing hber secret. However, Asahi convinces her, and although there is constant danger of Yoko's being exposed (such as the bats hovering outside or her wings appearing), things seem to bwe going wqell...until Mikan (who is working at the restaurant as a waitress) appears with her latest batch of Russian Cream Puffs for Yoko to try! To protect Yoko, Asahi (joined by Shimada, who doesn't know the lethal effects of Mikan's pastry) eat them all, with the expected result! The next day at school, Mikan is distraught, having lost her \"Heathen Queen\" glasses; Asahi, Yoko and Nagisa join her in searching for them. It turns out that Akani stole them, and a major chase through the school begins with Akani using her magic tricks, culminating in her creating clones wearing identical glasses, but Akari breaks up the chase, returns the glasses and drags Akani off for punishment! Later, by the riverside, Nagisa learns the truth about the glasses: that they are inhabited by a fukunokami, a god of good fortune (in this case, a god-in-training!) and that this fukunokami inhabited the glasses because they were filled with the good memories about Mikan's childhood and her true feelings for Asahi. Rather than admit to her true feelings, Mikan repeatedly tries to throw the glasses away, but is stopped by Nagisa, who challenges her to face Asahi without them. The glasses tell Mikan that if she won't admit her feelings to Asahi it will just as Asahi and Yoko join them. In a panoic, Mikan tries to put the glasses on again, and in the ensuing confusion Nagisa winds up wearing the glasses just as the fukunokami blurts out, \"Asahi-kun, the truth is I am in love with you!\", making it sound (to everybody's shock) that Nagisa had spoken! ",
+        "titles": {
+          "en_jp": "Sunao ni Narou!",
+          "en_us": "Let's Be Honest!",
+          "ja_jp": "素直になろう！"
+        },
+        "canonicalTitle": "Let's Be Honest!",
+        "seasonNumber": 1,
+        "number": 10,
+        "relativeNumber": 10,
+        "airdate": "2015-09-08",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178199/original.jpg?1597700705",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178199/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178199/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178199/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178199/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178200",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178200"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:15.264Z",
+        "updatedAt": "2020-08-17T21:45:19.376Z",
+        "synopsis": "Asahi and Nagisa were invited by Youko, Shimada, Oka, and Sakura (respectively) to the Summer Festival; however, Youko tricked them into together on them spending an exciting time 'alone together'. Youko and Shiho follow Asahi and Nagisa around to watch what they do together. Asahi, tying to make the atmosphere less awkward, invites Nagisa to play at the shooting gallery. Youko becomes flustered while watching the two of them play, and loses track of where they went. Soon after, Mikan shows up with her two little brothers and helps the two of them look for Asahi and Nagisa. Soon after they find the two of them, Nagisa trips and falls onto Asahi, then realizing her love for him! ",
+        "description": "Asahi and Nagisa were invited by Youko, Shimada, Oka, and Sakura (respectively) to the Summer Festival; however, Youko tricked them into together on them spending an exciting time 'alone together'. Youko and Shiho follow Asahi and Nagisa around to watch what they do together. Asahi, tying to make the atmosphere less awkward, invites Nagisa to play at the shooting gallery. Youko becomes flustered while watching the two of them play, and loses track of where they went. Soon after, Mikan shows up with her two little brothers and helps the two of them look for Asahi and Nagisa. Soon after they find the two of them, Nagisa trips and falls onto Asahi, then realizing her love for him! ",
+        "titles": {
+          "en_jp": "Natsumatsuri ni Ikou!",
+          "en_us": "Let's Go to the Summer Festival!",
+          "ja_jp": "夏祭りに行こう！"
+        },
+        "canonicalTitle": "Let's Go to the Summer Festival!",
+        "seasonNumber": 1,
+        "number": 11,
+        "relativeNumber": 11,
+        "airdate": "2015-09-15",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178200/original.jpg?1597700718",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178200/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178200/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178200/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178200/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178201",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178201"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:15.300Z",
+        "updatedAt": "2020-08-17T21:43:00.355Z",
+        "synopsis": "Nagisa is concerned that Yoko and Asahi seem to have fallen out since the summer festival, but she can't lie to her feelings anymore.",
+        "description": "Nagisa is concerned that Yoko and Asahi seem to have fallen out since the summer festival, but she can't lie to her feelings anymore.",
+        "titles": {
+          "en_jp": "Kokuhaku wo Soshi Shiyou!",
+          "en_us": "Let's Stop This Confession!",
+          "ja_jp": "告白を阻止しよう！"
+        },
+        "canonicalTitle": "Let's Stop This Confession!",
+        "seasonNumber": 1,
+        "number": 12,
+        "relativeNumber": 12,
+        "airdate": "2015-09-22",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178201/original.jpg?1597700578",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178201/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178201/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178201/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178201/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "178202",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/178202"
+      },
+      "attributes": {
+        "createdAt": "2015-07-07T17:01:15.450Z",
+        "updatedAt": "2020-08-17T21:43:00.332Z",
+        "synopsis": "Youko's father takes her away, but Asahi tries to get to the bottom of things.",
+        "description": "Youko's father takes her away, but Asahi tries to get to the bottom of things.",
+        "titles": {
+          "en_jp": "Issho ni Kaerou!",
+          "en_us": "Let's Go Home Together!",
+          "ja_jp": "一緒に帰ろう！"
+        },
+        "canonicalTitle": "Let's Go Home Together!",
+        "seasonNumber": 1,
+        "number": 13,
+        "relativeNumber": 13,
+        "airdate": "2015-09-29",
+        "length": 23,
+        "thumbnail": {
+          "original": "https://media.kitsu.io/episodes/thumbnails/178202/original.jpg?1597700578",
+          "meta": {
+            "dimensions": {}
+          }
+        }
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178202/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/178202/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/178202/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/178202/videos"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=jitsu-wa-watashi-wa&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=jitsu-wa-watashi-wa&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}
