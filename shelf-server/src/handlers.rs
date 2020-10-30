@@ -312,20 +312,30 @@ pub async fn blob_create(
 
 pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
     log::info!(target: crate::LOG_NAME, "GET /proxy URL: {}", params.url);
-    reqwest::get(&params.url)
-        .await
-        .map_err(|err| {
-            warp::reject::custom(model::ReqwestError {
-                error: format!("{}", err),
-            })
-        })?
-        .text()
-        .await
-        .map_err(|err| {
-            warp::reject::custom(model::ReqwestError {
-                error: format!("{}", err),
-            })
+    let response = reqwest::get(&params.url).await.map_err(|err| {
+        warp::reject::custom(model::ReqwestError {
+            error: format!("{}", err),
         })
+    })?;
+    let header = response
+        .headers()
+        .get(reqwest::header::CONTENT_TYPE)
+        .cloned()
+        .unwrap_or_else(|| reqwest::header::HeaderValue::from_static("text/plain"));
+    let content_type = header.to_str().unwrap_or("text/plain");
+    Ok(warp::reply::with_header(
+        response
+            .bytes()
+            .await
+            .map(|bytes| bytes.as_ref().to_vec())
+            .map_err(|err| {
+                warp::reject::custom(model::ReqwestError {
+                    error: format!("{}", err),
+                })
+            })?,
+        "content-type",
+        content_type,
+    ))
 }
 
 fn to_internal_err<E: std::fmt::Display>(err: E) -> warp::Rejection {
