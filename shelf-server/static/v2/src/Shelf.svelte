@@ -5,53 +5,37 @@
     import * as itemEdit from "./item-edit.mjs";
     import importKitsu from "./import/kitsu.mjs";
     import importMangadex from "./import/mangadex.mjs";
-    import itemsStore from "./stores/items.js";
-    import peopleStore from "./stores/people.js";
-    import seriesStore from "./stores/series.js";
+    import items from "./stores/items.js";
+    import people from "./stores/people.js";
+    import series from "./stores/series.js";
     import toastStore from "./component/toast.js";
     import * as util from "./util";
 
     export let router;
 
     let displayed = { "In Progress": true };
-    let items = {};
-    $: itemsByCategory = sortItems(Object.values(items));
-    let people = {};
-    let series = {};
+    $: itemsByCategory = sortItems(Object.values($items));
     let urlToImport = "";
 
-    async function reload() {
-        peopleStore.subscribe((newPeople) => (people = newPeople));
-        peopleStore.update();
-        seriesStore.subscribe((newSeries) => (series = newSeries));
-        seriesStore.update();
-        itemsStore.subscribe((newItems) => {
-            items = newItems;
-        });
-        itemsStore.update();
+    function reload() {
+        people.update();
+        series.update();
+        items.update();
     }
     onMount(reload);
 
-    function buildMap(items) {
-        const result = {};
-        for (const item of items) {
-            result[item.key] = item.name.alternatives[item.name.default];
-        }
-        return result;
-    }
-
     function getPersonName(person) {
-        if (!people[person]) {
+        if (!$people[person]) {
             return person;
         }
-        return people[person];
+        return $people[person];
     }
 
     function getSeriesName(key) {
-        if (!series[key]) {
+        if (!$series[key]) {
             return key;
         }
-        return series[key];
+        return $series[key];
     }
 
     function getMalUrl(kind, id) {
@@ -164,10 +148,10 @@
 
     /** Complete the next entry of an item */
     async function completeNext(key) {
-        const item = items[key];
+        const item = $items[key];
         const [newItem, newEntry] = itemEdit.completeNextEntry(item);
         try {
-            await itemsStore.patch(newItem);
+            await items.patch(newItem);
         } catch (error) {
             toastStore.push({
                 title: "Error.",
