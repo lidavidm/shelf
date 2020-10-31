@@ -1,5 +1,5 @@
 :root {
-    --theme-base: #FFF;
+    --theme-base: #fff;
     --theme-1: #e07a5f;
     --theme-2: #3d405b;
     --theme-3: #81b29a;
@@ -52,7 +52,7 @@ h3 {
     padding: 0;
 }
 
-input[type=text] {
+input[type="text"] {
     background: none;
     border: 0;
     border-bottom: 1px solid var(--theme-2);
