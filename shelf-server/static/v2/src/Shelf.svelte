@@ -4,6 +4,7 @@
 
     import importKitsu from "./import/kitsu.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import itemsStore from "./stores/items.js";
     import peopleStore from "./stores/people.js";
     import seriesStore from "./stores/series.js";
     import * as util from "./util";
@@ -11,7 +12,8 @@
     export let router;
 
     let displayed = { "In Progress": true };
-    let itemsByCategory = [];
+    let items = {};
+    $: itemsByCategory = sortItems(Object.values(items));
     let people = {};
     let series = {};
     let urlToImport = "";
@@ -21,8 +23,10 @@
         peopleStore.update();
         seriesStore.subscribe((newSeries) => (series = newSeries));
         seriesStore.update();
-        const itemList = await fetch("/item").then((r) => r.json());
-        itemsByCategory = sortItems(itemList);
+        itemsStore.subscribe((newItems) => {
+            items = newItems;
+        });
+        itemsStore.update();
     }
     onMount(reload);
 
@@ -78,21 +82,27 @@
                 firstNotInProgress === -1 ? items.length : firstNotInProgress
             ),
         });
-        let prevKind = null;
-        for (let index = firstNotInProgress; index < items.length; index++) {
-            const item = items[index];
-            if (item.kind != prevKind) {
-                prevKind = item.kind;
-                const title = util.humanKind(item.kind);
-                itemsByCategory.push({
-                    title,
-                    items: [],
-                });
-                if (typeof displayed[title] === "undefined") {
-                    displayed = { ...displayed, [title]: false };
+        if (firstNotInProgress >= 0) {
+            let prevKind = null;
+            for (
+                let index = firstNotInProgress;
+                index < items.length;
+                index++
+            ) {
+                const item = items[index];
+                if (item.kind != prevKind) {
+                    prevKind = item.kind;
+                    const title = util.humanKind(item.kind);
+                    itemsByCategory.push({
+                        title,
+                        items: [],
+                    });
+                    if (typeof displayed[title] === "undefined") {
+                        displayed = { ...displayed, [title]: false };
+                    }
                 }
+                itemsByCategory[itemsByCategory.length - 1].items.push(item);
             }
-            itemsByCategory[itemsByCategory.length - 1].items.push(item);
         }
         return itemsByCategory;
     }
@@ -148,6 +158,12 @@
         );
         console.log(await itemUpload.json());
         reload();
+    }
+
+    /** Complete the next entry of an item */
+    function completeNext(key) {
+        const item = items[key];
+        console.log(item);
     }
 </script>
 
@@ -225,11 +241,12 @@
     }
 
     .item-list li .info > h3 {
-        border-bottom: 1px dotted #000;
+        cursor: pointer;
         height: 2em;
         line-height: 2em;
         overflow: hidden;
         padding: 0 0.25em;
+        text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
         width: calc(100% - 0.5em);
@@ -242,6 +259,28 @@
 
     .item-list li .info > .item-bar {
         border-top: 1px dotted #000;
+    }
+
+    .item-bar button {
+        background: none;
+        border: 0;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+    }
+
+    .item-bar button.complete-next {
+        color: #000;
+        transition: color 50ms ease-in-out;
+    }
+
+    .item-bar button.complete-next:hover {
+        color: var(--theme-completed);
+    }
+
+    .item-bar button.complete-next span {
+        font-size: 1.1em;
+        vertical-align: middle;
     }
 
     .item-status.Completed {
@@ -402,6 +441,19 @@
                                     /
                                     {item.publication_status === 'Complete' ? item.entries.length : '?'}
                                 </span>
+                                {#if item.status !== 'Completed'}
+                                    <button
+                                        aria-label="Complete Next Entry"
+                                        class="complete-next"
+                                        title="Complete Next Entry"
+                                        on:click={completeNext(item.key)}>
+                                        <span
+                                            class="material-icons"
+                                            aria-hidden="true">
+                                            add_circle_outline
+                                        </span>
+                                    </button>
+                                {/if}
                             </div>
                         </div>
                     </li>

@@ -63,3 +63,7 @@ input[type="text"] {
     font-family: "Linux Biolinum O", sans;
     font-size: 1.2rem;
 }
+
+.material-icons {
+    font-size: 1em !important;
+}
