@@ -4,6 +4,8 @@
 
     import importKitsu from "./import/kitsu.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import peopleStore from "./stores/people.js";
+    import seriesStore from "./stores/series.js";
     import * as util from "./util";
 
     export let router;
@@ -15,14 +17,11 @@
     let urlToImport = "";
 
     async function reload() {
-        const [itemList, peopleList, seriesList] = await Promise.all([
-            fetch("/item").then((r) => r.json()),
-            fetch("/person").then((r) => r.json()),
-            fetch("/series").then((r) => r.json()),
-        ]);
-        // TODO: these can be stores
-        people = buildMap(peopleList);
-        series = buildMap(seriesList);
+        peopleStore.subscribe((newPeople) => (people = newPeople));
+        peopleStore.update();
+        seriesStore.subscribe((newSeries) => (series = newSeries));
+        seriesStore.update();
+        const itemList = await fetch("/item").then((r) => r.json());
         itemsByCategory = sortItems(itemList);
     }
     onMount(reload);
