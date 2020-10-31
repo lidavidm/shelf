@@ -2,11 +2,13 @@
     import { onMount } from "svelte";
     import firstBy from "thenby";
 
+    import * as itemEdit from "./item-edit.mjs";
     import importKitsu from "./import/kitsu.mjs";
     import importMangadex from "./import/mangadex.mjs";
     import itemsStore from "./stores/items.js";
     import peopleStore from "./stores/people.js";
     import seriesStore from "./stores/series.js";
+    import toastStore from "./component/toast.js";
     import * as util from "./util";
 
     export let router;
@@ -163,7 +165,14 @@
     /** Complete the next entry of an item */
     function completeNext(key) {
         const item = items[key];
-        console.log(item);
+        const [newItem, newEntry] = itemEdit.completeNextEntry(item);
+        itemsStore.patch(newItem);
+        toastStore.push({
+            title: "Updated Entry.",
+            body:
+                "Completed " +
+                newEntry.name.alternatives[newEntry.name.default],
+        });
     }
 </script>
 

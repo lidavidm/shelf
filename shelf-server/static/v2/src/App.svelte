@@ -2,6 +2,7 @@
     import router from "page";
     import EditItem from "./EditItem.svelte";
     import Shelf from "./Shelf.svelte";
+    import Toast from "./component/Toast.svelte";
 
     let page = Shelf;
     let params;
@@ -25,4 +26,5 @@
 <div>
     <h1>shelf</h1>
     <svelte:component this={page} {router} {params} />
+    <Toast />
 </div>
