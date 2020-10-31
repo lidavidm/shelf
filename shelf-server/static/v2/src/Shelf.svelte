@@ -163,10 +163,18 @@
     }
 
     /** Complete the next entry of an item */
-    function completeNext(key) {
+    async function completeNext(key) {
         const item = items[key];
         const [newItem, newEntry] = itemEdit.completeNextEntry(item);
-        itemsStore.patch(newItem);
+        try {
+            await itemsStore.patch(newItem);
+        } catch (error) {
+            toastStore.push({
+                title: "Error.",
+                body: error,
+            });
+            return;
+        }
         toastStore.push({
             title: "Updated Entry.",
             body:

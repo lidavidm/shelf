@@ -20,11 +20,22 @@ export default {
             });
     },
 
-    patch(newItem) {
-        // TODO: also make REST call
+    async patch(newItem) {
         store.update((items) => {
             items[newItem.key] = newItem;
             return items;
         });
+        const response = await window.fetch(`/item/${newItem.key}`, {
+            method: "POST",
+            body: JSON.stringify(newItem),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (response.status >= 200 && response.status < 300) {
+            this.update();
+        } else {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
     },
 };
