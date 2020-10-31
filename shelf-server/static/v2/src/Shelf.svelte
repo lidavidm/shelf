@@ -8,7 +8,7 @@
 
     export let router;
 
-    let displayed = {"In Progress": true};
+    let displayed = { "In Progress": true };
     let itemsByCategory = [];
     let people = {};
     let series = {};
@@ -16,9 +16,9 @@
 
     async function reload() {
         const [itemList, peopleList, seriesList] = await Promise.all([
-            fetch("/item").then(r => r.json()),
-            fetch("/person").then(r => r.json()),
-            fetch("/series").then(r => r.json()),
+            fetch("/item").then((r) => r.json()),
+            fetch("/person").then((r) => r.json()),
+            fetch("/series").then((r) => r.json()),
         ]);
         // TODO: these can be stores
         people = buildMap(peopleList);
@@ -57,16 +57,24 @@
     }
 
     function sortItems(items) {
-        items.sort(firstBy(v => v.status === "InProgress" ? 0 : 1)
-            .thenBy(v => v.kind)
-            .thenBy(v => v.status)
-            .thenBy(v => v.name.alternatives[v.name.default].toLowerCase()));
-        items = items.filter(v => !v.tags.includes("NSFW") && !v.tags.includes("Ecchi"));
+        items.sort(
+            firstBy((v) => (v.status === "InProgress" ? 0 : 1))
+                .thenBy((v) => v.kind)
+                .thenBy((v) => v.status)
+                .thenBy((v) =>
+                    v.name.alternatives[v.name.default].toLowerCase()
+                )
+        );
+        items = items.filter(
+            (v) => !v.tags.includes("NSFW") && !v.tags.includes("Ecchi")
+        );
         const itemsByCategory = [];
-        const firstNotInProgress = items.findIndex(item => item.status !== "InProgress");
+        const firstNotInProgress = items.findIndex(
+            (item) => item.status !== "InProgress"
+        );
         itemsByCategory.push({
-            "title": "In Progress",
-            "items": items.slice(
+            title: "In Progress",
+            items: items.slice(
                 0,
                 firstNotInProgress === -1 ? items.length : firstNotInProgress
             ),
@@ -82,7 +90,7 @@
                     items: [],
                 });
                 if (typeof displayed[title] === "undefined") {
-                    displayed = {...displayed, [title]: false};
+                    displayed = { ...displayed, [title]: false };
                 }
             }
             itemsByCategory[itemsByCategory.length - 1].items.push(item);
@@ -101,14 +109,19 @@
                 importer = importMangadex;
                 break;
             default:
-                alert(`Unknown source: ${urlToImport} (hostname ${url.hostname})`);
+                alert(
+                    `Unknown source: ${urlToImport} (hostname ${url.hostname})`
+                );
                 return;
         }
 
-        const {cover, item} = await window.fetch("/item/:template:")
-              .then(r => r.json())
-              .then(template => importer(urlToImport, { template }));
-        const coverRequest = await window.fetch("/proxy?url=" + encodeURIComponent(cover));
+        const { cover, item } = await window
+            .fetch("/item/:template:")
+            .then((r) => r.json())
+            .then((template) => importer(urlToImport, { template }));
+        const coverRequest = await window.fetch(
+            "/proxy?url=" + encodeURIComponent(cover)
+        );
         const coverBlob = await coverRequest.blob();
         const formData = new FormData();
         const blobKey = `blob-${item.key}-cover`;
@@ -121,144 +134,23 @@
         const blobResult = await blobUpload.json();
         console.log(blobResult);
 
-        item.covers = [{key: blobKey, description: "Cover"}];
+        item.covers = [{ key: blobKey, description: "Cover" }];
         const itemBody = JSON.stringify(item, null, 2);
-        console.log(itemBody)
-        const itemUpload = await window.fetch("/item/" + encodeURIComponent(item.key), {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: itemBody,
-        });
+        console.log(itemBody);
+        const itemUpload = await window.fetch(
+            "/item/" + encodeURIComponent(item.key),
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: itemBody,
+            }
+        );
         console.log(await itemUpload.json());
         reload();
     }
 </script>
-
-<main>
-    <section id="import">
-        <div>
-            <label for="import">Import URL:</label>
-            <input id="import" type="text" bind:value={urlToImport} />
-            <button on:click={importUrl}>Import</button>
-        </div>
-    </section>
-    <section id="filters">
-        <h2>Filters</h2>
-        <div>
-            <section class="filter-group">
-                <h3>Categories</h3>
-                <div class="filter-group-inner">
-                    {#each Object.keys(displayed) as title (title)}
-                        <div>
-                            <input id={'filter-' + title} type="checkbox" bind:checked={displayed[title]} />
-                            <label for={'filter-' + title}>{title}</label>
-                        </div>
-                    {/each}
-                </div>
-            </section>
-        </div>
-    </section>
-    {#each itemsByCategory.filter(cat => displayed[cat.title]) as category (category.title)}
-        <section>
-            <header>
-                <h2>{category.title} ({category.items.length} items)</h2>
-            </header>
-            <ul class="item-list">
-                {#each category.items as item (item.key)}
-                    <li>
-                        <div class="cover">
-                            {#if item.covers.length > 0}
-                                <img
-                                    src={'/blob/' + item.covers[0].key + '/contents'}
-                                    alt={item.covers[0].description}
-                                    title={item.covers[0].description}
-                                />
-                            {:else}
-                                <img src="https://via.placeholder.com/320x240" alt="" />
-                            {/if}
-                        </div>
-
-                        <div class="info">
-                            <h3
-                                title={item.name.alternatives[item.name.default]}
-                                on:click="{e => router.show('/edit/' + item.key)}"
-                            >
-                                {item.name.alternatives[item.name.default]}
-                            </h3>
-
-                            {#if item.series}
-                                <span>
-                                    {getSeriesName(item.series[0])}
-                                    {#if item.series[1]}
-                                        ({item.series[1]})
-                                    {/if}
-                                </span>
-                            {/if}
-
-                            {#each item.people as person}
-                                {#if person[0] === 'Author' || person[0] === 'Director'}
-                                    <span>
-                                        <em>by</em> {getPersonName(person[1])}
-                                    </span>
-                                {/if}
-                            {/each}
-
-                            <span>
-                                Rating: {item.rating ? item.rating : "-"}/10
-                            </span>
-
-                            {#if item.completed}
-                            <span>
-                                Completed:
-                                {#if item.completed.indexOf('T') > 0}
-                                {new Date(item.completed).toLocaleDateString('en-GB')}
-                                {:else}
-                                {item.completed}
-                                {/if}
-                            </span>
-                            {/if}
-
-                            <div class="spacer"></div>
-
-                            {#if item.tags && item.tags.length > 0}
-                            <div class="item-bar tags">
-                                <span>Tags:</span>
-                                {#each item.tags as tag}
-                                    <span>{tag}</span>
-                                {/each}
-                            </div>
-                            {/if}
-                            <div class="item-bar external-links">
-                                <span>External Links:</span>
-                                {#if item.extra && item.extra.mangadex_url}
-                                    <a href={item.extra.mangadex_url} target="_blank">
-                                        <img src="mangadex.svg" alt="MangaDex" />
-                                    </a>
-                                {/if}
-                                {#if item.extra && item.extra.mal_id}
-                                    <a href={getMalUrl(item.kind, item.extra.mal_id)} target="_blank">
-                                        <img src="assets/images/mal.ico" alt="MyAnimeList" />
-                                    </a>
-                                {/if}
-                            </div>
-                            <div class="item-bar">
-                                <span><strong>{item.kind}</strong></span>
-                                <span class={'item-status ' + item.status}>{item.status}</span>
-                                <span>
-                                    {item.entries.filter(e => e.completed).length}
-                                    /
-                                    {item.publication_status === "Complete" ? item.entries.length : "?"}
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-                {/each}
-            </ul>
-        </section>
-    {/each}
-</main>
 
 <style>
     h3 {
@@ -272,7 +164,7 @@
     }
 
     .filter-group {
-        border: 1px solid #CCC;
+        border: 1px solid #ccc;
         border-radius: 5px;
         box-sizing: border-box;
         flex: 0 0;
@@ -285,7 +177,7 @@
     .filter-group h3 {
         position: absolute;
         top: -0.75em;
-        background: #FFF;
+        background: #fff;
     }
 
     .filter-group > .filter-group-inner {
@@ -385,3 +277,137 @@
         content: ", ";
     }
 </style>
+
+<main>
+    <section id="import">
+        <div>
+            <label for="import">Import URL:</label>
+            <input id="import" type="text" bind:value={urlToImport} />
+            <button on:click={importUrl}>Import</button>
+        </div>
+    </section>
+    <section id="filters">
+        <h2>Filters</h2>
+        <div>
+            <section class="filter-group">
+                <h3>Categories</h3>
+                <div class="filter-group-inner">
+                    {#each Object.keys(displayed) as title (title)}
+                        <div>
+                            <input
+                                id={'filter-' + title}
+                                type="checkbox"
+                                bind:checked={displayed[title]} />
+                            <label for={'filter-' + title}>{title}</label>
+                        </div>
+                    {/each}
+                </div>
+            </section>
+        </div>
+    </section>
+    {#each itemsByCategory.filter((cat) => displayed[cat.title]) as category (category.title)}
+        <section>
+            <header>
+                <h2>{category.title} ({category.items.length} items)</h2>
+            </header>
+            <ul class="item-list">
+                {#each category.items as item (item.key)}
+                    <li>
+                        <div class="cover">
+                            {#if item.covers.length > 0}
+                                <img
+                                    src={'/blob/' + item.covers[0].key + '/contents'}
+                                    alt={item.covers[0].description}
+                                    title={item.covers[0].description} />
+                            {:else}
+                                <img
+                                    src="https://via.placeholder.com/320x240"
+                                    alt="" />
+                            {/if}
+                        </div>
+
+                        <div class="info">
+                            <h3
+                                title={item.name.alternatives[item.name.default]}
+                                on:click={(e) => router.show('/edit/' + item.key)}>
+                                {item.name.alternatives[item.name.default]}
+                            </h3>
+
+                            {#if item.series}
+                                <span>
+                                    {getSeriesName(item.series[0])}
+                                    {#if item.series[1]}({item.series[1]}){/if}
+                                </span>
+                            {/if}
+
+                            {#each item.people as person}
+                                {#if person[0] === 'Author' || person[0] === 'Director'}
+                                    <span>
+                                        <em>by</em>
+                                        {getPersonName(person[1])}
+                                    </span>
+                                {/if}
+                            {/each}
+
+                            <span>
+                                Rating:
+                                {item.rating ? item.rating : '-'}/10
+                            </span>
+
+                            {#if item.completed}
+                                <span>
+                                    Completed:
+                                    {#if item.completed.indexOf('T') > 0}
+                                        {new Date(item.completed).toLocaleDateString('en-GB')}
+                                    {:else}{item.completed}{/if}
+                                </span>
+                            {/if}
+
+                            <div class="spacer" />
+
+                            {#if item.tags && item.tags.length > 0}
+                                <div class="item-bar tags">
+                                    <span>Tags:</span>
+                                    {#each item.tags as tag}
+                                        <span>{tag}</span>
+                                    {/each}
+                                </div>
+                            {/if}
+                            <div class="item-bar external-links">
+                                <span>External Links:</span>
+                                {#if item.extra && item.extra.mangadex_url}
+                                    <a
+                                        href={item.extra.mangadex_url}
+                                        target="_blank">
+                                        <img
+                                            src="mangadex.svg"
+                                            alt="MangaDex" />
+                                    </a>
+                                {/if}
+                                {#if item.extra && item.extra.mal_id}
+                                    <a
+                                        href={getMalUrl(item.kind, item.extra.mal_id)}
+                                        target="_blank">
+                                        <img
+                                            src="assets/images/mal.ico"
+                                            alt="MyAnimeList" />
+                                    </a>
+                                {/if}
+                            </div>
+                            <div class="item-bar">
+                                <span><strong>{item.kind}</strong></span>
+                                <span
+                                    class={'item-status ' + item.status}>{item.status}</span>
+                                <span>
+                                    {item.entries.filter((e) => e.completed).length}
+                                    /
+                                    {item.publication_status === 'Complete' ? item.entries.length : '?'}
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                {/each}
+            </ul>
+        </section>
+    {/each}
+</main>

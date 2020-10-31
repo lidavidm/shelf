@@ -13,26 +13,32 @@
 //     limitations under the License.
 
 export async function defaultProxy(url) {
-    const req = await window.fetch(`/proxy?url=${window.encodeURIComponent(url)}`);
+    const req = await window.fetch(
+        `/proxy?url=${window.encodeURIComponent(url)}`
+    );
     const resp = await req.text();
     return resp;
 }
 
 export function langCodeToName(code) {
     switch (code.toLowerCase()) {
-    case "en":
-    case "en_us":
-        return "English";
-    case "en_jp":
-        return "Japanese (Romaji)";
-    case "ja":
-    case "ja_jp":
-        return "Japanese";
-    default:
-        return code;
+        case "en":
+        case "en_us":
+            return "English";
+        case "en_jp":
+            return "Japanese (Romaji)";
+        case "ja":
+        case "ja_jp":
+            return "Japanese";
+        default:
+            return code;
     }
 }
 
 export function titleToKey(title) {
-    return title.toLowerCase().trim().replace(/[^ a-z0-9]/g, "").replace(/ +/g, "-");
+    return title
+        .toLowerCase()
+        .trim()
+        .replace(/[^ a-z0-9]/g, "")
+        .replace(/ +/g, "-");
 }

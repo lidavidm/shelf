@@ -5,10 +5,10 @@ import * as testUtil from "./test-util.mjs";
 
 const proxy = testUtil.makeProxy("test.magical-lollipop.html");
 
-test("import MangaDex page", async t => {
+test("import MangaDex page", async (t) => {
     const url = "https://mangadex.org/title/7771/magical-lollipop";
-    const {cover, item} = await importTitle(url, {
-        template: {entries:[]},
+    const { cover, item } = await importTitle(url, {
+        template: { entries: [] },
         proxy,
     });
     t.deepEqual(item.key, "manga-magical-lollipop");

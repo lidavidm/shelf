@@ -12,12 +12,13 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-import {formatISO} from "date-fns";
+import { formatISO } from "date-fns";
 import * as jsdom from "jsdom";
 let parse;
 if (typeof global !== "undefined") {
     console.log("Using JSDOM");
-    parse = (source) => new jsdom.JSDOM(source, { contentType: "text/html" }).window.document;
+    parse = (source) =>
+        new jsdom.JSDOM(source, { contentType: "text/html" }).window.document;
 } else {
     console.log("Using window.DOMParser");
     parse = (source) => {
@@ -29,23 +30,26 @@ if (typeof global !== "undefined") {
 
 import * as util from "./util.mjs";
 
-export default async function mangadex(rawUrl, {template, proxy = util.defaultProxy}) {
+export default async function mangadex(
+    rawUrl,
+    { template, proxy = util.defaultProxy }
+) {
     const body = await proxy(rawUrl);
     const document = parse(body);
 
-    const title = document.querySelector("h6.card-header")
-          .textContent
-          .trim();
+    const title = document.querySelector("h6.card-header").textContent.trim();
 
     const key = "manga-" + util.titleToKey(title);
 
     const names = {
         default: "English",
         alternatives: {
-            "English": title,
+            English: title,
         },
     };
-    const nameList = document.querySelectorAll(".card-body.p-0 > .row > div:nth-child(2) > div:nth-child(2) .list-inline-item");
+    const nameList = document.querySelectorAll(
+        ".card-body.p-0 > .row > div:nth-child(2) > div:nth-child(2) .list-inline-item"
+    );
     let ctr = 1;
     for (const el of nameList) {
         names.alternatives[`Alternate Name ${ctr}`] = el.textContent.trim();

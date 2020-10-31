@@ -6,14 +6,16 @@
     export let params;
 
     let item = null;
-    let loading = fetch("/item/" + params.key).then(r => r.json()).then((value) => item = value);
+    let loading = fetch("/item/" + params.key)
+        .then((r) => r.json())
+        .then((value) => (item = value));
     let people = {};
     let series = {};
 
-    onMount(async function() {
+    onMount(async function () {
         const [peopleList, seriesList] = await Promise.all([
-            fetch("/person").then(r => r.json()),
-            fetch("/series").then(r => r.json()),
+            fetch("/person").then((r) => r.json()),
+            fetch("/series").then((r) => r.json()),
         ]);
 
         // TODO: these can be stores
@@ -23,20 +25,30 @@
 
     function buildMap(items) {
         const result = {};
-                       for (const item of items) {
-                           result[item.key] = item.name.alternatives[item.name.default];
-                       }
-                       return result;
-                       }
-
+        for (const item of items) {
+            result[item.key] = item.name.alternatives[item.name.default];
+        }
+        return result;
+    }
 </script>
+
+<style>
+    header h2 span {
+        font-style: italic;
+        font-weight: normal;
+    }
+</style>
 
 <main>
     {#await loading}
         Loading…
     {:then}
         <header>
-            <h2>Editing {util.humanKind(item.kind)}: <span>{item.name.alternatives[item.name.default]}</span></h2>
+            <h2>
+                Editing
+                {util.humanKind(item.kind)}:
+                <span>{item.name.alternatives[item.name.default]}</span>
+            </h2>
             <p>Added {item.added}</p>
         </header>
 
@@ -58,7 +70,9 @@
             </div>
             <div>
                 <label for="publication-status">Publication Status:</label>
-                <select id="publication-status" bind:value={item.publication_status}>
+                <select
+                    id="publication-status"
+                    bind:value={item.publication_status}>
                     <option>Publishing</option>
                     <option>Complete</option>
                 </select>
@@ -104,10 +118,3 @@
         {error}
     {/await}
 </main>
-
-<style>
-    header h2 span {
-        font-style: italic;
-        font-weight: normal;
-    }
-</style>

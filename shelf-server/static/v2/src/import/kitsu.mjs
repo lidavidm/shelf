@@ -12,14 +12,18 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-import {formatISO} from "date-fns";
+import { formatISO } from "date-fns";
 import firstBy from "thenby";
 
 import * as util from "./util.mjs";
 
-const BASE_URL = "https://kitsu.io/api/edge/anime?fields[categories]=slug%2Ctitle&include=episodes&filter[slug]=";
+const BASE_URL =
+    "https://kitsu.io/api/edge/anime?fields[categories]=slug%2Ctitle&include=episodes&filter[slug]=";
 
-export default async function kitsu(rawUrl, {template, proxy = util.defaultProxy}) {
+export default async function kitsu(
+    rawUrl,
+    { template, proxy = util.defaultProxy }
+) {
     const itemId = extractId(rawUrl);
     const url = BASE_URL + itemId;
     const resp = await proxy(url);
@@ -34,22 +38,28 @@ export default async function kitsu(rawUrl, {template, proxy = util.defaultProxy
         throw new Error(`Unknown type: ${anime.type}`);
     }
     // Get rid of duplicate titles
-    const [canonicalTitle, names] = extractTitles(anime.attributes.titles, anime.attributes.canonicalTitle);
+    const [canonicalTitle, names] = extractTitles(
+        anime.attributes.titles,
+        anime.attributes.canonicalTitle
+    );
     const coverUrl = anime.attributes.posterImage.original;
     const entries = data.included
-          .filter(entry => entry.type === "episodes")
-          .map(entry => {
-              const volume = entry.attributes.seasonNumber;
-              const number = entry.attributes.number;
-              return {
-                  number,
-                  volume,
-                  name: extractTitles(entry.attributes.titles, entry.attributes.canonicalTitle)[1],
-                  completed: null,
-                  extra: null,
-              };
-          });
-    entries.sort(firstBy(v => v.volume).thenBy(v => v.number));
+        .filter((entry) => entry.type === "episodes")
+        .map((entry) => {
+            const volume = entry.attributes.seasonNumber;
+            const number = entry.attributes.number;
+            return {
+                number,
+                volume,
+                name: extractTitles(
+                    entry.attributes.titles,
+                    entry.attributes.canonicalTitle
+                )[1],
+                completed: null,
+                extra: null,
+            };
+        });
+    entries.sort(firstBy((v) => v.volume).thenBy((v) => v.number));
     template.key = "tv-" + util.titleToKey(canonicalTitle);
     template.kind = "TV";
     template.name = names;
@@ -81,12 +91,21 @@ export function extractId(rawUrl) {
 
 export function extractTitles(rawTitles, canonicalTitle) {
     // Get rid of duplicate titles
-    const titles = Object.entries(Object.fromEntries(Object.entries(rawTitles).map(([lang, title]) => {
-        return [util.langCodeToName(lang), title];
-    })));
-    const defaultTitleLanguage = titles.filter(t => t[1] === canonicalTitle)[0][0];
-    return [canonicalTitle, {
-        default: defaultTitleLanguage,
-        alternatives: Object.fromEntries(titles),
-    }];
+    const titles = Object.entries(
+        Object.fromEntries(
+            Object.entries(rawTitles).map(([lang, title]) => {
+                return [util.langCodeToName(lang), title];
+            })
+        )
+    );
+    const defaultTitleLanguage = titles.filter(
+        (t) => t[1] === canonicalTitle
+    )[0][0];
+    return [
+        canonicalTitle,
+        {
+            default: defaultTitleLanguage,
+            alternatives: Object.fromEntries(titles),
+        },
+    ];
 }

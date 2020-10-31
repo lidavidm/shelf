@@ -13,29 +13,33 @@
 //     limitations under the License.
 
 export function makeKey(kind, name) {
-    return kind + "-" + (name
-                         .replace(/[\W:]+/g, "-")
-                         .replace(/^-+/, "")
-                         .replace(/-+$/, "")
-                         .toLowerCase());
+    return (
+        kind +
+        "-" +
+        name
+            .replace(/[\W:]+/g, "-")
+            .replace(/^-+/, "")
+            .replace(/-+$/, "")
+            .toLowerCase()
+    );
 }
 
 /** Map an item kind to a user-friendly string. */
 export function humanKind(kind) {
     switch (kind) {
-    case "NonFiction":
-        return "Non-Fiction";
-    case "OVA":
-        return "OVA";
-    case "ONA":
-        return "ONA";
-    case "ShortStory":
-        return "Short Story";
-    case "VisualNovel":
-        return "Visual Novel";
-    case "Music":
-        return "Music Video";
-    default:
-        return kind;
+        case "NonFiction":
+            return "Non-Fiction";
+        case "OVA":
+            return "OVA";
+        case "ONA":
+            return "ONA";
+        case "ShortStory":
+            return "Short Story";
+        case "VisualNovel":
+            return "Visual Novel";
+        case "Music":
+            return "Music Video";
+        default:
+            return kind;
     }
 }
