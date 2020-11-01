@@ -14,7 +14,8 @@
     export let router;
 
     let displayed = { "In Progress": true };
-    $: itemsByCategory = sortItems(Object.values($items));
+    let tagFilters = { "sfw": true }
+    $: itemsByCategory = sortItems(Object.values($items), tagFilters);
     let urlToImport = "";
 
     function reload() {
@@ -45,7 +46,7 @@
         return `https://myanimelist.net/anime/${id}`;
     }
 
-    function sortItems(items) {
+    function sortItems(items, tagFilters) {
         items.sort(
             firstBy((v) => (v.status === "InProgress" ? 0 : 1))
                 .thenBy((v) => v.kind)
@@ -54,9 +55,11 @@
                     v.name.alternatives[v.name.default].toLowerCase()
                 )
         );
-        items = items.filter(
-            (v) => !v.tags.includes("NSFW") && !v.tags.includes("Ecchi")
-        );
+        if (tagFilters["sfw"]) {
+            items = items.filter(
+                (v) => !v.tags.includes("NSFW") && !v.tags.includes("Ecchi")
+            );
+        }
         const itemsByCategory = [];
         const firstNotInProgress = items.findIndex(
             (item) => item.status !== "InProgress"
@@ -340,6 +343,18 @@
                             <label for={'filter-' + title}>{title}</label>
                         </div>
                     {/each}
+                </div>
+            </section>
+            <section class="filter-group">
+                <h3>Tags</h3>
+                <div class="filter-group-inner">
+                    <div>
+                        <input
+                            id="filter-tag-sfw"
+                            type="checkbox"
+                            bind:checked={tagFilters["sfw"]} />
+                        <label for="filter-tag-sfw">SFW Only</label>
+                    </div>
                 </div>
             </section>
         </div>
