@@ -6,6 +6,19 @@
 
     let page = Shelf;
     let params;
+    let content;
+
+    router("*", function (ctx, next) {
+        if (ctx.init) {
+            next();
+        } else {
+            content.classList.add("page-transition");
+            setTimeout(function () {
+                content.classList.remove("page-transition");
+                next();
+            }, 100);
+        }
+    });
 
     router("/", () => (page = Shelf));
     router(
@@ -21,10 +34,18 @@
 </script>
 
 <style>
+    #content {
+        transition: opacity 100ms ease-in-out;
+    }
+
+    :global(.page-transition) {
+        opacity: 0;
+    }
 </style>
 
 <div>
-    <h1>shelf</h1>
-    <svelte:component this={page} {router} {params} />
+    <div id="content" bind:this={content}>
+        <svelte:component this={page} {router} {params} />
+    </div>
     <Toast />
 </div>

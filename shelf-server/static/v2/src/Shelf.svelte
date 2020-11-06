@@ -8,13 +8,14 @@
     import items from "./stores/items.js";
     import people from "./stores/people.js";
     import series from "./stores/series.js";
+    import TitleBar from "./component/TitleBar.svelte";
     import toastStore from "./component/toast.js";
     import * as util from "./util";
 
     export let router;
 
     let displayed = { "In Progress": true };
-    let tagFilters = { "sfw": true }
+    let tagFilters = { sfw: true };
     $: itemsByCategory = sortItems(Object.values($items), tagFilters);
     let urlToImport = "";
 
@@ -146,6 +147,10 @@
             }
         );
         console.log(await itemUpload.json());
+        toastStore.push({
+            title: "Created Item.",
+            body: item.name.alternatives[item.name.default],
+        });
         reload();
     }
 
@@ -321,6 +326,7 @@
 </style>
 
 <main>
+    <TitleBar>Library</TitleBar>
     <section id="import">
         <div>
             <label for="import">Import URL:</label>
@@ -352,7 +358,7 @@
                         <input
                             id="filter-tag-sfw"
                             type="checkbox"
-                            bind:checked={tagFilters["sfw"]} />
+                            bind:checked={tagFilters['sfw']} />
                         <label for="filter-tag-sfw">SFW Only</label>
                     </div>
                 </div>

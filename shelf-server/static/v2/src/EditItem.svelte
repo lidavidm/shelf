@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import TitleBar from "./component/TitleBar.svelte";
     import * as util from "./util";
 
     export let router;
@@ -33,8 +34,8 @@
 </script>
 
 <style>
-    header h2 span {
-        font-style: italic;
+    :global(.edit-item-name) {
+        font-style: normal;
         font-weight: normal;
     }
 </style>
@@ -43,14 +44,13 @@
     {#await loading}
         Loading…
     {:then}
-        <header>
-            <h2>
-                Editing
-                {util.humanKind(item.kind)}:
-                <span>{item.name.alternatives[item.name.default]}</span>
-            </h2>
-            <p>Added {item.added}</p>
-        </header>
+        <TitleBar>
+            Editing
+            {util.humanKind(item.kind)}:
+            <span
+                class="edit-item-name">{item.name.alternatives[item.name.default]}</span>
+        </TitleBar>
+        <p>Added {item.added}</p>
 
         <section>
             <div>

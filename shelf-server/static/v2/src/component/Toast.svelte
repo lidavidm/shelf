@@ -1,10 +1,6 @@
 <script>
     import { fly } from "svelte/transition";
-    import toastStore from "./toast.js";
-
-    let toasts;
-
-    toastStore.subscribe((newToasts) => (toasts = newToasts));
+    import toasts from "./toast.js";
 </script>
 
 <style>
@@ -31,7 +27,7 @@
 </style>
 
 <div id="toasts">
-    {#each toasts as toast (toast.id)}
+    {#each $toasts as toast (toast.id)}
         <div class="toast" transition:fly={{ y: 200, duration: 200 }}>
             <p><em>{toast.title}</em> {toast.body}</p>
         </div>
