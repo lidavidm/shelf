@@ -3,7 +3,7 @@ import test from "ava";
 import * as itemEdit from "./item-edit.mjs";
 
 test("complete blank item", (t) => {
-    const item = itemEdit.completeNextEntry({ kind: "Manga", entries: [] });
+    const [item] = itemEdit.completeNextEntry({ kind: "Manga", entries: [] });
     t.deepEqual(1, item.entries.length);
     t.deepEqual(null, item.entries[0].volume);
     t.deepEqual(1, item.entries[0].number);
@@ -11,7 +11,7 @@ test("complete blank item", (t) => {
 });
 
 test("complete existing item", (t) => {
-    const item = itemEdit.completeNextEntry({
+    const [item] = itemEdit.completeNextEntry({
         kind: "Manga",
         entries: [{ completed: true }, { completed: false }],
     });
@@ -20,7 +20,7 @@ test("complete existing item", (t) => {
 });
 
 test("add new item", (t) => {
-    const item = itemEdit.completeNextEntry({
+    const [item] = itemEdit.completeNextEntry({
         kind: "Manga",
         entries: [{ completed: true, volume: 1, number: 3 }],
     });
