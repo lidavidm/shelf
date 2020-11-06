@@ -1,6 +1,10 @@
 <script>
-    import { onMount } from "svelte";
+    import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
+    import toastStore from "./component/toast.js";
+    import items from "./stores/items.js";
+    import people from "./stores/people.js";
+    import series from "./stores/series.js";
     import * as util from "./util";
 
     export let router;
@@ -10,26 +14,21 @@
     let loading = fetch("/item/" + params.key)
         .then((r) => r.json())
         .then((value) => (item = value));
-    let people = {};
-    let series = {};
 
-    onMount(async function () {
-        const [peopleList, seriesList] = await Promise.all([
-            fetch("/person").then((r) => r.json()),
-            fetch("/series").then((r) => r.json()),
-        ]);
-
-        // TODO: these can be stores
-        people = buildMap(peopleList);
-        series = buildMap(seriesList);
-    });
-
-    function buildMap(items) {
-        const result = {};
-        for (const item of items) {
-            result[item.key] = item.name.alternatives[item.name.default];
+    async function save() {
+        try {
+            await items.patch(item);
+        } catch (error) {
+            toastStore.push({
+                title: "Error.",
+                body: error,
+            });
+            return;
         }
-        return result;
+        toastStore.push({
+            title: "Updated Entry.",
+            body: item.name.alternatives[item.name.default],
+        });
     }
 </script>
 
@@ -102,7 +101,9 @@
             <!-- Name -->
             <!-- People -->
             <!-- Series -->
-            <!-- Tags -->
+            <div>
+                <TagList bind:tags={item.tags} />
+            </div>
             <!-- Extra/URLs -->
 
             <!-- Tabbed: -->
@@ -112,7 +113,7 @@
         </section>
         <section class="buttons">
             <button>Cancel</button>
-            <button>Save</button>
+            <button on:click={save}>Save</button>
         </section>
     {:catch error}
         {error}
