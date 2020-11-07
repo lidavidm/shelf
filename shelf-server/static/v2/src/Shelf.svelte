@@ -4,6 +4,7 @@
 
     import * as itemEdit from "./item-edit.mjs";
     import importKitsu from "./import/kitsu.mjs";
+    import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
     import items from "./stores/items.js";
     import people from "./stores/people.js";
@@ -103,6 +104,9 @@
         switch (url.hostname) {
             case "kitsu.io":
                 importer = importKitsu;
+                break;
+            case "www.kobo.com":
+                importer = importKobo;
                 break;
             case "mangadex.org":
                 importer = importMangadex;
