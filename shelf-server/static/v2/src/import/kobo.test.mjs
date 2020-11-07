@@ -15,11 +15,13 @@ test("import MangaDex page", async (t) => {
     t.deepEqual(item.kind, "Novel");
     t.deepEqual(item.name.default, "English");
     t.deepEqual(item.name.alternatives[item.name.default], "Orsinian Tales");
-    t.deepEqual(item.entries.length, 0);
     t.deepEqual(item.extra.external_url, url);
     t.deepEqual(item.extra.isbn, "9781598534962");
     t.deepEqual(
         cover,
         "https://kbimages1-a.akamaihd.net/d410419c-63cb-4df2-9d9c-85e38eb556b4/353/569/90/False/orsinian-tales.jpg"
     );
+    t.deepEqual(1, item.entries.length);
+    t.deepEqual(1, item.entries[0].number);
+    t.deepEqual(null, item.entries[0].volume);
 });

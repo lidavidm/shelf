@@ -79,6 +79,7 @@ export default async function kobo(
         external_url: rawUrl,
         isbn,
     };
+    template.entries = entries;
     template.status = "InProgress";
     let src = document.querySelector("img.cover-image").getAttribute("src");
     if (!src.startsWith("https") && src.startsWith("//")) {
