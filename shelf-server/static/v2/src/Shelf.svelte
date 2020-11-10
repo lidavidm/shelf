@@ -229,6 +229,7 @@
     .item-list li {
         border-bottom: 1px solid #000;
         display: flex;
+        height: 20em;
         width: 30em;
     }
 
@@ -244,6 +245,7 @@
     .item-list li > .cover img {
         flex: 0 0;
         max-width: 100%;
+        object-fit: contain;
     }
 
     .item-list li > .info {
@@ -380,6 +382,7 @@
                         <div class="cover">
                             {#if item.covers.length > 0}
                                 <img
+                                    loading="lazy"
                                     src={'/blob/' + item.covers[0].key + '/contents'}
                                     alt={item.covers[0].description}
                                     title={item.covers[0].description} />
