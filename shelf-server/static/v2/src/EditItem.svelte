@@ -1,4 +1,5 @@
 <script>
+    import NullableMultiDate from "./component/NullableMultiDate.svelte";
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
     import toastStore from "./component/toast.js";
@@ -95,8 +96,22 @@
                 </select>
             </div>
 
-            <!-- Started -->
-            <!-- Completed -->
+            <div>
+                <NullableMultiDate
+                    id="started"
+                    label="Started"
+                    placeholder="(not started)"
+                    value={item.started}
+                    on:input={(e) => (item.started = e.detail)} />
+            </div>
+            <div>
+                <NullableMultiDate
+                    id="completed"
+                    label="Completed"
+                    placeholder="(not completed)"
+                    value={item.completed}
+                    on:input={(e) => (item.completed = e.detail)} />
+            </div>
 
             <!-- Name -->
             <!-- People -->
@@ -115,6 +130,10 @@
             <button>Cancel</button>
             <button on:click={save}>Save</button>
         </section>
+
+        <textarea
+            width="100"
+            height="200">{JSON.stringify(item, null, 2)}</textarea>
     {:catch error}
         {error}
     {/await}
