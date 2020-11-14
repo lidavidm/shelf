@@ -40,6 +40,7 @@ pub type AppStateRef = Arc<Mutex<AppState>>;
 #[derive(serde_derive::Deserialize)]
 pub struct ProxyParams {
     pub url: String,
+    pub referrer: Option<String>,
 }
 
 #[derive(Debug)]

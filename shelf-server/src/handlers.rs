@@ -310,9 +310,17 @@ pub async fn blob_create(
     ))
 }
 
-pub async fn proxy(params: model::ProxyParams) -> Result<impl warp::Reply, warp::Rejection> {
+pub async fn proxy(
+    client: reqwest::Client,
+    params: model::ProxyParams,
+) -> Result<impl warp::Reply, warp::Rejection> {
+    use reqwest::Method;
     log::info!(target: crate::LOG_NAME, "GET /proxy URL: {}", params.url);
-    let response = reqwest::get(&params.url).await.map_err(|err| {
+    let mut request = client.request(Method::GET, &params.url);
+    if let Some(referrer) = params.referrer {
+        request = request.header(reqwest::header::REFERER, referrer);
+    }
+    let response = request.send().await.map_err(|err| {
         warp::reject::custom(model::ReqwestError {
             error: format!("{}", err),
         })

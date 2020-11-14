@@ -6,6 +6,7 @@
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import importWebtoons from "./import/webtoons.mjs";
     import items from "./stores/items.js";
     import people from "./stores/people.js";
     import series from "./stores/series.js";
@@ -111,6 +112,9 @@
             case "mangadex.org":
                 importer = importMangadex;
                 break;
+            case "www.webtoons.com":
+                importer = importWebtoons;
+                break;
             default:
                 alert(
                     `Unknown source: ${urlToImport} (hostname ${url.hostname})`
@@ -122,9 +126,14 @@
             .fetch("/item/:template:")
             .then((r) => r.json())
             .then((template) => importer(urlToImport, { template }));
-        const coverRequest = await window.fetch(
-            "/proxy?url=" + encodeURIComponent(cover)
-        );
+        let coverRequest;
+        if (typeof cover === "string") {
+            coverRequest = await window.fetch(
+                "/proxy?url=" + encodeURIComponent(cover)
+            );
+        } else {
+            coverRequest = await cover();
+        }
         const coverBlob = await coverRequest.blob();
         const formData = new FormData();
         const blobKey = `blob-${item.key}-cover`;

@@ -159,8 +159,10 @@ pub fn blob_create(
 }
 
 pub fn proxy() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    let client = reqwest::Client::new();
     warp::path!("proxy")
         .and(warp::get())
+        .and(warp::any().map(move || client.clone()))
         .and(warp::query::<model::ProxyParams>())
         .and_then(handlers::proxy)
 }

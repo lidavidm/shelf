@@ -12,10 +12,12 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-export async function defaultProxy(url) {
-    const req = await window.fetch(
-        `/proxy?url=${window.encodeURIComponent(url)}`
-    );
+export async function defaultProxy(url, options = {}) {
+    let proxyUrl = `/proxy?url=${window.encodeURIComponent(url)}`;
+    if (options.referrer) {
+        proxyUrl += `&referrer=${window.encodeURIComponent(options.referrer)}`;
+    }
+    const req = await window.fetch(proxyUrl);
     const resp = await req.text();
     return resp;
 }
