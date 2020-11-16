@@ -48,13 +48,22 @@ export default async function kitsu(
         .map((entry) => {
             const volume = entry.attributes.seasonNumber;
             const number = entry.attributes.number;
+            let name = {
+                alternatives: {
+                    English: `Season ${volume} Episode ${number}`,
+                },
+                default: "English",
+            };
+            if (Object.keys(entry.attributes.titles).length > 0) {
+                name = extractTitles(
+                    entry.attributes.titles,
+                    entry.attributes.canonicalTitle
+                )[1];
+            }
             return {
                 number,
                 volume,
-                name: extractTitles(
-                    entry.attributes.titles,
-                    entry.attributes.canonicalTitle
-                )[1],
+                name,
                 completed: null,
                 extra: null,
             };
@@ -98,9 +107,8 @@ export function extractTitles(rawTitles, canonicalTitle) {
             })
         )
     );
-    const defaultTitleLanguage = titles.filter(
-        (t) => t[1] === canonicalTitle
-    )[0][0];
+    const canonicalTitleEntry = titles.filter((t) => t[1] === canonicalTitle);
+    const defaultTitleLanguage = canonicalTitleEntry[0][0];
     return [
         canonicalTitle,
         {

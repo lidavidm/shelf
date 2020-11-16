@@ -49,3 +49,28 @@ test("import Kitsu page", async (t) => {
         "https://media.kitsu.io/anime/poster_images/10350/original.jpg?1597697462"
     );
 });
+
+test("import Kitsu page with blank episode titles", async (t) => {
+    const url = "https://kitsu.io/anime/jitsu-wa-watashi-wa";
+    const { cover, item } = await importTitle(url, {
+        template: {},
+        proxy: testUtil.makeProxy("test.rikeikoi.json"),
+    });
+    t.deepEqual(item.key, "tv-rikei-ga-koi-ni-ochita-no-de-shoumei-shitemita");
+    t.deepEqual(item.kind, "TV");
+    t.deepEqual(item.name.default, "Japanese (Romaji)");
+    t.deepEqual(
+        item.name.alternatives[item.name.default],
+        "Rikei ga Koi ni Ochita no de Shoumei shitemita."
+    );
+    t.deepEqual(item.entries.length, 12);
+    t.deepEqual(item.extra.external_url, url);
+    t.deepEqual(
+        cover,
+        "https://media.kitsu.io/anime/poster_images/42297/original.jpg?1597691461"
+    );
+    t.deepEqual(
+        item.entries[0].name.alternatives[item.entries[0].name.default],
+        "Season 1 Episode 1"
+    );
+});
