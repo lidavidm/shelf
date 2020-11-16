@@ -253,6 +253,7 @@
 
     .item-list li > .cover img {
         flex: 0 0;
+        max-height: 100%;
         max-width: 100%;
         object-fit: contain;
     }
