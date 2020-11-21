@@ -3,6 +3,7 @@
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
     import toastStore from "./component/toast.js";
+    import * as itemEdit from "./item-edit.mjs";
     import items from "./stores/items.js";
     import people from "./stores/people.js";
     import series from "./stores/series.js";
@@ -30,6 +31,24 @@
             title: "Updated Entry.",
             body: item.name.alternatives[item.name.default],
         });
+    }
+
+    async function addMultipleEntries() {
+        const count = parseInt(window.prompt("Number of entries to add?"), 10);
+        const [newItem] = itemEdit.addNextEntry(item, count);
+        item = newItem;
+    }
+
+    async function completeMultipleEntries() {
+        const count = parseInt(
+            window.prompt("Number of entries to complete?"),
+            10
+        );
+        let newItem = item;
+        for (let i = 0; i < count; i++) {
+            [newItem] = itemEdit.completeNextEntry(item);
+        }
+        item = newItem;
     }
 </script>
 
@@ -121,14 +140,50 @@
             </div>
             <!-- Extra/URLs -->
 
-            <!-- Tabbed: -->
-            <!-- Entries -->
-            <!-- Covers -->
-            <!-- Synopsis/Comments -->
+            <div>
+                <button on:click={() => addMultipleEntries()}>Add Multiple
+                    Entries</button>
+                <button on:click={() => completeMultipleEntries()}>Complete
+                    Multiple Entries</button>
+            </div>
         </section>
         <section class="buttons">
             <button>Cancel</button>
             <button on:click={save}>Save</button>
+        </section>
+
+        <section>
+            <!-- Tabbed: -->
+            <!-- Entries -->
+            <div>
+                <p>{item.entries.length} entries</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Volume</th>
+                            <th>Number</th>
+                            <th>Completed?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each [...item.entries].reverse() as entry}
+                            <tr>
+                                <td>
+                                    {entry.name ? entry.name.alternatives[entry.name.default] : '-'}
+                                </td>
+                                <td>
+                                    {entry.volume === null ? '-' : entry.volume}
+                                </td>
+                                <td>{entry.number}</td>
+                                <td>{entry.completed}</td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Covers -->
+            <!-- Synopsis/Comments -->
         </section>
 
         <textarea

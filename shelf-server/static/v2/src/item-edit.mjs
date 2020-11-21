@@ -14,6 +14,13 @@ export function completeNextEntry(item) {
         }
     }
 
+    let [_, [entry]] = addNextEntry(item, 1);
+    entry.completed = completed;
+    return [item, entry];
+}
+
+/** Add the next entry of an item. */
+export function addNextEntry(item, count = 1) {
     let volume = null;
     let number = 1;
     if (item.entries.length !== 0) {
@@ -21,19 +28,25 @@ export function completeNextEntry(item) {
         volume = lastCompleted.volume;
         number = lastCompleted.number + 1;
     }
-    const entry = {
-        name: {
-            default: "English",
-            alternatives: {
-                English: `${entryName(item.kind)} ${number}`,
+
+    const entries = [];
+    for (let i = 0; i < count; i++) {
+        const entry = {
+            name: {
+                default: "English",
+                alternatives: {
+                    English: `${entryName(item.kind)} ${number}`,
+                },
             },
-        },
-        number,
-        volume,
-        completed,
-    };
-    item.entries.push(entry);
-    return [item, entry];
+            number,
+            volume,
+            completed: false,
+        };
+        item.entries.push(entry);
+        entries.push(entry);
+        number++;
+    }
+    return [item, entries];
 }
 
 export function entryName(kind, plural = false) {
