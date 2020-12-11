@@ -74,3 +74,28 @@ test("import Kitsu page with blank episode titles", async (t) => {
         "Season 1 Episode 1"
     );
 });
+
+test("import Kitsu movie", async (t) => {
+    const url = "https://kitsu.io/anime/hanasaku-iroha-home-sweet-home";
+    const { cover, item } = await importTitle(url, {
+        template: {},
+        proxy: testUtil.makeProxy("test.hanasaku-iroha-home-sweet-home.json"),
+    });
+    t.deepEqual(item.key, "film-hanasaku-iroha-home-sweet-home");
+    t.deepEqual(item.kind, "Film");
+    t.deepEqual(item.name.default, "Japanese (Romaji)");
+    t.deepEqual(
+        item.name.alternatives[item.name.default],
+        "Hanasaku Iroha: Home Sweet Home"
+    );
+    t.deepEqual(item.entries.length, 1);
+    t.deepEqual(item.extra.external_url, url);
+    t.deepEqual(
+        cover,
+        "https://media.kitsu.io/anime/poster_images/7090/original.jpg?1597697111"
+    );
+    t.deepEqual(
+        item.entries[0].name.alternatives[item.entries[0].name.default],
+        "Episode 1"
+    );
+});

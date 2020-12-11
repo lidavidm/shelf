@@ -320,6 +320,10 @@ pub async fn proxy(
     if let Some(referrer) = params.referrer {
         request = request.header(reqwest::header::REFERER, referrer);
     }
+    for (name, value) in params.cookies.iter() {
+        let cookie = cookie::Cookie::new(name, value);
+        request = request.header(reqwest::header::SET_COOKIE, format!("{}", cookie));
+    }
     let response = request.send().await.map_err(|err| {
         warp::reject::custom(model::ReqwestError {
             error: format!("{}", err),

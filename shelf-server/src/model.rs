@@ -12,6 +12,7 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
@@ -41,6 +42,7 @@ pub type AppStateRef = Arc<Mutex<AppState>>;
 pub struct ProxyParams {
     pub url: String,
     pub referrer: Option<String>,
+    pub cookies: HashMap<String, String>,
 }
 
 #[derive(Debug)]

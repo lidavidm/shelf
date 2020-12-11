@@ -37,6 +37,14 @@ export default async function kitsu(
     if (anime.type !== "anime") {
         throw new Error(`Unknown type: ${anime.type}`);
     }
+    let kind = "tv";
+    if (anime.attributes.subtype === "TV") {
+        kind = "TV";
+    } else if (anime.attributes.subtype === "movie") {
+        kind = "Film";
+    } else {
+        throw new Error(`Unknown subtype: ${anime.attributes.subtype}`);
+    }
     // Get rid of duplicate titles
     const [canonicalTitle, names] = extractTitles(
         anime.attributes.titles,
@@ -50,7 +58,7 @@ export default async function kitsu(
             const number = entry.attributes.number;
             let name = {
                 alternatives: {
-                    English: `Season ${volume} Episode ${number}`,
+                    English: volume === null ? `Episode ${number}` : `Season ${volume} Episode ${number}`,
                 },
                 default: "English",
             };
@@ -69,8 +77,8 @@ export default async function kitsu(
             };
         });
     entries.sort(firstBy((v) => v.volume).thenBy((v) => v.number));
-    template.key = "tv-" + util.titleToKey(canonicalTitle);
-    template.kind = "TV";
+    template.key = `${kind.toLowerCase()}-${util.titleToKey(canonicalTitle)}`;
+    template.kind = kind;
     template.name = names;
     template.added = formatISO(new Date());
     template.entries = entries;

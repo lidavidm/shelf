@@ -8,6 +8,7 @@ license = "Apache-2.0"
 [dependencies]
 app_dirs = "1.2"
 bytes = "0.5"
+cookie = "0.14"
 futures = "0.3"
 hyper = "0.13"
 log = "0.4"

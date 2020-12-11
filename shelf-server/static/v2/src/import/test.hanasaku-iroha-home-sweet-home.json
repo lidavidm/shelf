@@ -1,0 +1,266 @@
+{
+  "data": [
+    {
+      "id": "7090",
+      "type": "anime",
+      "links": {
+        "self": "https://kitsu.io/api/edge/anime/7090"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T17:50:10.784Z",
+        "updatedAt": "2020-11-25T00:00:22.480Z",
+        "slug": "hanasaku-iroha-home-sweet-home",
+        "synopsis": "In the days before the Bonbori Festival, Ohana's friend Yuina comes to Kissuiso for training. While cleaning up after her, Ohana discovers a logbook kept by Beans from when her mother, Satsuki, was still a youth at Kissuisso. Through the logbook, Ohana catches a glimpse of her mother's struggles, and realizes that maybe the two of them aren't so different after all. Meanwhile, the rest of the inn staff are caught up in dealing with a blackout.\n",
+        "description": "In the days before the Bonbori Festival, Ohana's friend Yuina comes to Kissuiso for training. While cleaning up after her, Ohana discovers a logbook kept by Beans from when her mother, Satsuki, was still a youth at Kissuisso. Through the logbook, Ohana catches a glimpse of her mother's struggles, and realizes that maybe the two of them aren't so different after all. Meanwhile, the rest of the inn staff are caught up in dealing with a blackout.\n",
+        "coverImageTopOffset": 145,
+        "titles": {
+          "en": "Hanasaku Iroha the Movie ~Home Sweet Home~",
+          "en_jp": "Hanasaku Iroha: Home Sweet Home",
+          "en_us": "Hanasaku Iroha the Movie: Home Sweet Home",
+          "ja_jp": "花咲くいろは Home Sweet Home"
+        },
+        "canonicalTitle": "Hanasaku Iroha: Home Sweet Home",
+        "abbreviatedTitles": [
+          "Hana-Saku Iroha: Home Sweet Home"
+        ],
+        "averageRating": "79.2",
+        "ratingFrequencies": {
+          "2": "40",
+          "3": "0",
+          "4": "5",
+          "5": "0",
+          "6": "5",
+          "7": "1",
+          "8": "65",
+          "9": "1",
+          "10": "69",
+          "11": "3",
+          "12": "244",
+          "13": "5",
+          "14": "713",
+          "15": "11",
+          "16": "1025",
+          "17": "25",
+          "18": "543",
+          "19": "6",
+          "20": "600"
+        },
+        "userCount": 8155,
+        "favoritesCount": 44,
+        "startDate": "2013-03-09",
+        "endDate": "2013-03-09",
+        "nextRelease": null,
+        "popularityRank": 1380,
+        "ratingRank": 703,
+        "ageRating": "PG",
+        "ageRatingGuide": "Teens 13 or older",
+        "subtype": "movie",
+        "status": "finished",
+        "tba": null,
+        "posterImage": {
+          "tiny": "https://media.kitsu.io/anime/poster_images/7090/tiny.jpg?1597697111",
+          "small": "https://media.kitsu.io/anime/poster_images/7090/small.jpg?1597697111",
+          "medium": "https://media.kitsu.io/anime/poster_images/7090/medium.jpg?1597697111",
+          "large": "https://media.kitsu.io/anime/poster_images/7090/large.jpg?1597697111",
+          "original": "https://media.kitsu.io/anime/poster_images/7090/original.jpg?1597697111",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 110,
+                "height": 156
+              },
+              "small": {
+                "width": 284,
+                "height": 402
+              },
+              "medium": {
+                "width": 390,
+                "height": 554
+              },
+              "large": {
+                "width": 550,
+                "height": 780
+              }
+            }
+          }
+        },
+        "coverImage": {
+          "tiny": "https://media.kitsu.io/anime/cover_images/7090/tiny.jpg?1597702684",
+          "small": "https://media.kitsu.io/anime/cover_images/7090/small.jpg?1597702684",
+          "large": "https://media.kitsu.io/anime/cover_images/7090/large.jpg?1597702684",
+          "original": "https://media.kitsu.io/anime/cover_images/7090/original.png?1597702684",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 840,
+                "height": 200
+              },
+              "small": {
+                "width": 1680,
+                "height": 400
+              },
+              "large": {
+                "width": 3360,
+                "height": 800
+              }
+            }
+          }
+        },
+        "episodeCount": 1,
+        "episodeLength": 66,
+        "totalLength": 66,
+        "youtubeVideoId": "MnhP4I_CAr4",
+        "showType": "movie",
+        "nsfw": false
+      },
+      "relationships": {
+        "genres": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/genres",
+            "related": "https://kitsu.io/api/edge/anime/7090/genres"
+          }
+        },
+        "categories": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/categories",
+            "related": "https://kitsu.io/api/edge/anime/7090/categories"
+          }
+        },
+        "castings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/castings",
+            "related": "https://kitsu.io/api/edge/anime/7090/castings"
+          }
+        },
+        "installments": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/installments",
+            "related": "https://kitsu.io/api/edge/anime/7090/installments"
+          }
+        },
+        "mappings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/mappings",
+            "related": "https://kitsu.io/api/edge/anime/7090/mappings"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/anime/7090/reviews"
+          }
+        },
+        "mediaRelationships": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/media-relationships",
+            "related": "https://kitsu.io/api/edge/anime/7090/media-relationships"
+          }
+        },
+        "characters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/characters",
+            "related": "https://kitsu.io/api/edge/anime/7090/characters"
+          }
+        },
+        "staff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/staff",
+            "related": "https://kitsu.io/api/edge/anime/7090/staff"
+          }
+        },
+        "productions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/productions",
+            "related": "https://kitsu.io/api/edge/anime/7090/productions"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/anime/7090/quotes"
+          }
+        },
+        "episodes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/episodes",
+            "related": "https://kitsu.io/api/edge/anime/7090/episodes"
+          },
+          "data": [
+            {
+              "type": "episodes",
+              "id": "87553"
+            }
+          ]
+        },
+        "streamingLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/streaming-links",
+            "related": "https://kitsu.io/api/edge/anime/7090/streaming-links"
+          }
+        },
+        "animeProductions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/anime-productions",
+            "related": "https://kitsu.io/api/edge/anime/7090/anime-productions"
+          }
+        },
+        "animeCharacters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/anime-characters",
+            "related": "https://kitsu.io/api/edge/anime/7090/anime-characters"
+          }
+        },
+        "animeStaff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/7090/relationships/anime-staff",
+            "related": "https://kitsu.io/api/edge/anime/7090/anime-staff"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "87553",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/87553"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T18:28:20.373Z",
+        "updatedAt": "2018-11-27T20:44:42.560Z",
+        "synopsis": null,
+        "description": null,
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": null,
+        "number": 1,
+        "relativeNumber": 1,
+        "airdate": null,
+        "length": 66,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/87553/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/87553/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/87553/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/87553/videos"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=hanasaku-iroha-home-sweet-home&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=hanasaku-iroha-home-sweet-home&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}
