@@ -58,7 +58,10 @@ export default async function kitsu(
             const number = entry.attributes.number;
             let name = {
                 alternatives: {
-                    English: volume === null ? `Episode ${number}` : `Season ${volume} Episode ${number}`,
+                    English:
+                        volume === null
+                            ? `Episode ${number}`
+                            : `Season ${volume} Episode ${number}`,
                 },
                 default: "English",
             };
