@@ -156,7 +156,11 @@
             <!-- Tabbed: -->
             <!-- Entries -->
             <div>
-                <p>{item.entries.length} entries</p>
+                <p>
+                    {item.entries.filter((e) => e.completed).length}
+                    complete/{item.entries.length}
+                    entries
+                </p>
                 <table>
                     <thead>
                         <tr>

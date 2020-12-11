@@ -122,49 +122,58 @@
                 return;
         }
 
-        const { cover, item } = await window
-            .fetch("/item/:template:")
-            .then((r) => r.json())
-            .then((template) => importer(urlToImport, { template }));
-        let coverRequest;
-        if (typeof cover === "string") {
-            coverRequest = await window.fetch(
-                "/proxy?url=" + encodeURIComponent(cover)
-            );
-        } else {
-            coverRequest = await cover();
-        }
-        const coverBlob = await coverRequest.blob();
-        const formData = new FormData();
-        const blobKey = `blob-${item.key}-cover`;
-        formData.append(blobKey, coverBlob);
-
-        const blobUpload = await window.fetch("/blob", {
-            method: "PUT",
-            body: formData,
-        });
-        const blobResult = await blobUpload.json();
-        console.log(blobResult);
-
-        item.covers = [{ key: blobKey, description: "Cover" }];
-        const itemBody = JSON.stringify(item, null, 2);
-        console.log(itemBody);
-        const itemUpload = await window.fetch(
-            "/item/" + encodeURIComponent(item.key),
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: itemBody,
+        try {
+            const { cover, item } = await window
+                .fetch("/item/:template:")
+                .then((r) => r.json())
+                .then((template) => importer(urlToImport, { template }));
+            let coverRequest;
+            if (typeof cover === "string") {
+                coverRequest = await window.fetch(
+                    "/proxy?url=" + encodeURIComponent(cover)
+                );
+            } else {
+                coverRequest = await cover();
             }
-        );
-        console.log(await itemUpload.json());
-        toastStore.push({
-            title: "Created Item.",
-            body: item.name.alternatives[item.name.default],
-        });
-        reload();
+            const coverBlob = await coverRequest.blob();
+            const formData = new FormData();
+            const blobKey = `blob-${item.key}-cover`;
+            formData.append(blobKey, coverBlob);
+
+            const blobUpload = await window.fetch("/blob", {
+                method: "PUT",
+                body: formData,
+            });
+            const blobResult = await blobUpload.json();
+            console.log(blobResult);
+
+            item.covers = [{ key: blobKey, description: "Cover" }];
+            const itemBody = JSON.stringify(item, null, 2);
+            console.log(itemBody);
+            const itemUpload = await window.fetch(
+                "/item/" + encodeURIComponent(item.key),
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: itemBody,
+                }
+            );
+            console.log(await itemUpload.json());
+            toastStore.push({
+                title: "Created Item.",
+                body: item.name.alternatives[item.name.default],
+            });
+            reload();
+        } catch (err) {
+            console.error(err);
+            toastStore.push({
+                kind: "error",
+                title: "Failed To Import.",
+                body: err.toString(),
+            });
+        }
     }
 
     /** Complete the next entry of an item */
@@ -478,7 +487,7 @@
                                 <span>
                                     {item.entries.filter((e) => e.completed).length}
                                     /
-                                    {item.publication_status === 'Complete' ? item.entries.length : '?'}
+                                    {item.publication_status === 'Complete' ? item.entries.length : `${item.entries.length}+`}
                                 </span>
                                 {#if item.status !== 'Completed'}
                                     <button
