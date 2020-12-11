@@ -6,6 +6,7 @@
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import * as importUtil from "./import/util.mjs";
     import importWebtoons from "./import/webtoons.mjs";
     import items from "./stores/items.js";
     import people from "./stores/people.js";
@@ -129,9 +130,7 @@
                 .then((template) => importer(urlToImport, { template }));
             let coverRequest;
             if (typeof cover === "string") {
-                coverRequest = await window.fetch(
-                    "/proxy?url=" + encodeURIComponent(cover)
-                );
+                coverRequest = await importUtil.proxy(cover);
             } else {
                 coverRequest = await cover();
             }

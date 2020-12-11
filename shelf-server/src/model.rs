@@ -42,7 +42,7 @@ pub type AppStateRef = Arc<Mutex<AppState>>;
 pub struct ProxyParams {
     pub url: String,
     pub referrer: Option<String>,
-    pub cookies: HashMap<String, String>,
+    pub cookies: Option<HashMap<String, String>>,
 }
 
 #[derive(Debug)]

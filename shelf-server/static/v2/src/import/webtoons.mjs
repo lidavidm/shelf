@@ -60,11 +60,9 @@ export default async function webtoons(
             const src = document
                 .querySelector(".detail_body.banner")
                 .style.backgroundImage.match(/url\("?([^"]*)"?\)/)[1];
-            return window.fetch(
-                `/proxy?url=${encodeURIComponent(
-                    src
-                )}&referrer=${encodeURIComponent("https://www.webtoons.com")}`
-            );
+            return util.proxy(src, {
+                referrer: "https://www.webtoons.com",
+            });
         },
         item: template,
     };

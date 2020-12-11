@@ -12,14 +12,29 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
-export async function defaultProxy(url, options = {}) {
-    let proxyUrl = `/proxy?url=${window.encodeURIComponent(url)}`;
+export async function proxy(url, options = {}) {
+    const params = {
+        url,
+    };
     if (options.referrer) {
-        proxyUrl += `&referrer=${window.encodeURIComponent(options.referrer)}`;
+        params.referrer = options.referrer;
     }
-    const req = await window.fetch(proxyUrl);
-    const resp = await req.text();
-    return resp;
+    // Inject cookies
+    const cookies = JSON.parse(window.localStorage["cookies"] || "{}");
+    const urlComponents = new URL(url);
+    params.cookies = cookies[urlComponents.hostname] || {};
+    return await window.fetch("/proxy", {
+        method: "POST",
+        body: JSON.stringify(params),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+export async function defaultProxy(url, options = {}) {
+    const req = await proxy(url, options);
+    return await req.text();
 }
 
 export function langCodeToName(code) {
