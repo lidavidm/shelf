@@ -84,13 +84,28 @@ You may obtain a copy of the License at
         display: flex;
         flex: 0 0 auto;
         margin-right: 0.5em;
-        padding: 0 0.5em;
+        padding: 0 0 0 0.5em;
         height: 1.75em;
         line-height: 2em;
     }
 
+    li.tag button {
+        background: none;
+        border: 0;
+        border-left: 1px solid #000;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0 0.5em;
+        margin: 0 0 0 0.25em;
+    }
+
+    li.tag button:hover {
+        cursor: pointer;
+    }
+
     input[type="text"] {
         border-bottom: 0;
+        height: 100%;
     }
 
     .tag-input {

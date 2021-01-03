@@ -5,7 +5,6 @@
     const dispatch = createEventDispatcher();
 
     export let id;
-    export let label;
     export let placeholder;
     export let value;
     let error = null;
@@ -28,8 +27,13 @@
     }
 </script>
 
+<style>
+    div {
+        display: inline-block;
+    }
+</style>
+
 <div>
-    <label for={id}>{label}:</label>
     <input
         {id}
         type="text"
