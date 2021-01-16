@@ -219,12 +219,10 @@ pub async fn blob_get_contents(
 
     use std::io::Read;
     let state = &shelf.lock().await;
-    for blob in state.shelf.query_blobs() {
-        log::info!(target: crate::LOG_NAME, "Blob: {:?}", blob);
-    }
+    let decoded_key = decode_key(&key)?;
     let blob = state
         .shelf
-        .get_blob(&key)
+        .get_blob(&decoded_key)
         .ok_or_else(|| warp::reject::not_found())?;
     let path = state.saver.get_blob(&blob.key);
 
