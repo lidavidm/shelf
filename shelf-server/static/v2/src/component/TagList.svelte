@@ -74,7 +74,8 @@ You may obtain a copy of the License at
         padding: 0;
         list-style-type: none;
         display: inline-flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 40em;
         min-height: 2em;
         border-bottom: 1px solid #000;
     }

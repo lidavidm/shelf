@@ -91,6 +91,11 @@
         ];
         await save();
     }
+
+    function setPrimaryCover(index) {
+        const cover = item.covers.splice(index, 1);
+        item.covers = cover.concat(item.covers);
+    }
 </script>
 
 <style>
@@ -119,14 +124,17 @@
 
     .columns > .column {
         border-right: 1px dotted #000;
-        flex: 1 0 calc(33% - 1em);
-        min-width: 40em;
+        flex: 1 1 calc(33% - 1em);
         padding: 0 0.5em;
     }
 
     .columns > .column:first-child {
         flex: 1 0 calc(33.3% - 0.5em);
         padding: 0 0.5em 0 0;
+    }
+
+    .columns > .column:last-child {
+        border: 0;
     }
 
     #covers img {
@@ -299,12 +307,15 @@
                     <button on:click={importUrl}>Import</button>
                 </div>
                 {#if item.covers.length > 0}
-                    {#each item.covers as cover}
+                    {#each item.covers as cover, index}
                         <div>
                             <img
                                 src={'/blob/' + cover.key + '/contents'}
                                 alt={cover.description} />
-                            <input type="text" bind:value={cover.description} />
+                            <div>
+                                <input type="text" bind:value={cover.description} />
+                                <button on:click={() => setPrimaryCover(index)}>Make Primary Cover</button>
+                            </div>
                         </div>
                     {/each}
                 {:else}
