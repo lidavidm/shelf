@@ -21,6 +21,9 @@ export default {
     },
 
     async patch(newItem) {
+        if (!newItem.key) {
+            throw new Error("Item is missing a key");
+        }
         store.update((items) => {
             items[newItem.key] = newItem;
             return items;

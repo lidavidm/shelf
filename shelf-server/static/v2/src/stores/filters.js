@@ -1,7 +1,10 @@
 import { writable } from "svelte/store";
 
-const defaultFilters = {displayed: {"In Progress": true}, tags: {"sfw": false}};
-let filters = {...defaultFilters};
+const defaultFilters = {
+    displayed: { "In Progress": true },
+    tags: { sfw: false },
+};
+let filters = { ...defaultFilters };
 if (window.localStorage["filters"]) {
     filters = JSON.parse(window.localStorage["filters"]);
 }

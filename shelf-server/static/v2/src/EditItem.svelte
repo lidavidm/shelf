@@ -313,8 +313,12 @@
                                 src={'/blob/' + cover.key + '/contents'}
                                 alt={cover.description} />
                             <div>
-                                <input type="text" bind:value={cover.description} />
-                                <button on:click={() => setPrimaryCover(index)}>Make Primary Cover</button>
+                                <input
+                                    type="text"
+                                    bind:value={cover.description} />
+                                <button
+                                    on:click={() => setPrimaryCover(index)}>Make
+                                    Primary Cover</button>
                             </div>
                         </div>
                     {/each}

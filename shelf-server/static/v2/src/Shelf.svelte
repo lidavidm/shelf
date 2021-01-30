@@ -90,7 +90,10 @@
                         items: [],
                     });
                     if (typeof $filters.displayed[title] === "undefined") {
-                        $filters.displayed = { ...$filters.displayed, [title]: false };
+                        $filters.displayed = {
+                            ...$filters.displayed,
+                            [title]: false,
+                        };
                     }
                 }
                 itemsByCategory[itemsByCategory.length - 1].items.push(item);
