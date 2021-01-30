@@ -355,6 +355,13 @@
     <TitleBar>Library</TitleBar>
     <section id="import">
         <div>
+            <button on:click={(e) => router.show('/edit/:template:')}>
+                <span class="material-icons" aria-hidden="true">
+                    note_add
+                </span>
+                Add New Item
+            </button>
+
             <label for="import">Import URL:</label>
             <input id="import" type="text" bind:value={urlToImport} />
             <button on:click={importUrl}>Import</button>

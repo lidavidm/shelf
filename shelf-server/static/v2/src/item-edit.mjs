@@ -56,7 +56,8 @@ export function entryName(kind, plural = false) {
         case "OVA":
         case "TV":
             return plural ? "Episodes" : "Episode";
-        case "Book":
+        case "Novel":
+            return plural ? "Volumes" : "Volume";
         case "Collection":
         case "Manga":
         case "NonFiction":

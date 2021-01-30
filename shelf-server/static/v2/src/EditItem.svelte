@@ -1,4 +1,5 @@
 <script>
+    import EditAlternatives from "./component/EditAlternatives.svelte";
     import NullableMultiDate from "./component/NullableMultiDate.svelte";
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
@@ -17,7 +18,8 @@
     let urlToImportDescription;
 
     let item = null;
-    let loading = fetch("/item/" + params.key)
+    let isNewItem = !params.key || params.key === ":template:";
+    let loading = fetch(params.key ? "/item/" + params.key : "/item/:template:")
         .then((r) => r.json())
         .then((value) => (item = value));
 
@@ -96,6 +98,12 @@
         const cover = item.covers.splice(index, 1);
         item.covers = cover.concat(item.covers);
     }
+
+    function generateKey() {
+        item.key = `${item.kind.toLowerCase()}-${importUtil.titleToKey(
+            item.name.alternatives[item.name.default]
+        )}`;
+    }
 </script>
 
 <style>
@@ -159,7 +167,14 @@
                 <section>
                     <div>
                         <label for="key">Key:</label>
-                        <input id="key" readonly type="text" value={item.key} />
+                        <input
+                            id="key"
+                            readonly={!isNewItem}
+                            type="text"
+                            value={item.key} />
+                        {#if isNewItem}
+                            <button on:click={generateKey}>Generate From Title</button>
+                        {/if}
                     </div>
                     <div>
                         <label for="kind">Kind:</label>
@@ -237,6 +252,13 @@
                     </div>
 
                     <!-- Name -->
+                    <div>
+                        <EditAlternatives
+                            propertyName="Language"
+                            valueName="Name"
+                            alternatives={item.name}
+                            on:change={(e) => (item.name = e.detail)} />
+                    </div>
                     <!-- People -->
                     <!-- Series -->
                     <div>
