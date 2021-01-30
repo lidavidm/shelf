@@ -8,6 +8,7 @@
     import importMangadex from "./import/mangadex.mjs";
     import * as importUtil from "./import/util.mjs";
     import importWebtoons from "./import/webtoons.mjs";
+    import filters from "./stores/filters.js";
     import items from "./stores/items.js";
     import people from "./stores/people.js";
     import series from "./stores/series.js";
@@ -17,9 +18,7 @@
 
     export let router;
 
-    let displayed = { "In Progress": true };
-    let tagFilters = { sfw: true };
-    $: itemsByCategory = sortItems(Object.values($items), tagFilters);
+    $: itemsByCategory = sortItems(Object.values($items), $filters.tags);
     let urlToImport = "";
 
     function reload() {
@@ -90,8 +89,8 @@
                         title,
                         items: [],
                     });
-                    if (typeof displayed[title] === "undefined") {
-                        displayed = { ...displayed, [title]: false };
+                    if (typeof $filters.displayed[title] === "undefined") {
+                        $filters.displayed = { ...$filters.displayed, [title]: false };
                     }
                 }
                 itemsByCategory[itemsByCategory.length - 1].items.push(item);
@@ -364,12 +363,12 @@
             <section class="filter-group">
                 <h3>Categories</h3>
                 <div class="filter-group-inner">
-                    {#each Object.keys(displayed) as title (title)}
+                    {#each Object.keys($filters.displayed) as title (title)}
                         <div>
                             <input
                                 id={'filter-' + title}
                                 type="checkbox"
-                                bind:checked={displayed[title]} />
+                                bind:checked={$filters.displayed[title]} />
                             <label for={'filter-' + title}>{title}</label>
                         </div>
                     {/each}
@@ -382,14 +381,14 @@
                         <input
                             id="filter-tag-sfw"
                             type="checkbox"
-                            bind:checked={tagFilters['sfw']} />
+                            bind:checked={$filters.tags['sfw']} />
                         <label for="filter-tag-sfw">SFW Only</label>
                     </div>
                 </div>
             </section>
         </div>
     </section>
-    {#each itemsByCategory.filter((cat) => displayed[cat.title]) as category (category.title)}
+    {#each itemsByCategory.filter((cat) => $filters.displayed[cat.title]) as category (category.title)}
         <section>
             <header>
                 <h2>{category.title} ({category.items.length} items)</h2>
