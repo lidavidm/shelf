@@ -4,6 +4,9 @@
 
 [[https://github.com/lidavidm/shelf/workflows/Rust/badge.svg?branch=master]]
 
+#+CAPTION: A screenshot of the library view.
+[[file:.readme/shelf.png]]
+
 Currently supported:
 
 - Several media types (novels, movies, manga, short stories, visual novels, musicals, etc.)

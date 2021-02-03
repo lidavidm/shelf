@@ -60,7 +60,11 @@
         );
         if (tagFilters["sfw"]) {
             items = items.filter(
-                (v) => !v.tags.includes("NSFW") && !v.tags.includes("Ecchi")
+                (v) =>
+                    !v.tags.includes("Ecchi") &&
+                    !v.tags.includes("NSFW") &&
+                    !v.tags.includes("Sexual Violence") &&
+                    !v.tags.includes("Smut")
             );
         }
         const itemsByCategory = [];
@@ -197,6 +201,19 @@
                 newEntry.name.alternatives[newEntry.name.default],
         });
     }
+
+    function langCode(lang) {
+        switch (lang) {
+            case "Chinese":
+            case "Chinese (Simplified)":
+                return "zh-CN";
+            case "Japanese":
+            case "Japanese (Kana)":
+                return "ja-JP";
+            default:
+                return "en";
+        }
+    }
 </script>
 
 <style>
@@ -205,7 +222,17 @@
         font-style: italic;
     }
 
-    #filters > div {
+    h3[lang="ja-JP"] {
+        font-style: normal;
+        font-family: "Noto Serif CJK JP";
+    }
+
+    h3[lang="zh-CN"] {
+        font-style: normal;
+        font-family: "Noto Serif CJK SC";
+    }
+
+    #tools > div {
         display: flex;
         flex-wrap: wrap;
     }
@@ -214,8 +241,8 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         box-sizing: border-box;
-        flex: 0 0;
-        min-width: 40em;
+        flex: 1 0;
+        min-width: 30em;
         padding: 1em;
         position: relative;
         width: 33%;
@@ -233,7 +260,11 @@
     }
 
     .filter-group > .filter-group-inner > div {
-        flex: 0 0 8em;
+        flex: 0 0 10em;
+    }
+
+    .filter-categories label {
+        font-weight: normal;
     }
 
     .item-list {
@@ -252,9 +283,21 @@
         width: 30em;
     }
 
+    @media (min-width: 1600px) and (max-width: 2559px) {
+        .item-list li {
+            width: calc(26em + 6 * (100vw - 10em) / (2560 - 1600));
+        }
+    }
+
+    @media (min-width: 2560px) {
+        .item-list li {
+            width: 32em;
+        }
+    }
+
     .item-list li > .cover {
         display: flex;
-        flex: 0 0 40%;
+        flex: 0 0 50%;
         flex-direction: column;
         font-size: 0;
         justify-content: center;
@@ -262,10 +305,10 @@
     }
 
     .item-list li > .cover img {
-        flex: 0 0;
+        flex: 1 0;
         max-height: 100%;
         max-width: 100%;
-        object-fit: contain;
+        object-fit: cover;
     }
 
     .item-list li > .info {
@@ -277,13 +320,13 @@
 
     .item-list li .info > h3 {
         cursor: pointer;
-        height: 2em;
-        line-height: 2em;
-        overflow: hidden;
+        /* height: 2em; */
+        /* line-height: 2em; */
+        /* overflow: hidden; */
         padding: 0 0.25em;
-        text-align: center;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        /* text-align: center; */
+        /* text-overflow: ellipsis; */
+        /* white-space: nowrap; */
         width: calc(100% - 0.5em);
     }
 
@@ -346,31 +389,30 @@
         height: 1em;
     }
 
-    .tags span:not(:last-child):not(:first-child):after {
+    .tags span:not(:last-child):after {
         content: ", ";
     }
 </style>
 
 <main>
     <TitleBar>Library</TitleBar>
-    <section id="import">
-        <div>
-            <button on:click={(e) => router.show('/edit/:template:')}>
-                <span class="material-icons" aria-hidden="true">
-                    note_add
-                </span>
-                Add New Item
-            </button>
-
-            <label for="import">Import URL:</label>
-            <input id="import" type="text" bind:value={urlToImport} />
-            <button on:click={importUrl}>Import</button>
-        </div>
-    </section>
-    <section id="filters">
-        <h2>Filters</h2>
+    <section id="tools">
         <div>
             <section class="filter-group">
+                <h3>Import</h3>
+                <label for="import">Import URL:</label>
+                <input id="import" type="text" bind:value={urlToImport} />
+                <button on:click={importUrl}>Import</button>
+                <div>
+                    <button on:click={(e) => router.show('/edit/:template:')}>
+                        <span class="material-icons" aria-hidden="true">
+                            note_add
+                        </span>
+                        Add New Item
+                    </button>
+                </div>
+            </section>
+            <section class="filter-group filter-categories">
                 <h3>Categories</h3>
                 <div class="filter-group-inner">
                     {#each Object.keys($filters.displayed) as title (title)}
@@ -384,7 +426,7 @@
                     {/each}
                 </div>
             </section>
-            <section class="filter-group">
+            <section class="filter-group filter-categories">
                 <h3>Tags</h3>
                 <div class="filter-group-inner">
                     <div>
@@ -423,7 +465,8 @@
                         <div class="info">
                             <h3
                                 title={item.name.alternatives[item.name.default]}
-                                on:click={(e) => router.show('/edit/' + item.key)}>
+                                on:click={(e) => router.show('/edit/' + item.key)}
+                                lang={langCode(item.name.default)}>
                                 {item.name.alternatives[item.name.default]}
                             </h3>
 
@@ -461,7 +504,6 @@
 
                             {#if item.tags && item.tags.length > 0}
                                 <div class="item-bar tags">
-                                    <span>Tags:</span>
                                     {#each item.tags as tag}
                                         <span>{tag}</span>
                                     {/each}
