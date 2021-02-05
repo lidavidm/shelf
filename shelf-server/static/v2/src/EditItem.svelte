@@ -1,5 +1,6 @@
 <script>
     import EditAlternatives from "./component/EditAlternatives.svelte";
+    import EditPeople from "./component/EditPeople.svelte";
     import NullableMultiDate from "./component/NullableMultiDate.svelte";
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
@@ -7,7 +8,6 @@
     import * as importUtil from "./import/util.mjs";
     import * as itemEdit from "./item-edit.mjs";
     import items from "./stores/items.js";
-    import people from "./stores/people.js";
     import series from "./stores/series.js";
     import * as util from "./util";
 
@@ -250,8 +250,6 @@
                             value={item.completed}
                             on:input={(e) => (item.completed = e.detail)} />
                     </div>
-
-                    <!-- Name -->
                     <div>
                         <EditAlternatives
                             propertyName="Language"
@@ -259,7 +257,9 @@
                             alternatives={item.name}
                             on:change={(e) => (item.name = e.detail)} />
                     </div>
-                    <!-- People -->
+                    <div>
+                        <EditPeople bind:values={item.people} />
+                    </div>
                     <!-- Series -->
                     <div>
                         <TagList bind:tags={item.tags} />
