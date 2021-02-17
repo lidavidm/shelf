@@ -45,6 +45,13 @@
         item = newItem;
     }
 
+    async function addVolume() {
+        const volume = parseInt(window.prompt("Volume number?"), 10);
+        const count = parseInt(window.prompt("Number of entries to add?"), 10);
+        const [newItem] = itemEdit.addNextEntry(item, count, volume);
+        item = newItem;
+    }
+
     async function completeMultipleEntries() {
         const count = parseInt(
             window.prompt("Number of entries to complete?"),
@@ -284,6 +291,7 @@
                         <div>
                             <button on:click={() => addMultipleEntries()}>Add
                                 Multiple Entries</button>
+                            <button on:click={() => addVolume()}>Add Volume</button>
                             <button
                                 on:click={() => completeMultipleEntries()}>Complete
                                 Multiple Entries</button>

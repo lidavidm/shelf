@@ -83,3 +83,19 @@ test("add new item", (t) => {
         t.deepEqual(false, entries[i].completed);
     }
 });
+
+test("add volume", (t) => {
+    let [item] = itemEdit.addNextEntry(
+        {
+            kind: "Manga",
+            entries: [],
+        },
+        2,
+        3
+    );
+    t.deepEqual(2, item.entries.length);
+    t.deepEqual(3, item.entries[0].volume);
+    t.deepEqual(1, item.entries[0].number);
+    t.deepEqual("Chapter 1", item.entries[0].name.alternatives["English"]);
+    t.deepEqual(false, item.entries[0].completed);
+});

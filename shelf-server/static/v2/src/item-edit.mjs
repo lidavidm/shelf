@@ -20,12 +20,14 @@ export function completeNextEntry(item) {
 }
 
 /** Add the next entry of an item. */
-export function addNextEntry(item, count = 1) {
-    let volume = null;
+export function addNextEntry(item, count = 1, givenVolume = null) {
+    let volume = givenVolume;
     let number = 1;
     if (item.entries.length !== 0) {
         const lastCompleted = item.entries[item.entries.length - 1];
-        volume = lastCompleted.volume;
+        if (volume == null) {
+            volume = lastCompleted.volume;
+        }
         number = lastCompleted.number + 1;
     }
 

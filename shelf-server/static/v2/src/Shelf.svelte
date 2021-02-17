@@ -279,19 +279,19 @@
     .item-list li {
         border-bottom: 1px solid #000;
         display: flex;
-        height: 20em;
+        height: 24em;
         width: 30em;
     }
 
     @media (min-width: 1600px) and (max-width: 2559px) {
         .item-list li {
-            width: calc(26em + 6 * (100vw - 10em) / (2560 - 1600));
+            width: calc(26em + 4 * (100vw - 10em) / (2560 - 1600));
         }
     }
 
     @media (min-width: 2560px) {
         .item-list li {
-            width: 32em;
+            width: 30em;
         }
     }
 
