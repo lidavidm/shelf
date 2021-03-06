@@ -42,6 +42,8 @@ export default async function kitsu(
         kind = "TV";
     } else if (anime.attributes.subtype === "movie") {
         kind = "Film";
+    } else if (anime.attributes.subtype === "special") {
+        kind = "OVA";
     } else {
         throw new Error(`Unknown subtype: ${anime.attributes.subtype}`);
     }

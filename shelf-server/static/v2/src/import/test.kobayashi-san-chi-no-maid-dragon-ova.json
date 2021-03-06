@@ -1,0 +1,245 @@
+{
+  "data": [
+    {
+      "id": "13861",
+      "type": "anime",
+      "links": {
+        "self": "https://kitsu.io/api/edge/anime/13861"
+      },
+      "attributes": {
+        "createdAt": "2017-09-25T22:54:15.730Z",
+        "updatedAt": "2021-03-06T18:00:07.265Z",
+        "slug": "kobayashi-san-chi-no-maid-dragon-ova",
+        "synopsis": "Unaired episode included with the volume 7 BD/DVD release of Kobayashi-san Chi no Maid Dragon.",
+        "description": "Unaired episode included with the volume 7 BD/DVD release of Kobayashi-san Chi no Maid Dragon.",
+        "coverImageTopOffset": 0,
+        "titles": {
+          "en": "Miss Kobayashi's Dragon Maid OVA",
+          "en_jp": "Kobayashi-san Chi no Maid Dragon: Valentine, Soshite Onsen! - Amari Kitai Shinaide Kudasai",
+          "en_us": "Miss Kobayashi's Dragon Maid Episode 14: Valentine's, and Then Hot Springs! - Please Don't Get Your Hopes Up",
+          "ja_jp": "小林さんちのメイドラゴン バレンタイン, そして温泉! (あまり期待しないでください)"
+        },
+        "canonicalTitle": "Kobayashi-san Chi no Maid Dragon: Valentine, Soshite Onsen! - Amari Kitai Shinaide Kudasai",
+        "abbreviatedTitles": [
+          "Kobayashi-san Chi no Maid Dragon Episode 14"
+        ],
+        "averageRating": "79.1",
+        "ratingFrequencies": {
+          "2": "33",
+          "3": "0",
+          "4": "5",
+          "5": "2",
+          "6": "10",
+          "7": "4",
+          "8": "100",
+          "9": "4",
+          "10": "159",
+          "11": "10",
+          "12": "399",
+          "13": "30",
+          "14": "1571",
+          "15": "108",
+          "16": "1508",
+          "17": "96",
+          "18": "662",
+          "19": "42",
+          "20": "1201"
+        },
+        "userCount": 9463,
+        "favoritesCount": 20,
+        "startDate": "2017-09-20",
+        "endDate": "2017-09-20",
+        "nextRelease": null,
+        "popularityRank": 1223,
+        "ratingRank": 733,
+        "ageRating": "PG",
+        "ageRatingGuide": "",
+        "subtype": "special",
+        "status": "finished",
+        "tba": "",
+        "posterImage": {
+          "tiny": "https://media.kitsu.io/anime/poster_images/13861/tiny.jpg?1506380050",
+          "small": "https://media.kitsu.io/anime/poster_images/13861/small.jpg?1506380050",
+          "medium": "https://media.kitsu.io/anime/poster_images/13861/medium.jpg?1506380050",
+          "large": "https://media.kitsu.io/anime/poster_images/13861/large.jpg?1506380050",
+          "original": "https://media.kitsu.io/anime/poster_images/13861/original.jpg?1506380050",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": null,
+                "height": null
+              },
+              "small": {
+                "width": null,
+                "height": null
+              },
+              "medium": {
+                "width": null,
+                "height": null
+              },
+              "large": {
+                "width": null,
+                "height": null
+              }
+            }
+          }
+        },
+        "coverImage": null,
+        "episodeCount": 1,
+        "episodeLength": 24,
+        "totalLength": 24,
+        "youtubeVideoId": "",
+        "showType": "special",
+        "nsfw": false
+      },
+      "relationships": {
+        "genres": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/genres",
+            "related": "https://kitsu.io/api/edge/anime/13861/genres"
+          }
+        },
+        "categories": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/categories",
+            "related": "https://kitsu.io/api/edge/anime/13861/categories"
+          }
+        },
+        "castings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/castings",
+            "related": "https://kitsu.io/api/edge/anime/13861/castings"
+          }
+        },
+        "installments": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/installments",
+            "related": "https://kitsu.io/api/edge/anime/13861/installments"
+          }
+        },
+        "mappings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/mappings",
+            "related": "https://kitsu.io/api/edge/anime/13861/mappings"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/anime/13861/reviews"
+          }
+        },
+        "mediaRelationships": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/media-relationships",
+            "related": "https://kitsu.io/api/edge/anime/13861/media-relationships"
+          }
+        },
+        "characters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/characters",
+            "related": "https://kitsu.io/api/edge/anime/13861/characters"
+          }
+        },
+        "staff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/staff",
+            "related": "https://kitsu.io/api/edge/anime/13861/staff"
+          }
+        },
+        "productions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/productions",
+            "related": "https://kitsu.io/api/edge/anime/13861/productions"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/anime/13861/quotes"
+          }
+        },
+        "episodes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/episodes",
+            "related": "https://kitsu.io/api/edge/anime/13861/episodes"
+          },
+          "data": [
+            {
+              "type": "episodes",
+              "id": "226195"
+            }
+          ]
+        },
+        "streamingLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/streaming-links",
+            "related": "https://kitsu.io/api/edge/anime/13861/streaming-links"
+          }
+        },
+        "animeProductions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/anime-productions",
+            "related": "https://kitsu.io/api/edge/anime/13861/anime-productions"
+          }
+        },
+        "animeCharacters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/anime-characters",
+            "related": "https://kitsu.io/api/edge/anime/13861/anime-characters"
+          }
+        },
+        "animeStaff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/13861/relationships/anime-staff",
+            "related": "https://kitsu.io/api/edge/anime/13861/anime-staff"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "226195",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/226195"
+      },
+      "attributes": {
+        "createdAt": "2017-09-25T22:54:16.518Z",
+        "updatedAt": "2018-11-27T20:44:42.560Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 1,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": 24,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/226195/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/226195/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/226195/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/226195/videos"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=kobayashi-san-chi-no-maid-dragon-ova&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=kobayashi-san-chi-no-maid-dragon-ova&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}

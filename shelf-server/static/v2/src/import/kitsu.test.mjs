@@ -99,3 +99,33 @@ test("import Kitsu movie", async (t) => {
         "Episode 1"
     );
 });
+
+test("import Kitsu OVA", async (t) => {
+    const url = "https://kitsu.io/anime/kobayashi-san-chi-no-maid-dragon-ova";
+    const { cover, item } = await importTitle(url, {
+        template: {},
+        proxy: testUtil.makeProxy(
+            "test.kobayashi-san-chi-no-maid-dragon-ova.json"
+        ),
+    });
+    t.deepEqual(
+        item.key,
+        "ova-kobayashisan-chi-no-maid-dragon-valentine-soshite-onsen-amari-kitai-shinaide-kudasai"
+    );
+    t.deepEqual(item.kind, "OVA");
+    t.deepEqual(item.name.default, "Japanese (Romaji)");
+    t.deepEqual(
+        item.name.alternatives[item.name.default],
+        "Kobayashi-san Chi no Maid Dragon: Valentine, Soshite Onsen! - Amari Kitai Shinaide Kudasai"
+    );
+    t.deepEqual(item.entries.length, 1);
+    t.deepEqual(item.extra.external_url, url);
+    t.deepEqual(
+        cover,
+        "https://media.kitsu.io/anime/poster_images/13861/original.jpg?1506380050"
+    );
+    t.deepEqual(
+        item.entries[0].name.alternatives[item.entries[0].name.default],
+        "Season 1 Episode 1"
+    );
+});
