@@ -178,7 +178,7 @@
                             id="key"
                             readonly={!isNewItem}
                             type="text"
-                            value={item.key} />
+                            bind:value={item.key} />
                         {#if isNewItem}
                             <button on:click={generateKey}>Generate From Title</button>
                         {/if}
