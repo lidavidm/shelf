@@ -15,9 +15,13 @@ You may obtain a copy of the License at
 -->
 <script>
     import { onMount } from "svelte";
+    import { titleToKey } from "../import/util.mjs";
     import people from "../stores/people.js";
 
     export let values;
+    let creatingPerson = false;
+    let createPersonName = "";
+    let createPersonError = "";
 
     onMount(function () {
         people.update();
@@ -30,6 +34,42 @@ You may obtain a copy of the License at
 
     function deleteItem(index) {
         values = values.filter((_, i) => i != index);
+    }
+
+    function createPerson() {
+        if (!createPersonName) {
+            createPersonError = "Name must not be blank.";
+            return;
+        }
+        createPersonError = "";
+        const key = `person-${titleToKey(createPersonName)}`;
+        if ($people[key]) {
+            createPersonError = `Person already exists: ${$people[key]}`;
+            return;
+        }
+        window
+            .fetch("/person", {
+                method: "PUT",
+                body: JSON.stringify({
+                    key,
+                    name: {
+                        default: "English",
+                        alternatives: {
+                            English: createPersonName,
+                        },
+                    },
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((req) => req.text())
+            .then(() => people.update())
+            .then(() => {
+                values = [...values, ["Author", key]];
+                creatingPerson = false;
+                createPersonName = "";
+            });
     }
 </script>
 
@@ -73,15 +113,42 @@ You may obtain a copy of the License at
                     </td>
                 </tr>
             {/each}
-            <tr>
-                <button
-                    on:click={() => (values = [...values, ['Author', Object.keys($people).sort()[0]]])}>
-                    <span class="material-icons" aria-hidden="true">
-                        note_add
-                    </span>
-                    Add Person
-                </button>
-            </tr>
         </tbody>
     </table>
+    <div>
+        <button
+            on:click={() => (values = [...values, ['Author', Object.keys($people).sort()[0]]])}>
+            <span class="material-icons" aria-hidden="true"> note_add </span>
+            Add Person
+        </button>
+        <button
+            on:click={() => (creatingPerson = true)}
+            disabled={creatingPerson}>
+            <span class="material-icons" aria-hidden="true"> person_add </span>
+            Create Person
+        </button>
+    </div>
+    {#if creatingPerson}
+        <div>
+            <label for="new-person-name">Name:</label>
+            <input
+                id="new-person-name"
+                type="text"
+                placeholder="Person Name"
+                bind:value={createPersonName} />
+            <button on:click={createPerson}>
+                <span class="material-icons" aria-hidden="true">
+                    person_add
+                </span>
+                Create Person
+            </button>
+            <button on:click={() => (creatingPerson = false)}>
+                <span class="material-icons" aria-hidden="true"> cancel </span>
+                Cancel
+            </button>
+            {#if createPersonError}
+                <p>{createPersonError}</p>
+            {/if}
+        </div>
+    {/if}
 </div>

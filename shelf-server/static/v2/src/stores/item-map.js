@@ -9,7 +9,7 @@ export default function makeStore(endpoint, defaultValue) {
 
         update() {
             // TODO: debounce
-            window
+            return window
                 .fetch(endpoint)
                 .then((r) => r.json())
                 .then((items) => {
