@@ -1,0 +1,690 @@
+{
+  "data": [
+    {
+      "id": "42413",
+      "type": "anime",
+      "links": {
+        "self": "https://kitsu.io/api/edge/anime/42413"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:12.980Z",
+        "updatedAt": "2021-04-05T18:00:07.801Z",
+        "slug": "vlad-love",
+        "synopsis": "Mitsugu Bamba is a high school girl who finds meaning in donating blood. She frequently visits a blood bank to donate blood, despite being harshly treated by the nurse. One day, she encounters a beautiful girl who looks like she's from overseas at the blood bank. The pale girl looks like she's about to faint any minute, but then, she starts destroying the blood bank. The girl loses consciousness and Mitsugu takes her home...\n\n(Source: Anime News Network)",
+        "description": "Mitsugu Bamba is a high school girl who finds meaning in donating blood. She frequently visits a blood bank to donate blood, despite being harshly treated by the nurse. One day, she encounters a beautiful girl who looks like she's from overseas at the blood bank. The pale girl looks like she's about to faint any minute, but then, she starts destroying the blood bank. The girl loses consciousness and Mitsugu takes her home...\n\n(Source: Anime News Network)",
+        "coverImageTopOffset": 0,
+        "titles": {
+          "en_jp": "VladLove",
+          "ja_jp": "ぶらどらぶ VLADLOVE"
+        },
+        "canonicalTitle": "VladLove",
+        "abbreviatedTitles": [
+          "Vlad Love"
+        ],
+        "averageRating": "64.78",
+        "ratingFrequencies": {
+          "2": "9",
+          "3": "1",
+          "4": "1",
+          "5": "1",
+          "6": "8",
+          "8": "12",
+          "10": "10",
+          "11": "3",
+          "12": "21",
+          "13": "4",
+          "14": "28",
+          "15": "4",
+          "16": "7",
+          "17": "0",
+          "18": "3",
+          "20": "11"
+        },
+        "userCount": 1133,
+        "favoritesCount": 5,
+        "startDate": "2021-02-14",
+        "endDate": "2021-03-14",
+        "nextRelease": null,
+        "popularityRank": 4549,
+        "ratingRank": 7160,
+        "ageRating": "PG",
+        "ageRatingGuide": null,
+        "subtype": "ONA",
+        "status": "finished",
+        "tba": null,
+        "posterImage": {
+          "tiny": "https://media.kitsu.io/anime/poster_images/42413/tiny.jpg?1607695654",
+          "small": "https://media.kitsu.io/anime/poster_images/42413/small.jpg?1607695654",
+          "medium": "https://media.kitsu.io/anime/poster_images/42413/medium.jpg?1607695654",
+          "large": "https://media.kitsu.io/anime/poster_images/42413/large.jpg?1607695654",
+          "original": "https://media.kitsu.io/anime/poster_images/42413/original.jpg?1607695654",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 110,
+                "height": 156
+              },
+              "small": {
+                "width": 284,
+                "height": 402
+              },
+              "medium": {
+                "width": 390,
+                "height": 554
+              },
+              "large": {
+                "width": 550,
+                "height": 780
+              }
+            }
+          }
+        },
+        "coverImage": {
+          "tiny": "https://media.kitsu.io/anime/cover_images/42413/tiny.jpg?1616510128",
+          "small": "https://media.kitsu.io/anime/cover_images/42413/small.jpg?1616510128",
+          "large": "https://media.kitsu.io/anime/cover_images/42413/large.jpg?1616510128",
+          "original": "https://media.kitsu.io/anime/cover_images/42413/original.jpg?1616510128",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 840,
+                "height": 200
+              },
+              "small": {
+                "width": 1680,
+                "height": 400
+              },
+              "large": {
+                "width": 3360,
+                "height": 800
+              }
+            }
+          }
+        },
+        "episodeCount": 12,
+        "episodeLength": null,
+        "totalLength": null,
+        "youtubeVideoId": "fiV8IHy9jN4",
+        "showType": "ONA",
+        "nsfw": false
+      },
+      "relationships": {
+        "genres": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/genres",
+            "related": "https://kitsu.io/api/edge/anime/42413/genres"
+          }
+        },
+        "categories": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/categories",
+            "related": "https://kitsu.io/api/edge/anime/42413/categories"
+          }
+        },
+        "castings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/castings",
+            "related": "https://kitsu.io/api/edge/anime/42413/castings"
+          }
+        },
+        "installments": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/installments",
+            "related": "https://kitsu.io/api/edge/anime/42413/installments"
+          }
+        },
+        "mappings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/mappings",
+            "related": "https://kitsu.io/api/edge/anime/42413/mappings"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/anime/42413/reviews"
+          }
+        },
+        "mediaRelationships": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/media-relationships",
+            "related": "https://kitsu.io/api/edge/anime/42413/media-relationships"
+          }
+        },
+        "characters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/characters",
+            "related": "https://kitsu.io/api/edge/anime/42413/characters"
+          }
+        },
+        "staff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/staff",
+            "related": "https://kitsu.io/api/edge/anime/42413/staff"
+          }
+        },
+        "productions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/productions",
+            "related": "https://kitsu.io/api/edge/anime/42413/productions"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/anime/42413/quotes"
+          }
+        },
+        "episodes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/episodes",
+            "related": "https://kitsu.io/api/edge/anime/42413/episodes"
+          },
+          "data": [
+            {
+              "type": "episodes",
+              "id": "267335"
+            },
+            {
+              "type": "episodes",
+              "id": "267336"
+            },
+            {
+              "type": "episodes",
+              "id": "267337"
+            },
+            {
+              "type": "episodes",
+              "id": "267338"
+            },
+            {
+              "type": "episodes",
+              "id": "267339"
+            },
+            {
+              "type": "episodes",
+              "id": "267340"
+            },
+            {
+              "type": "episodes",
+              "id": "267341"
+            },
+            {
+              "type": "episodes",
+              "id": "267342"
+            },
+            {
+              "type": "episodes",
+              "id": "267343"
+            },
+            {
+              "type": "episodes",
+              "id": "267344"
+            },
+            {
+              "type": "episodes",
+              "id": "267345"
+            },
+            {
+              "type": "episodes",
+              "id": "267346"
+            }
+          ]
+        },
+        "streamingLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/streaming-links",
+            "related": "https://kitsu.io/api/edge/anime/42413/streaming-links"
+          }
+        },
+        "animeProductions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/anime-productions",
+            "related": "https://kitsu.io/api/edge/anime/42413/anime-productions"
+          }
+        },
+        "animeCharacters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/anime-characters",
+            "related": "https://kitsu.io/api/edge/anime/42413/anime-characters"
+          }
+        },
+        "animeStaff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/42413/relationships/anime-staff",
+            "related": "https://kitsu.io/api/edge/anime/42413/anime-staff"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "267335",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267335"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.033Z",
+        "updatedAt": "2019-06-27T00:58:13.033Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 1,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267335/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267335/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267335/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267335/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267336",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267336"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.054Z",
+        "updatedAt": "2019-06-27T00:58:13.054Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 2,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267336/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267336/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267336/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267336/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267337",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267337"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.069Z",
+        "updatedAt": "2019-06-27T00:58:13.069Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 3,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267337/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267337/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267337/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267337/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267338",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267338"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.084Z",
+        "updatedAt": "2019-06-27T00:58:13.084Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 4,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267338/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267338/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267338/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267338/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267339",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267339"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.099Z",
+        "updatedAt": "2019-06-27T00:58:13.099Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 5,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267339/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267339/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267339/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267339/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267340",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267340"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.114Z",
+        "updatedAt": "2019-06-27T00:58:13.114Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 6,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267340/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267340/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267340/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267340/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267341",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267341"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.128Z",
+        "updatedAt": "2019-06-27T00:58:13.128Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 7,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267341/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267341/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267341/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267341/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267342",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267342"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.145Z",
+        "updatedAt": "2019-06-27T00:58:13.145Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 8,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267342/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267342/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267342/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267342/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267343",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267343"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.156Z",
+        "updatedAt": "2019-06-27T00:58:13.156Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 9,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267343/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267343/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267343/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267343/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267344",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267344"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.166Z",
+        "updatedAt": "2019-06-27T00:58:13.166Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 10,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267344/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267344/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267344/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267344/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267345",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267345"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.188Z",
+        "updatedAt": "2019-06-27T00:58:13.188Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 11,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267345/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267345/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267345/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267345/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "267346",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/267346"
+      },
+      "attributes": {
+        "createdAt": "2019-06-27T00:58:13.197Z",
+        "updatedAt": "2019-06-27T00:58:13.197Z",
+        "synopsis": "",
+        "description": "",
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": 1,
+        "number": 12,
+        "relativeNumber": null,
+        "airdate": null,
+        "length": null,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267346/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/267346/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/267346/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/267346/videos"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=vlad-love&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=vlad-love&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}

@@ -129,3 +129,25 @@ test("import Kitsu OVA", async (t) => {
         "Season 1 Episode 1"
     );
 });
+
+test("import Kitsu ONA", async (t) => {
+    const url = "https://kitsu.io/anime/vlad-love";
+    const { cover, item } = await importTitle(url, {
+        template: {},
+        proxy: testUtil.makeProxy("test.vladlove.json"),
+    });
+    t.deepEqual(item.key, "ona-vladlove");
+    t.deepEqual(item.kind, "ONA");
+    t.deepEqual(item.name.default, "Japanese (Romaji)");
+    t.deepEqual(item.name.alternatives[item.name.default], "VladLove");
+    t.deepEqual(item.entries.length, 12);
+    t.deepEqual(item.extra.external_url, url);
+    t.deepEqual(
+        cover,
+        "https://media.kitsu.io/anime/poster_images/42413/original.jpg?1607695654"
+    );
+    t.deepEqual(
+        item.entries[0].name.alternatives[item.entries[0].name.default],
+        "Season 1 Episode 1"
+    );
+});
