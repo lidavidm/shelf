@@ -1,4 +1,6 @@
 <script>
+    import * as lodash from "lodash";
+
     import EditAlternatives from "./component/EditAlternatives.svelte";
     import EditPeople from "./component/EditPeople.svelte";
     import NullableMultiDate from "./component/NullableMultiDate.svelte";
@@ -17,13 +19,24 @@
     let urlToImport;
     let urlToImportDescription;
 
+    let originalItem = null;
     let item = null;
     let isNewItem = !params.key || params.key === ":template:";
     let loading = fetch(params.key ? "/item/" + params.key : "/item/:template:")
         .then((r) => r.json())
-        .then((value) => (item = value));
+        .then((value) => {
+            item = value;
+            originalItem = JSON.parse(JSON.stringify(value));
+        });
 
     async function save() {
+        if (lodash.isEqual(item, originalItem)) {
+            toastStore.push({
+                title: "Not Saved.",
+                body: "Item was not changed.",
+            });
+            return;
+        }
         try {
             await items.patch(item);
         } catch (error) {
@@ -33,9 +46,10 @@
             });
             return;
         }
+        originalItem = JSON.parse(JSON.stringify(item));
         toastStore.push({
             title: "Updated Entry.",
-            body: item.name.alternatives[item.name.default],
+            body: `“${item.name.alternatives[item.name.default]}”`,
         });
     }
 
