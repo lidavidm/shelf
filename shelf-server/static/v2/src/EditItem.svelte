@@ -111,6 +111,14 @@
             item.name.alternatives[item.name.default]
         )}`;
     }
+
+    function setExtra(prop, value) {
+        if (!item.extra) {
+            item.extra = { [prop]: value };
+        } else {
+            item.extra = { ...item.extra, [prop]: value };
+        }
+    }
 </script>
 
 <style>
@@ -272,6 +280,24 @@
                         <TagList bind:tags={item.tags} />
                     </div>
                     <!-- Extra/URLs -->
+                    <div>
+                        <div>
+                            <label for="mangadex_url">MangaDex URL:</label>
+                            <input
+                                id="mangadex_url"
+                                type="text"
+                                on:change={(e) => setExtra('mangadex_url', e.target.value)}
+                                value={item.extra && item.extra.mangadex_url ? item.extra.mangadex_url : ''} />
+                        </div>
+                        <div>
+                            <label for="external_url">External URL:</label>
+                            <input
+                                id="external_url"
+                                type="text"
+                                on:change={(e) => setExtra('external_url', e.target.value)}
+                                value={item.extra && item.extra.external_url ? item.extra.external_url : ''} />
+                        </div>
+                    </div>
                 </section>
                 <section class="buttons">
                     <button>Cancel</button>

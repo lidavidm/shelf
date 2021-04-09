@@ -529,6 +529,18 @@
                                             alt="MyAnimeList" />
                                     </a>
                                 {/if}
+                                {#if item.extra && item.extra.external_url}
+                                    <a
+                                        href={item.extra.external_url}
+                                        target="_blank"
+                                        title="External Link">
+                                        <span
+                                            class="material-icons"
+                                            aria-hidden="true">
+                                            add_box
+                                        </span>
+                                    </a>
+                                {/if}
                             </div>
                             <div class="item-bar">
                                 <span><strong>{item.kind}</strong></span>
