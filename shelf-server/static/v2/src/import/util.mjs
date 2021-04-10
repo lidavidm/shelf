@@ -13,6 +13,7 @@
 //     limitations under the License.
 
 import anyAscii from "any-ascii";
+import * as jsdom from "jsdom";
 import * as wanakana from "wanakana";
 
 export async function proxy(url, options = {}) {
@@ -72,4 +73,18 @@ export function titleToKey(title) {
         .replace(/ +/g, "-")
         .replace(/^-+/, "")
         .replace(/-+$/, "");
+}
+
+export let parse;
+if (typeof global !== "undefined") {
+    console.log("Using JSDOM for HTML parsing");
+    parse = (source) =>
+        new jsdom.JSDOM(source, { contentType: "text/html" }).window.document;
+} else {
+    console.log("Using window.DOMParser for HTML parsing");
+    parse = (source) => {
+        const parser = new window.DOMParser();
+        const doc = parser.parseFromString(source, "text/html");
+        return doc.documentElement;
+    };
 }

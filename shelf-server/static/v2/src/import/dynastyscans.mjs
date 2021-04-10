@@ -13,17 +13,18 @@
 //     limitations under the License.
 
 import { formatISO } from "date-fns";
-import * as jsdom from "jsdom";
 import * as util from "./util.mjs";
 
-export default async function mangadex(
+export default async function dynastyScans(
     rawUrl,
     { template, proxy = util.defaultProxy }
 ) {
     const body = await proxy(rawUrl);
     const document = util.parse(body);
 
-    const title = document.querySelector("h6.card-header").textContent.trim();
+    // TODO: also implement a path to import a series
+
+    const title = document.querySelector("#chapter-title b").textContent.trim();
 
     const key = "manga-" + util.titleToKey(title);
 
@@ -33,26 +34,39 @@ export default async function mangadex(
             English: title,
         },
     };
-    const nameList = document.querySelectorAll(
-        ".card-body.p-0 > .row > div:nth-child(2) > div:nth-child(2) .list-inline-item"
-    );
-    let ctr = 1;
-    for (const el of nameList) {
-        names.alternatives[`Alternate Name ${ctr}`] = el.textContent.trim();
-        ctr++;
-    }
 
     const entries = [];
     template.key = key;
     template.kind = "Manga";
     template.name = names;
     template.added = formatISO(new Date());
+    template.started = template.added;
+    template.completed = template.added;
+    template.publication_status = "Complete";
+    const url = new URL(rawUrl);
+    url.hash = "";
     template.extra = {
-        mangadex_url: rawUrl,
+        external_url: url.toString(),
     };
-    template.status = "InProgress";
+    template.status = "Completed";
+    template.tags = ["Oneshot", "Yuri"];
+    template.entries = [
+        {
+            number: 1,
+            volume: null,
+            name: {
+                default: "English",
+                alternatives: {
+                    English: "Oneshot",
+                },
+            },
+            completed: template.added,
+            extra: null,
+        },
+    ];
+    url.pathname = document.querySelector("#image img").getAttribute("src");
     return {
-        cover: document.querySelector("img.rounded").getAttribute("src"),
+        cover: url.toString(),
         item: template,
     };
 }

@@ -3,6 +3,7 @@
     import firstBy from "thenby";
 
     import * as itemEdit from "./item-edit.mjs";
+    import importDynastyScans from "./import/dynastyscans.mjs";
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
@@ -110,6 +111,9 @@
         const url = new URL(urlToImport);
         let importer;
         switch (url.hostname) {
+            case "dynasty-scans.com":
+                importer = importDynastyScans;
+                break;
             case "kitsu.io":
                 importer = importKitsu;
                 break;
@@ -165,7 +169,7 @@
                     body: itemBody,
                 }
             );
-            console.log(await itemUpload.json());
+            console.log(await itemUpload.text());
             toastStore.push({
                 title: "Created Item.",
                 body: item.name.alternatives[item.name.default],
