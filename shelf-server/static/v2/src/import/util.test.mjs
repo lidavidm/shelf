@@ -7,3 +7,8 @@ test("titleToKey", (t) => {
     t.deepEqual(util.titleToKey("39 Music!"), "39-music");
     t.deepEqual(util.titleToKey(" white  space  "), "white-space");
 });
+
+test("titleToKey handles Unicode", (t) => {
+    t.deepEqual(util.titleToKey("実は私は…"), "shi-ha-si-ha");
+    t.deepEqual(util.titleToKey("陈心云"), "chenxinyun");
+});

@@ -12,6 +12,9 @@
 //     See the License for the specific language governing permissions and
 //     limitations under the License.
 
+import anyAscii from "any-ascii";
+import * as wanakana from "wanakana";
+
 export async function proxy(url, options = {}) {
     const params = {
         url,
@@ -53,9 +56,20 @@ export function langCodeToName(code) {
 }
 
 export function titleToKey(title) {
+    title = wanakana
+        .tokenize(title)
+        .map((token) => {
+            if (wanakana.isJapanese(token)) {
+                return anyAscii(wanakana.toRomaji(token));
+            }
+            return anyAscii(token);
+        })
+        .join(" ");
     return title
         .toLowerCase()
         .trim()
         .replace(/[^ a-z0-9]/g, "")
-        .replace(/ +/g, "-");
+        .replace(/ +/g, "-")
+        .replace(/^-+/, "")
+        .replace(/-+$/, "");
 }

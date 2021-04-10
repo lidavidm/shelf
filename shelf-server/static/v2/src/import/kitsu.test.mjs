@@ -110,7 +110,7 @@ test("import Kitsu OVA", async (t) => {
     });
     t.deepEqual(
         item.key,
-        "ova-kobayashisan-chi-no-maid-dragon-valentine-soshite-onsen-amari-kitai-shinaide-kudasai"
+        "ova-kobayashi-san-chi-no-maid-dragon-valentine-soshite-onsen-amari-kitai-shinaide-kudasai"
     );
     t.deepEqual(item.kind, "OVA");
     t.deepEqual(item.name.default, "Japanese (Romaji)");

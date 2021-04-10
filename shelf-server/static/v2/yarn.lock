@@ -232,6 +232,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0, ansi-styles@^4.2.1:
   dependencies:
     color-convert "^2.0.1"
 
+any-ascii@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/any-ascii/-/any-ascii-0.1.7.tgz#1fe772506f07cc6270cb797e9ef5d403da3b129c"
+  integrity sha512-9zc8XIPeG9lDGtjiQGQtRF2+ow97/eTtZJR7K4UvciSC5GSOySYoytXeA2fSaY8pLhpRMcAsiZDEEkuU20HD8g==
+
 any-promise@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
@@ -3129,6 +3134,11 @@ w3c-xmlserializer@^2.0.0:
   integrity sha512-4tzD0mF8iSiMiNs30BiLO3EpfGLZUT2MSX/G+o7ZywDzliWQ3OPtTZ0PTC3B3ca1UAf4cJMHB+2Bf56EriJuRA==
   dependencies:
     xml-name-validator "^3.0.0"
+
+wanakana@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/wanakana/-/wanakana-4.0.2.tgz#a7d60186724a56fd50e6e9c224628c09294901d8"
+  integrity sha512-lBFtnLJhTpp5wQBdH7TrOHhLxqmUabAfL86plNN8+iffyhosjZyx+kkO8KEBGR8zWH5nxSQ67oyx3W/lcEC8sg==
 
 wcwidth@^1.0.1:
   version "1.0.1"
