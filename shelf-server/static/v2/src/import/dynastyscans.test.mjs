@@ -12,7 +12,10 @@ test("import Dynasty Scans oneshot", async (t) => {
         template: { entries: [] },
         proxy,
     });
-    t.deepEqual(item.key, "manga-beginning-their-new-life-together");
+    t.deepEqual(
+        item.key,
+        "manga-kodama-naoko-beginning-their-new-life-together"
+    );
     t.deepEqual(item.kind, "Manga");
     t.deepEqual(item.name.default, "English");
     t.deepEqual(item.added, item.started);

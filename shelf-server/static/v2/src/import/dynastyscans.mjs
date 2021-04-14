@@ -25,8 +25,11 @@ export default async function dynastyScans(
     // TODO: also implement a path to import a series
 
     const title = document.querySelector("#chapter-title b").textContent.trim();
+    const author = document
+        .querySelector("#chapter-title > a")
+        .textContent.trim();
 
-    const key = "manga-" + util.titleToKey(title);
+    const key = `manga-${util.titleToKey(author)}-${util.titleToKey(title)}`;
 
     const names = {
         default: "English",
