@@ -174,7 +174,7 @@
                 title: "Created Item.",
                 body: item.name.alternatives[item.name.default],
             });
-            reload();
+            router.show("/edit/" + item.key);
         } catch (err) {
             console.error(err);
             toastStore.push({
