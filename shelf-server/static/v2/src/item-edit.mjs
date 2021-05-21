@@ -21,23 +21,41 @@ export function completeNextEntry(item) {
 
 /** Add the next entry of an item. */
 export function addNextEntry(item, count = 1, givenVolume = null) {
-    let volume = givenVolume;
-    let number = 1;
-    if (item.entries.length !== 0) {
-        const lastCompleted = item.entries[item.entries.length - 1];
-        if (volume == null) {
-            volume = lastCompleted.volume;
-        }
-        number = lastCompleted.number + 1;
-    }
-
     const entries = [];
     for (let i = 0; i < count; i++) {
+        let volume = givenVolume;
+        let number = 1;
+        let userNumber = 1;
+        let namePrefix = entryName(item.kind);
+        if (item.entries.length !== 0) {
+            const lastCompleted = item.entries[item.entries.length - 1];
+            if (volume == null) {
+                volume = lastCompleted.volume;
+            }
+            number = lastCompleted.number + 1;
+            userNumber = number;
+            // Infer actual number from chapter title
+            if (lastCompleted.name) {
+                const name =
+                    lastCompleted.name.alternatives[lastCompleted.name.default];
+                const match = name.match(
+                    /^(Volume|Chapter|Episode)\s+([0-9]+(?:\.[0-9]+)?)$/
+                );
+                if (match) {
+                    namePrefix = match[1];
+                    userNumber = Math.floor(Number.parseFloat(match[2])) + 1;
+                }
+                if (namePrefix === "Volume") {
+                    volume = userNumber;
+                }
+            }
+        }
+
         const entry = {
             name: {
                 default: "English",
                 alternatives: {
-                    English: `${entryName(item.kind)} ${number}`,
+                    English: `${namePrefix} ${userNumber}`,
                 },
             },
             number,
