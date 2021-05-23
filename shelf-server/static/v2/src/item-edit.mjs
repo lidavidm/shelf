@@ -39,7 +39,7 @@ export function addNextEntry(item, count = 1, givenVolume = null) {
                 const name =
                     lastCompleted.name.alternatives[lastCompleted.name.default];
                 const match = name.match(
-                    /^(Volume|Chapter|Episode)\s+([0-9]+(?:\.[0-9]+)?)$/
+                    /^(Volume|Chapter|Episode)\s+([0-9]+(?:\.[0-9]+)?)/
                 );
                 if (match) {
                     namePrefix = match[1];

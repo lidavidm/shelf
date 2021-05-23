@@ -87,6 +87,25 @@ test("follow numbering/naming scheme", (t) => {
     t.deepEqual(5, item.entries[1].volume);
     t.deepEqual(2, item.entries[1].number);
     t.deepEqual("Episode 26", item.entries[1].name.alternatives["English"]);
+
+    [item] = itemEdit.completeNextEntry({
+        kind: "Manga",
+        entries: [
+            {
+                name: {
+                    default: "English",
+                    alternatives: { English: "Chapter 16: A Bad Omen" },
+                },
+                completed: true,
+                volume: 1,
+                number: 1,
+            },
+        ],
+    });
+    t.deepEqual(2, item.entries.length);
+    t.deepEqual(1, item.entries[1].volume);
+    t.deepEqual(2, item.entries[1].number);
+    t.deepEqual("Chapter 17", item.entries[1].name.alternatives["English"]);
 });
 
 test("add new item", (t) => {
