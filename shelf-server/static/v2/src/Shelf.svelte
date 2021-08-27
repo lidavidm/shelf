@@ -3,6 +3,7 @@
     import firstBy from "thenby";
 
     import * as itemEdit from "./item-edit.mjs";
+    import importCubari from "./import/cubari.mjs";
     import importDynastyScans from "./import/dynastyscans.mjs";
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
@@ -111,6 +112,9 @@
         const url = new URL(urlToImport);
         let importer;
         switch (url.hostname) {
+            case "cubari.moe":
+                importer = importCubari;
+                break;
             case "dynasty-scans.com":
                 importer = importDynastyScans;
                 break;
