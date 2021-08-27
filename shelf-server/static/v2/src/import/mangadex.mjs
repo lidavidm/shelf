@@ -20,39 +20,52 @@ export default async function mangadex(
     rawUrl,
     { template, proxy = util.defaultProxy }
 ) {
-    const body = await proxy(rawUrl);
-    const document = util.parse(body);
+    const url = new URL(rawUrl);
+    const uuid = url.pathname.match(/\/(?:manga|title)\/([a-zA-Z0-9-]+)/)[1];
+    const body = await proxy(`https://api.mangadex.org/manga/${uuid}`);
+    const document = JSON.parse(body);
 
-    const title = document.querySelector("h6.card-header").textContent.trim();
-
-    const key = "manga-" + util.titleToKey(title);
-
+    const rawTitles = document.data.attributes.title;
+    const title = rawTitles[Object.keys(rawTitles)[0]];
     const names = {
         default: "English",
         alternatives: {
             English: title,
         },
     };
-    const nameList = document.querySelectorAll(
-        ".card-body.p-0 > .row > div:nth-child(2) > div:nth-child(2) .list-inline-item"
-    );
-    let ctr = 1;
-    for (const el of nameList) {
-        names.alternatives[`Alternate Name ${ctr}`] = el.textContent.trim();
-        ctr++;
-    }
+    const key = "manga-" + util.titleToKey(title);
 
     const entries = [];
     template.key = key;
     template.kind = "Manga";
     template.name = names;
     template.added = formatISO(new Date());
+    template.started = formatISO(new Date());
     template.extra = {
         mangadex_url: rawUrl,
     };
     template.status = "InProgress";
+    template.publication_status =
+        document.data.attributes.status === "completed"
+            ? "Complete"
+            : "Publishing";
+
+    let coverArt = null;
+    for (const relationship of document.relationships) {
+        if (relationship.type === "cover_art") {
+            coverArt = relationship.id;
+            break;
+        }
+    }
+    if (coverArt === null) {
+        throw new Error("Could not find cover art!");
+    }
+
+    const cover = await proxy(`https://api.mangadex.org/cover/${coverArt}`);
+    const coverDocument = JSON.parse(cover);
+
     return {
-        cover: document.querySelector("img.rounded").getAttribute("src"),
+        cover: `https://uploads.mangadex.org/covers/${uuid}/${coverDocument.data.attributes.fileName}`,
         item: template,
     };
 }
