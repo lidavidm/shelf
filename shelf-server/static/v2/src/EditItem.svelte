@@ -18,6 +18,7 @@ You may obtain a copy of the License at
 
     import EditAlternatives from "./component/EditAlternatives.svelte";
     import EditPeople from "./component/EditPeople.svelte";
+    import EditSeries from "./component/EditSeries.svelte";
     import NullableMultiDate from "./component/NullableMultiDate.svelte";
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
@@ -105,6 +106,13 @@ You may obtain a copy of the License at
             toastStore.push({
                 title: "Error.",
                 body: "Must provide description",
+            });
+            return;
+        }
+        if (!item.key) {
+            toastStore.push({
+                title: "Error.",
+                body: "Item must have a key.",
             });
             return;
         }
@@ -307,6 +315,9 @@ You may obtain a copy of the License at
                     <!-- Series -->
                     <div>
                         <TagList bind:tags={item.tags} />
+                    </div>
+                    <div>
+                        <EditSeries bind:series={item.series} />
                     </div>
                     <!-- Extra/URLs -->
                     <div>
