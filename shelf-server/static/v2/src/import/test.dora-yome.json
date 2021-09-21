@@ -1,5 +1,6 @@
 {
   "result": "ok",
+  "response": "entity",
   "data": {
     "id": "8280d386-8195-40da-8cbb-e8763ba3a93a",
     "type": "manga",
@@ -49,7 +50,8 @@
             "description": [],
             "group": "format",
             "version": 1
-          }
+          },
+          "relationships": []
         },
         {
           "id": "423e2eae-a7a2-4a8b-ac03-a8351462d71d",
@@ -61,7 +63,8 @@
             "description": [],
             "group": "genre",
             "version": 1
-          }
+          },
+          "relationships": []
         },
         {
           "id": "4d32cc48-9f00-4cca-9b5a-a839f0764984",
@@ -73,7 +76,8 @@
             "description": [],
             "group": "genre",
             "version": 1
-          }
+          },
+          "relationships": []
         },
         {
           "id": "cdc58593-87dd-415e-bbc0-2ec27bf404cc",
@@ -85,7 +89,8 @@
             "description": [],
             "group": "genre",
             "version": 1
-          }
+          },
+          "relationships": []
         },
         {
           "id": "dd1f77c5-dea9-4e2b-97ae-224af09caf99",
@@ -97,26 +102,27 @@
             "description": [],
             "group": "theme",
             "version": 1
-          }
+          },
+          "relationships": []
         }
       ],
       "createdAt": "2019-03-02T06:00:54+00:00",
       "updatedAt": "2021-05-25T15:44:25+00:00",
       "version": 2
-    }
-  },
-  "relationships": [
-    {
-      "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
-      "type": "author"
     },
-    {
-      "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
-      "type": "artist"
-    },
-    {
-      "id": "4c150271-745a-4f4c-8156-9535df11b207",
-      "type": "cover_art"
-    }
-  ]
+    "relationships": [
+      {
+        "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
+        "type": "author"
+      },
+      {
+        "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
+        "type": "artist"
+      },
+      {
+        "id": "4c150271-745a-4f4c-8156-9535df11b207",
+        "type": "cover_art"
+      }
+    ]
+  }
 }

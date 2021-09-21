@@ -51,7 +51,7 @@ export default async function mangadex(
             : "Publishing";
 
     let coverArt = null;
-    for (const relationship of document.relationships) {
+    for (const relationship of document.data.relationships) {
         if (relationship.type === "cover_art") {
             coverArt = relationship.id;
             break;
