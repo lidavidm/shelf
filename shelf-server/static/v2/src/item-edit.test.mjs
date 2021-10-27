@@ -177,3 +177,35 @@ test("add volume", (t) => {
     t.deepEqual("Chapter 1", item.entries[0].name.alternatives["English"]);
     t.deepEqual(false, item.entries[0].completed);
 });
+
+test("add volume and restart numbering", (t) => {
+    let [item] = itemEdit.addNextEntry(
+        {
+            kind: "Manga",
+            entries: [],
+        },
+        2,
+        3
+    );
+    t.deepEqual(2, item.entries.length);
+    t.deepEqual(3, item.entries[0].volume);
+    t.deepEqual(1, item.entries[0].number);
+    t.deepEqual("Chapter 1", item.entries[0].name.alternatives["English"]);
+    t.deepEqual(false, item.entries[0].completed);
+
+    [item] = itemEdit.addNextEntry(item, 2, 4, { restartNumbering: true });
+    t.deepEqual(4, item.entries.length);
+    t.deepEqual(4, item.entries[2].volume);
+    t.deepEqual(3, item.entries[2].number);
+    t.deepEqual("Chapter 1", item.entries[2].name.alternatives["English"]);
+
+    t.deepEqual(4, item.entries[3].volume);
+    t.deepEqual(4, item.entries[3].number);
+    t.deepEqual("Chapter 2", item.entries[3].name.alternatives["English"]);
+
+    [item] = itemEdit.addNextEntry(item, 1, null, { restartNumbering: true });
+    t.deepEqual(5, item.entries.length);
+    t.deepEqual(4, item.entries[4].volume);
+    t.deepEqual(5, item.entries[4].number);
+    t.deepEqual("Chapter 3", item.entries[4].name.alternatives["English"]);
+});

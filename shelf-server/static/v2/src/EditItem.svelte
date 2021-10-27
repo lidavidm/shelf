@@ -78,7 +78,9 @@ You may obtain a copy of the License at
     async function addVolume() {
         const volume = parseInt(window.prompt("Volume number?"), 10);
         const count = parseInt(window.prompt("Number of entries to add?"), 10);
-        const [newItem] = itemEdit.addNextEntry(item, count, volume);
+        const [newItem] = itemEdit.addNextEntry(item, count, volume, {
+            restartNumbering: getEditProp("volumes_restart_numbering"),
+        });
         item = newItem;
     }
 
@@ -154,6 +156,31 @@ You may obtain a copy of the License at
             item.extra = { [prop]: value };
         } else {
             item.extra = { ...item.extra, [prop]: value };
+        }
+    }
+
+    function getEditProp(prop, defaultValue) {
+        if (
+            !item.extra ||
+            !item.extra.editing ||
+            typeof item.extra.editing[prop] === "undefined"
+        ) {
+            return defaultValue;
+        }
+        return item.extra.editing[prop];
+    }
+
+    function setEditProp(prop, value) {
+        if (!item.extra) {
+            item.extra = { editing: { [prop]: value } };
+        } else {
+            item.extra = {
+                ...item.extra,
+                editing: {
+                    ...(item.extra.editing || {}),
+                    [prop]: value,
+                },
+            };
         }
     }
 </script>
@@ -361,6 +388,15 @@ You may obtain a copy of the License at
                             <button
                                 on:click={() => completeMultipleEntries()}>Complete
                                 Multiple Entries</button>
+                        </div>
+                        <div>
+                            <label for="restart-numbering">Volumes Restart
+                                Numbering</label>
+                            <input
+                                id="restart-numbering"
+                                type="checkbox"
+                                checked={getEditProp('volumes_restart_numbering', false)}
+                                on:change={(e) => setEditProp('volumes_restart_numbering', e.target.value === 'on' ? true : false)} />
                         </div>
                         <table>
                             <thead>

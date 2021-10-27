@@ -33,6 +33,15 @@ export default async function mangadex(
             English: title,
         },
     };
+
+    let counter = 1;
+    for (const title of document.data.attributes.altTitles) {
+        names.alternatives[`Alternate Title ${counter}`] = Object.values(
+            title
+        )[0];
+        counter++;
+    }
+
     const key = "manga-" + util.titleToKey(title);
 
     const entries = [];

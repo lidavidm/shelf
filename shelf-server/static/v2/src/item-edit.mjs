@@ -20,8 +20,14 @@ export function completeNextEntry(item) {
 }
 
 /** Add the next entry of an item. */
-export function addNextEntry(item, count = 1, givenVolume = null) {
+export function addNextEntry(
+    item,
+    count = 1,
+    givenVolume = null,
+    options = null
+) {
     const entries = [];
+    const restartNumbering = options && options.restartNumbering;
     for (let i = 0; i < count; i++) {
         let volume = givenVolume;
         let number = 1;
@@ -34,8 +40,10 @@ export function addNextEntry(item, count = 1, givenVolume = null) {
             }
             number = lastCompleted.number + 1;
             userNumber = number;
-            // Infer actual number from chapter title
-            if (lastCompleted.name) {
+            if (restartNumbering && volume != lastCompleted.volume) {
+                userNumber = 1;
+            } else if (lastCompleted.name) {
+                // Infer actual number from chapter title
                 const name =
                     lastCompleted.name.alternatives[lastCompleted.name.default];
                 const match = name.match(
