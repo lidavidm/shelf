@@ -100,7 +100,7 @@ test("import Kitsu movie", async (t) => {
     );
 });
 
-test("import Kitsu OVA", async (t) => {
+test("import Kitsu special", async (t) => {
     const url = "https://kitsu.io/anime/kobayashi-san-chi-no-maid-dragon-ova";
     const { cover, item } = await importTitle(url, {
         template: {},
@@ -127,6 +127,27 @@ test("import Kitsu OVA", async (t) => {
     t.deepEqual(
         item.entries[0].name.alternatives[item.entries[0].name.default],
         "Season 1 Episode 1"
+    );
+});
+
+test("import Kitsu OVA", async (t) => {
+    const url = "https://kitsu.io/anime/tokyo-marble-chocolate";
+    const { cover, item } = await importTitle(url, {
+        template: {},
+        proxy: testUtil.makeProxy("test.tokyo-marble-chocolate.json"),
+    });
+    t.deepEqual(item.key, "ova-tokyo-marble-chocolate");
+    t.deepEqual(item.kind, "OVA");
+    t.deepEqual(item.name.default, "English");
+    t.deepEqual(
+        item.name.alternatives[item.name.default],
+        "Tokyo Marble Chocolate"
+    );
+    t.deepEqual(item.entries.length, 2);
+    t.deepEqual(item.extra.external_url, url);
+    t.deepEqual(
+        item.entries[0].name.alternatives[item.entries[0].name.default],
+        "Episode 1"
     );
 });
 

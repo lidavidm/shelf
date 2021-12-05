@@ -1,0 +1,306 @@
+{
+  "data": [
+    {
+      "id": "2784",
+      "type": "anime",
+      "links": {
+        "self": "https://kitsu.io/api/edge/anime/2784"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T16:43:22.516Z",
+        "updatedAt": "2021-12-05T12:00:09.066Z",
+        "slug": "tokyo-marble-chocolate",
+        "synopsis": "Serious and generous, but a bit shy, Yuudai has been unsuccessful with the opposite gender.\nChizuru is an energetic and cheerful girl, but when it comes to boyfriends, she's been unlucky and clumsy, and never had a steady relationship. This is the first Christmas the couple spends together. Chizuru loves animals and Yuudai plans to give her a rabbit in a box, but it turns out to be... a mini donkey?! As the funny creature escapes, Chizuru goes after it, and Yuudai loses sight of them both!\nThe time that should have been spent together...\nThe important feeling that should have been revealed...\nSmall, but precious things that tend to be buried in every day life.\nWhat answer will the two youngsters find while separated from each other?\nYuudai and Chizuru - their feelings and the time they spent far from each other are delicately unfolded in this double-sided pure love story told from two different perspectives! \n(Source: Production I.G.)",
+        "description": "Serious and generous, but a bit shy, Yuudai has been unsuccessful with the opposite gender.\nChizuru is an energetic and cheerful girl, but when it comes to boyfriends, she's been unlucky and clumsy, and never had a steady relationship. This is the first Christmas the couple spends together. Chizuru loves animals and Yuudai plans to give her a rabbit in a box, but it turns out to be... a mini donkey?! As the funny creature escapes, Chizuru goes after it, and Yuudai loses sight of them both!\nThe time that should have been spent together...\nThe important feeling that should have been revealed...\nSmall, but precious things that tend to be buried in every day life.\nWhat answer will the two youngsters find while separated from each other?\nYuudai and Chizuru - their feelings and the time they spent far from each other are delicately unfolded in this double-sided pure love story told from two different perspectives! \n(Source: Production I.G.)",
+        "coverImageTopOffset": 250,
+        "titles": {
+          "en": "Tokyo Marble Chocolate",
+          "en_jp": "Tokyo Marble Chocolate",
+          "en_us": "Tokyo Marble Chocolate",
+          "ja_jp": "東京マーブルチョコレート"
+        },
+        "canonicalTitle": "Tokyo Marble Chocolate",
+        "abbreviatedTitles": [
+          "Zenryoku Shounen",
+          "Matta Aimashou"
+        ],
+        "averageRating": "71.38",
+        "ratingFrequencies": {
+          "2": "7",
+          "3": "0",
+          "4": "10",
+          "5": "1",
+          "6": "14",
+          "7": "1",
+          "8": "52",
+          "9": "1",
+          "10": "90",
+          "11": "1",
+          "12": "223",
+          "13": "2",
+          "14": "381",
+          "15": "6",
+          "16": "333",
+          "17": "6",
+          "18": "110",
+          "19": "0",
+          "20": "83"
+        },
+        "userCount": 2346,
+        "favoritesCount": 7,
+        "startDate": "2007-12-05",
+        "endDate": "2007-12-05",
+        "nextRelease": null,
+        "popularityRank": 3233,
+        "ratingRank": 3527,
+        "ageRating": "PG",
+        "ageRatingGuide": "Teens 13 or older",
+        "subtype": "OVA",
+        "status": "finished",
+        "tba": null,
+        "posterImage": {
+          "tiny": "https://media.kitsu.io/anime/poster_images/2784/tiny.jpg",
+          "large": "https://media.kitsu.io/anime/poster_images/2784/large.jpg",
+          "small": "https://media.kitsu.io/anime/poster_images/2784/small.jpg",
+          "medium": "https://media.kitsu.io/anime/poster_images/2784/medium.jpg",
+          "original": "https://media.kitsu.io/anime/poster_images/2784/original.jpg",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 110,
+                "height": 156
+              },
+              "large": {
+                "width": 550,
+                "height": 780
+              },
+              "small": {
+                "width": 284,
+                "height": 402
+              },
+              "medium": {
+                "width": 390,
+                "height": 554
+              }
+            }
+          }
+        },
+        "coverImage": {
+          "tiny": "https://media.kitsu.io/anime/cover_images/2784/tiny.jpg",
+          "large": "https://media.kitsu.io/anime/cover_images/2784/large.jpg",
+          "small": "https://media.kitsu.io/anime/cover_images/2784/small.jpg",
+          "original": "https://media.kitsu.io/anime/cover_images/2784/original.jpg",
+          "meta": {
+            "dimensions": {
+              "tiny": {
+                "width": 840,
+                "height": 200
+              },
+              "large": {
+                "width": 3360,
+                "height": 800
+              },
+              "small": {
+                "width": 1680,
+                "height": 400
+              }
+            }
+          }
+        },
+        "episodeCount": 2,
+        "episodeLength": 26,
+        "totalLength": 52,
+        "youtubeVideoId": "gt_Wdcbk3vU",
+        "showType": "OVA",
+        "nsfw": false
+      },
+      "relationships": {
+        "genres": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/genres",
+            "related": "https://kitsu.io/api/edge/anime/2784/genres"
+          }
+        },
+        "categories": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/categories",
+            "related": "https://kitsu.io/api/edge/anime/2784/categories"
+          }
+        },
+        "castings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/castings",
+            "related": "https://kitsu.io/api/edge/anime/2784/castings"
+          }
+        },
+        "installments": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/installments",
+            "related": "https://kitsu.io/api/edge/anime/2784/installments"
+          }
+        },
+        "mappings": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/mappings",
+            "related": "https://kitsu.io/api/edge/anime/2784/mappings"
+          }
+        },
+        "reviews": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/reviews",
+            "related": "https://kitsu.io/api/edge/anime/2784/reviews"
+          }
+        },
+        "mediaRelationships": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/media-relationships",
+            "related": "https://kitsu.io/api/edge/anime/2784/media-relationships"
+          }
+        },
+        "characters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/characters",
+            "related": "https://kitsu.io/api/edge/anime/2784/characters"
+          }
+        },
+        "staff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/staff",
+            "related": "https://kitsu.io/api/edge/anime/2784/staff"
+          }
+        },
+        "productions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/productions",
+            "related": "https://kitsu.io/api/edge/anime/2784/productions"
+          }
+        },
+        "quotes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/quotes",
+            "related": "https://kitsu.io/api/edge/anime/2784/quotes"
+          }
+        },
+        "episodes": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/episodes",
+            "related": "https://kitsu.io/api/edge/anime/2784/episodes"
+          },
+          "data": [
+            {
+              "type": "episodes",
+              "id": "47263"
+            },
+            {
+              "type": "episodes",
+              "id": "47264"
+            }
+          ]
+        },
+        "streamingLinks": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/streaming-links",
+            "related": "https://kitsu.io/api/edge/anime/2784/streaming-links"
+          }
+        },
+        "animeProductions": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/anime-productions",
+            "related": "https://kitsu.io/api/edge/anime/2784/anime-productions"
+          }
+        },
+        "animeCharacters": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/anime-characters",
+            "related": "https://kitsu.io/api/edge/anime/2784/anime-characters"
+          }
+        },
+        "animeStaff": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/anime/2784/relationships/anime-staff",
+            "related": "https://kitsu.io/api/edge/anime/2784/anime-staff"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "47263",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/47263"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T18:24:39.274Z",
+        "updatedAt": "2018-11-27T20:44:42.560Z",
+        "synopsis": null,
+        "description": null,
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": null,
+        "number": 1,
+        "relativeNumber": 1,
+        "airdate": null,
+        "length": 26,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/47263/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/47263/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/47263/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/47263/videos"
+          }
+        }
+      }
+    },
+    {
+      "id": "47264",
+      "type": "episodes",
+      "links": {
+        "self": "https://kitsu.io/api/edge/episodes/47264"
+      },
+      "attributes": {
+        "createdAt": "2013-02-20T18:24:39.278Z",
+        "updatedAt": "2018-11-27T20:44:42.560Z",
+        "synopsis": null,
+        "description": null,
+        "titles": {},
+        "canonicalTitle": null,
+        "seasonNumber": null,
+        "number": 2,
+        "relativeNumber": 2,
+        "airdate": null,
+        "length": 26,
+        "thumbnail": null
+      },
+      "relationships": {
+        "media": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/47264/relationships/media",
+            "related": "https://kitsu.io/api/edge/episodes/47264/media"
+          }
+        },
+        "videos": {
+          "links": {
+            "self": "https://kitsu.io/api/edge/episodes/47264/relationships/videos",
+            "related": "https://kitsu.io/api/edge/episodes/47264/videos"
+          }
+        }
+      }
+    }
+  ],
+  "meta": {
+    "count": 1
+  },
+  "links": {
+    "first": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=tokyo-marble-chocolate&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0",
+    "last": "https://kitsu.io/api/edge/anime?fields%5Bcategories%5D=slug%2Ctitle&filter%5Bslug%5D=tokyo-marble-chocolate&include=episodes&page%5Blimit%5D=10&page%5Boffset%5D=0"
+  }
+}

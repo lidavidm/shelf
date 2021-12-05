@@ -42,7 +42,10 @@ export default async function kitsu(
         kind = "TV";
     } else if (anime.attributes.subtype === "movie") {
         kind = "Film";
-    } else if (anime.attributes.subtype === "special") {
+    } else if (
+        anime.attributes.subtype === "special" ||
+        anime.attributes.subtype === "OVA"
+    ) {
         kind = "OVA";
     } else if (anime.attributes.subtype === "ONA") {
         kind = "ONA";
