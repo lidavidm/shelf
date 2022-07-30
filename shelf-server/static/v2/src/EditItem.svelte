@@ -211,12 +211,12 @@ You may obtain a copy of the License at
 
     .columns > .column {
         border-right: 1px dotted #000;
-        flex: 1 1 calc(33% - 1em);
+        flex: 1 1 calc(50%);
         padding: 0 0.5em;
     }
 
     .columns > .column:first-child {
-        flex: 1 0 calc(33.3% - 0.5em);
+        flex: 1 0 calc(50%);
         padding: 0 0.5em 0 0;
     }
 
@@ -239,22 +239,23 @@ You may obtain a copy of the License at
             <span
                 class="edit-item-name">{item.name.alternatives[item.name.default]}</span>
         </TitleBar>
-        <p>Added {item.added}</p>
+        <p>Added: {item.added}. Key: {item.key}</p>
 
         <div class="columns">
             <div class="column">
                 <section>
-                    <div>
-                        <label for="key">Key:</label>
-                        <input
-                            id="key"
-                            readonly={!isNewItem}
-                            type="text"
-                            bind:value={item.key} />
-                        {#if isNewItem}
-                            <button on:click={generateKey}>Generate From Title</button>
-                        {/if}
-                    </div>
+                    {#if isNewItem}
+                        <div>
+                            <label for="key">Key:</label>
+                            <input
+                                id="key"
+                                type="text"
+                                bind:value={item.key} />
+                            {#if isNewItem}
+                                <button on:click={generateKey}>Generate From Title</button>
+                            {/if}
+                        </div>
+                    {/if}
                     <div>
                         <label for="kind">Kind:</label>
                         <select id="kind" bind:value={item.kind}>
@@ -370,6 +371,39 @@ You may obtain a copy of the License at
                     <button>Cancel</button>
                     <button on:click={save}>Save</button>
                 </section>
+
+                <section id="covers">
+                    <h2>Covers</h2>
+                    <div>
+                        <label for="import">Import URL:</label>
+                        <input id="import" type="text" bind:value={urlToImport} />
+                        <label for="import-description">Description:</label>
+                        <input
+                            id="import-description"
+                            type="text"
+                            bind:value={urlToImportDescription} />
+                        <button on:click={importUrl}>Import</button>
+                    </div>
+                    {#if item.covers.length > 0}
+                        {#each item.covers as cover, index}
+                            <div>
+                                <img
+                                    src={'/blob/' + cover.key + '/contents'}
+                                    alt={cover.description} />
+                                <div>
+                                    <input
+                                        type="text"
+                                        bind:value={cover.description} />
+                                    <button
+                                        on:click={() => setPrimaryCover(index)}>Make
+                                        Primary Cover</button>
+                                </div>
+                            </div>
+                        {/each}
+                    {:else}
+                        <p>No covers.</p>
+                    {/if}
+                </section>
             </div>
 
             <div class="column">
@@ -425,40 +459,6 @@ You may obtain a copy of the License at
                     </div>
                 </section>
             </div>
-
-            <div class="column" id="covers">
-                <h2>Covers</h2>
-                <div>
-                    <label for="import">Import URL:</label>
-                    <input id="import" type="text" bind:value={urlToImport} />
-                    <label for="import-description">Description:</label>
-                    <input
-                        id="import-description"
-                        type="text"
-                        bind:value={urlToImportDescription} />
-                    <button on:click={importUrl}>Import</button>
-                </div>
-                {#if item.covers.length > 0}
-                    {#each item.covers as cover, index}
-                        <div>
-                            <img
-                                src={'/blob/' + cover.key + '/contents'}
-                                alt={cover.description} />
-                            <div>
-                                <input
-                                    type="text"
-                                    bind:value={cover.description} />
-                                <button
-                                    on:click={() => setPrimaryCover(index)}>Make
-                                    Primary Cover</button>
-                            </div>
-                        </div>
-                    {/each}
-                {:else}
-                    <p>No covers.</p>
-                {/if}
-            </div>
-
             <!-- Synopsis/Comments -->
         </div>
 

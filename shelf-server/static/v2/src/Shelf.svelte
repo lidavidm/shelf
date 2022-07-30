@@ -8,6 +8,7 @@
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import importSundayWebry from "./import/sundaywebry.mjs";
     import * as importUtil from "./import/util.mjs";
     import importWebtoons from "./import/webtoons.mjs";
     import filters from "./stores/filters.js";
@@ -127,6 +128,9 @@
             case "mangadex.org":
                 importer = importMangadex;
                 break;
+            case "www.sunday-webry.com":
+                importer = importSundayWebry;
+                break;
             case "www.webtoons.com":
                 importer = importWebtoons;
                 break;
@@ -221,6 +225,13 @@
             default:
                 return "en";
         }
+    }
+
+    function tagsAsClasses(tags) {
+        if (tags && tags.length > 0) {
+            return tags.map(x => `tag-${x.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z\-]/g, "")}`).join(" ");
+        }
+        return "";
     }
 </script>
 
@@ -400,6 +411,19 @@
     .tags span:not(:last-child):after {
         content: ", ";
     }
+
+    .tag-nsfw .cover {
+        overflow: hidden;
+    }
+
+    .tag-nsfw .cover img {
+        filter: blur(8px);
+        transition: filter ease-in-out 0.15s;
+    }
+
+    .tag-nsfw .cover:hover img{
+        filter: none;
+    }
 </style>
 
 <main>
@@ -455,7 +479,7 @@
             </header>
             <ul class="item-list">
                 {#each category.items as item (item.key)}
-                    <li>
+                    <li class={tagsAsClasses(item.tags)}>
                         <div class="cover">
                             {#if item.covers.length > 0}
                                 <img
