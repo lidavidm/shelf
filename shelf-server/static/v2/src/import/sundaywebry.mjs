@@ -24,7 +24,7 @@ function getMeta(document, property) {
     throw new Error(`Could not find property ${property}`);
 }
 
-export default async function cubari(
+export default async function sundayWebry(
     rawUrl,
     { template, proxy = util.defaultProxy }
 ) {
@@ -40,12 +40,19 @@ export default async function cubari(
         external_url: url.toString(),
     };
 
+    let siteprefix = "sundaywebry";
     const rawTitle = getMeta(document, "og:title").split(/ \| /g)[0].trim();
-    const titleAndAuthor = rawTitle.split(" / ", 2)[1];
+    let titleAndAuthor = "";
+    if (url.hostname === "www.sunday-webry.com") {
+        titleAndAuthor = rawTitle.split(" / ", 2)[1];
+    } else {
+        titleAndAuthor = rawTitle;
+        siteprefix = url.hostname.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    }
     const splitPoint = titleAndAuthor.lastIndexOf(" - ");
     const title = titleAndAuthor.substr(0, splitPoint);
     const author = titleAndAuthor.substr(splitPoint + 3);
-    template.key = `manga-sundaywebry-${util.titleToKey(titleAndAuthor)}`;
+    template.key = `manga-${siteprefix}-${util.titleToKey(titleAndAuthor)}`;
     template.name = {
         default: "Japanese",
         alternatives: {

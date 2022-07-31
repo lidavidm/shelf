@@ -247,12 +247,10 @@ You may obtain a copy of the License at
                     {#if isNewItem}
                         <div>
                             <label for="key">Key:</label>
-                            <input
-                                id="key"
-                                type="text"
-                                bind:value={item.key} />
+                            <input id="key" type="text" bind:value={item.key} />
                             {#if isNewItem}
-                                <button on:click={generateKey}>Generate From Title</button>
+                                <button on:click={generateKey}>Generate From
+                                    Title</button>
                             {/if}
                         </div>
                     {/if}
@@ -376,7 +374,10 @@ You may obtain a copy of the License at
                     <h2>Covers</h2>
                     <div>
                         <label for="import">Import URL:</label>
-                        <input id="import" type="text" bind:value={urlToImport} />
+                        <input
+                            id="import"
+                            type="text"
+                            bind:value={urlToImport} />
                         <label for="import-description">Description:</label>
                         <input
                             id="import-description"

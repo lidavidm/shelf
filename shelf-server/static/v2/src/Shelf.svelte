@@ -128,6 +128,7 @@
             case "mangadex.org":
                 importer = importMangadex;
                 break;
+            case "shonenjumpplus.com":
             case "www.sunday-webry.com":
                 importer = importSundayWebry;
                 break;
@@ -229,7 +230,15 @@
 
     function tagsAsClasses(tags) {
         if (tags && tags.length > 0) {
-            return tags.map(x => `tag-${x.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z\-]/g, "")}`).join(" ");
+            return tags
+                .map(
+                    (x) =>
+                        `tag-${x
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")
+                            .replace(/[^a-z\-]/g, "")}`
+                )
+                .join(" ");
         }
         return "";
     }
@@ -421,7 +430,7 @@
         transition: filter ease-in-out 0.15s;
     }
 
-    .tag-nsfw .cover:hover img{
+    .tag-nsfw .cover:hover img {
         filter: none;
     }
 </style>
