@@ -10,7 +10,7 @@
       },
       "altTitles": [
         {
-          "en": "DoraYome"
+          "ja-ro": "DoraYome"
         },
         {
           "en": "DoreYome"
@@ -19,12 +19,17 @@
           "en": "Dragon Wife"
         },
         {
-          "en": "ドラよめ"
+          "ja": "ドラよめ"
+        },
+        {
+          "es-la": "Esposa dragona"
         }
       ],
       "description": {
-        "en": "A dragon's hormones are not a trifling thing. Siegfried rolled a 20 for a chance to defeat the dragon (who was hunting for a mate) and accidentally hit the dragon with {Charm}, next thing you know they are married."
+        "en": "A dragon's hormones are not a trifling thing. Siegfried rolled a 20 for a chance to defeat the dragon (who was hunting for a mate) and accidentally hit the dragon with {Charm}, next thing you know they are married.",
+        "pt-br": "Os hormônios de um dragão não são uma coisa trivial. Siegfried rolou um dado procurando a chance de derrotar um dragão (que estava caçando por um companheiro) e acidentalmente acertou o dragão com {Charme} , e a próxima coisa que você sabe é que eles estão casados."
       },
+      "isLocked": false,
       "links": {
         "al": "100425",
         "ap": "dorayome",
@@ -33,7 +38,7 @@
         "mal": "110387"
       },
       "originalLanguage": "ja",
-      "lastVolume": null,
+      "lastVolume": "",
       "lastChapter": "1",
       "publicationDemographic": null,
       "status": "completed",
@@ -106,22 +111,62 @@
           "relationships": []
         }
       ],
+      "state": "published",
+      "chapterNumbersResetOnNewVolume": false,
       "createdAt": "2019-03-02T06:00:54+00:00",
-      "updatedAt": "2021-05-25T15:44:25+00:00",
-      "version": 2
+      "updatedAt": "2022-04-22T21:00:26+00:00",
+      "version": 4,
+      "availableTranslatedLanguages": [
+        "it",
+        "de",
+        "pt-br",
+        "en",
+        "fr",
+        "es-la"
+      ]
     },
     "relationships": [
       {
-        "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
-        "type": "author"
+        "id": "724fe082-6034-431c-b68c-e9c9cf042844",
+        "type": "author",
+        "attributes": {
+          "name": "Korai Ayumu",
+          "imageUrl": null,
+          "biography": [],
+          "twitter": null,
+          "pixiv": null,
+          "melonBook": null,
+          "fanBox": null,
+          "booth": null,
+          "nicoVideo": null,
+          "skeb": null,
+          "fantia": null,
+          "tumblr": null,
+          "youtube": null,
+          "weibo": null,
+          "naver": null,
+          "website": null,
+          "createdAt": "2021-04-19T21:59:45+00:00",
+          "updatedAt": "2021-04-19T21:59:45+00:00",
+          "version": 1
+        }
       },
       {
-        "id": "48076314-c2ec-479b-9ea3-63dabd798e88",
+        "id": "724fe082-6034-431c-b68c-e9c9cf042844",
         "type": "artist"
       },
       {
         "id": "4c150271-745a-4f4c-8156-9535df11b207",
-        "type": "cover_art"
+        "type": "cover_art",
+        "attributes": {
+          "description": "",
+          "volume": null,
+          "fileName": "3ea14915-4f5a-499a-a94f-1e3078cc1a2c.jpg",
+          "locale": "ja",
+          "createdAt": "2021-05-24T17:03:08+00:00",
+          "updatedAt": "2021-05-24T17:03:08+00:00",
+          "version": 1
+        }
       }
     ]
   }
