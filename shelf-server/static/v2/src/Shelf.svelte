@@ -128,6 +128,7 @@
             case "mangadex.org":
                 importer = importMangadex;
                 break;
+            case "magcomi.com":
             case "shonenjumpplus.com":
             case "www.sunday-webry.com":
                 importer = importSundayWebry;
