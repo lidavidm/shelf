@@ -8,6 +8,7 @@
     import importKitsu from "./import/kitsu.mjs";
     import importKobo from "./import/kobo.mjs";
     import importMangadex from "./import/mangadex.mjs";
+    import importNitter from "./import/nitter.mjs";
     import importSundayWebry from "./import/sundaywebry.mjs";
     import * as importUtil from "./import/util.mjs";
     import importWebtoons from "./import/webtoons.mjs";
@@ -128,10 +129,17 @@
             case "mangadex.org":
                 importer = importMangadex;
                 break;
+            case "comic-days.com":
             case "magcomi.com":
             case "shonenjumpplus.com":
             case "www.sunday-webry.com":
                 importer = importSundayWebry;
+                break;
+            case "twitter.com":
+            case "twitter.lidavidm.me":
+            case "nitter.net":
+            case "unofficialbird.com":
+                importer = importNitter;
                 break;
             case "www.webtoons.com":
                 importer = importWebtoons;

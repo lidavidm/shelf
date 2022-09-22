@@ -64,6 +64,7 @@ export default async function mangadex(
             case "fr":
             case "he":
             case "id":
+            case "ne":
             case "ru":
             case "vi":
                 continue;
@@ -99,6 +100,7 @@ export default async function mangadex(
         if (!tag.attributes.name || !tag.attributes.name.en) continue;
         const name = tag.attributes.name.en;
         if (
+            name === "Anthology" ||
             name === "Comedy" ||
             name === "Drama" ||
             name === "Fantasy" ||
@@ -112,6 +114,12 @@ export default async function mangadex(
         } else if (name === "School Life") {
             template.tags.push("School");
         }
+    }
+    switch (document.data.attributes.publicationDemographic) {
+        case "Josei":
+            template.tags.push("Josei");
+        default:
+            break;
     }
     template.tags.sort();
 
