@@ -132,6 +132,7 @@
             case "comic-days.com":
             case "magcomi.com":
             case "shonenjumpplus.com":
+            case "tonarinoyj.jp":
             case "www.sunday-webry.com":
                 importer = importSundayWebry;
                 break;
