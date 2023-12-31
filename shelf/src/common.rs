@@ -96,6 +96,7 @@ pub enum Kind {
     Musical,
     VisualNovel,
     NonFiction,
+    Article,
 }
 
 /// A binary blob stored in a shelf (for things like cover images).

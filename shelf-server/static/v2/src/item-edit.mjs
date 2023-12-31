@@ -4,7 +4,8 @@ import { formatISO } from "date-fns";
  * Complete the next entry of an item, adding a new entry if appropriate.
  */
 export function completeNextEntry(item) {
-    const completed = formatISO(new Date());
+    const completed = window.completionDate ? formatISO(new Date(window.completionDate)) : formatISO(new Date());
+    console.log(completed);
     // Complete the first uncompleted item; assumes entries are sorted
     for (const entry of item.entries) {
         if (!entry.completed) {

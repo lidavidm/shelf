@@ -130,6 +130,7 @@
                 importer = importMangadex;
                 break;
             case "comic-days.com":
+            case "comic-trail.com":
             case "magcomi.com":
             case "shonenjumpplus.com":
             case "tonarinoyj.jp":

@@ -258,6 +258,7 @@ You may obtain a copy of the License at
                         <label for="kind">Kind:</label>
                         <select id="kind" bind:value={item.kind}>
                             <option>Unknown</option>
+                            <option>Article</option>
                             <option>Manga</option>
                             <option>TV</option>
                             <option>Film</option>
