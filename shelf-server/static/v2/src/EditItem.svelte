@@ -19,6 +19,7 @@ You may obtain a copy of the License at
     import EditAlternatives from "./component/EditAlternatives.svelte";
     import EditPeople from "./component/EditPeople.svelte";
     import EditSeries from "./component/EditSeries.svelte";
+    import EditableLabel from "./component/EditableLabel.svelte";
     import NullableMultiDate from "./component/NullableMultiDate.svelte";
     import TagList from "./component/TagList.svelte";
     import TitleBar from "./component/TitleBar.svelte";
@@ -41,6 +42,18 @@ You may obtain a copy of the License at
     let loading = fetch(params.key ? "/item/" + params.key : "/item/:template:")
         .then((r) => r.json())
         .then((value) => {
+            // Fix up
+            for (let entry of value.entries) {
+                if (!entry.name) {
+                    entry.name = {
+                        "alternatives": {
+                            "English": "-",
+                        },
+                        "default": "English",
+                    };
+                }
+            }
+
             item = value;
             originalItem = JSON.parse(JSON.stringify(value));
         });
@@ -447,7 +460,7 @@ You may obtain a copy of the License at
                                 {#each [...item.entries].reverse() as entry}
                                     <tr>
                                         <td>
-                                            {entry.name ? entry.name.alternatives[entry.name.default] : '-'}
+                                            <EditableLabel bind:value={entry.name.alternatives[entry.name.default]} />
                                         </td>
                                         <td>
                                             {entry.volume === null ? '-' : entry.volume}
